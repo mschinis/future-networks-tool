@@ -13,6 +13,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public Tday As Integer
+Public finished As Boolean
 
 
 Private Sub ClearnessScroll_Change()
@@ -50,6 +51,7 @@ Private Sub CommandButton1_Click()
     
     If TdayVal.Value = "wd" Then Tday = 1 Else Tday = 2
     ChooseNetwork.Hide
+    finished = True
     Preset_Network
 
 End Sub
@@ -117,10 +119,10 @@ Public Sub UserForm_Initialize()
     filename = Dir()
     filename = Dir()
     Do While filename <> ""
-    If filename <> "Custom" Then
-        SelectNetwork.AddItem filename
-        filename = Dir()
-    End If
+        If filename <> "Custom" Then
+            SelectNetwork.AddItem filename
+        End If
+    filename = Dir()
     Loop
 
     'EVPage
