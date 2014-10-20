@@ -117,8 +117,10 @@ Public Sub UserForm_Initialize()
     filename = Dir()
     filename = Dir()
     Do While filename <> ""
+    If filename <> "Custom" Then
         SelectNetwork.AddItem filename
         filename = Dir()
+    End If
     Loop
 
     'EVPage

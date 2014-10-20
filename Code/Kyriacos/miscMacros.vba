@@ -56,7 +56,7 @@ Public Sub Monitors()
 
     Loop
     
-    WorkingSheet.Range("B2:B" & (RunHours + 1)).Value = Transformer
+    WorkingSheet.Range("B2:B" & (RunHours + 1)).Value = Values
     
 End Sub
 
