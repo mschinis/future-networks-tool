@@ -2,7 +2,6 @@ Attribute VB_Name = "Start"
 Public RunHours As Integer
 
 Public Sub Start()
-
 ' Create a new instance of the DSS
     Set DSSobj = New OpenDSSengine.DSS
            
@@ -17,6 +16,8 @@ Public Sub Start()
 
 
     WelcomeScreen.Show ' Goes into either Preset or Custom Network after this
+    If ChooseNetwork.finished <> True Then Exit Sub
+    
     DSSText.Command = "Set Datapath =" & ActiveWorkbook.Path & "\output"
     DSSText.Command = "new monitor.Transformer element=transformer.LV_Transformer terminal=1 mode=1 ppolar=yes"
     
@@ -55,3 +56,4 @@ Public Sub Start()
     MsgBox ("Total time " + Trim(Str(Timer - stime)))
     
 End Sub
+

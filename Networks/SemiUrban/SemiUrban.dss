@@ -1,0 +1,30 @@
+Clear
+
+Set DefaultBaseFrequency=50
+New Circuit.SemiurbanLVNetwork
+
+Edit Vsource.Source BasekV=11 pu=1.00 angle=0 ISC3=3000 ISC1=2500
+
+New transformer.LV_Transformer Buses=(Sourcebus, Main_Busbar)  Conns=(Delta, Wye) kvs=(11, 0.4) kvas=(500, 500) xhl=4.5 
+
+Redirect Linecodes.txt
+Redirect SemiUrban_LinesLaterals1.txt
+Redirect SemiUrban_LinesLaterals2.txt
+Redirect SemiUrban_LinesLaterals3.txt
+Redirect SemiUrban_LinesLaterals4.txt
+Redirect SemiUrban_Consumers1.txt
+Redirect SemiUrban_Consumers2.txt
+Redirect SemiUrban_Consumers3.txt
+Redirect SemiUrban_Consumers4.txt
+
+Redirect Monitors.txt
+
+Set voltagebases=[11 0.4]
+CalcVoltageBases
+
+
+
+
+
+
+

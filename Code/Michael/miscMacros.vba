@@ -8,7 +8,24 @@ Public DSSSolution As OpenDSSengine.Solution
 Public DSSControlQueue As OpenDSSengine.CtrlQueue
 Public Parser As ParserXControl.ParserX
 
+Public Function File_Exists(ByVal File As String) As Boolean
 
+    Dim FilePath As String
+    Dim TestStr As String
+
+    FilePath = ActiveWorkbook.Path & "\" & File
+    
+    TestStr = ""
+    On Error Resume Next
+    TestStr = Dir(FilePath)
+    On Error GoTo 0
+    If TestStr = "" Then
+        File_Exists = False
+    Else
+        File_Exists = True
+    End If
+
+End Function
 
 Public Sub Monitors()
 

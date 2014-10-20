@@ -1,4 +1,4 @@
-Attribute VB_Name = "CustomNetwork1"
+Attribute VB_Name = "CustomNetwork"
 Public Sub Custom_Network()
 
 
