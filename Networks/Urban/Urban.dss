@@ -16,15 +16,8 @@ Redirect Urban_Consumers1.txt
 Redirect Urban_Consumers2.txt
 Redirect Urban_Consumers3.txt
 Redirect Urban_Consumers4.txt
-
+Redirect Monitors.txt
 
 Set voltagebases=[11 0.4]
 CalcVoltageBases
-
-
-
-
-
-
-
 
