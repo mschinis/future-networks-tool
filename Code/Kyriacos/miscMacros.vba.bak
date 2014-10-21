@@ -13,7 +13,7 @@ Public Parser As ParserXControl.ParserX
 Public Sub Monitors()
 
     Dim WorkingSheet As Worksheet
-    Dim i, iextra As Long
+    Dim i, j, iextra As Long
     Dim s As String
     Dim FileNum As Long
     Dim rangex
@@ -27,7 +27,23 @@ Public Sub Monitors()
     
     Direc = PresetNetwork.Network & "LVNetwork_Mon_" '
     
-
+    ' Export dem monitors
+    DSSText.Command = "Export monitors SSTransformer"
+    
+    For i = 1 To 4
+        DSSText.Command = "Export monitors VIFeeder" & i
+        
+        For j = 1 To 4
+            DSSText.Command = "Export monitors VILateral" & i & "_" & j & "_Start"
+            DSSText.Command = "Export monitors VILateral" & i & "_" & j & "_End"
+        Next
+    Next
+    ' TODO: Check if necessary files exist
+    ' Start of feeder
+    ' Transformer
+    ' Start, End of each lateral
+    
+    
     ' >>>>
     ' >>>> time series results (P and Q) for GSP
     Set WorkingSheet = Worksheets("Transformer")
@@ -59,4 +75,5 @@ Public Sub Monitors()
     WorkingSheet.Range("B2:B" & (RunHours + 1)).Value = Values
     
 End Sub
+
 
