@@ -44,7 +44,7 @@ Dim stime As Single
         PVPenetration = ChooseNetwork.PVPeneText.Value / 100
         location = ChooseNetwork.SelectLocation.ListIndex + 1
         clearness = ChooseNetwork.ClearnessText.Value
-        'Call Assign_PV_Profiles(customers, PVPenetration, location, Tmonth, clearness)
+        Call Assign_PV_Profiles(customers, PVPenetration, location, Tmonth, clearness)
     End If
     
     If ChooseNetwork.HPEnable.Value = True Then

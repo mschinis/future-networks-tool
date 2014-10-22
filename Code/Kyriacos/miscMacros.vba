@@ -81,10 +81,13 @@ Public Sub Monitors()
         iextra = Parser.IntValue 'seconds
         Transformer(i, 1) = Parser.DblValue
         iextra = Parser.DblValue
+        If iextra > 90 Or iextra < -90 Then Transformer(i, 1) = -Transformer(i, 1)
         Transformer(i, 2) = Parser.DblValue
         iextra = Parser.DblValue
+        If iextra > 90 Or iextra < -90 Then Transformer(i, 2) = -Transformer(i, 2)
         Transformer(i, 3) = Parser.DblValue
         iextra = Parser.DblValue
+        If iextra > 90 Or iextra < -90 Then Transformer(i, 3) = -Transformer(i, 3)
         Values(i, 1) = Transformer(i, 1) + Transformer(i, 2) + Transformer(i, 3)
 
     Loop

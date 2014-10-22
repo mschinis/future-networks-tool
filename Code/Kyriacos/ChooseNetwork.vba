@@ -263,7 +263,7 @@ Public Sub UserForm_Initialize()
     SelectLocation.AddItem "Yorkshire and Humber"
     SelectLocation.AddItem "East Midlands"
     SelectLocation.AddItem "West Midlands"
-    SelectLocation.AddItem "something"
+    SelectLocation.AddItem "East"
     SelectLocation.AddItem "Wales"
     SelectLocation.AddItem "London"
     SelectLocation.AddItem "South East"

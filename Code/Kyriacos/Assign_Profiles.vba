@@ -26,7 +26,7 @@ For i = 1 To (penetration * NoCustomers)
 
     
     DSSText.Command = "new loadshape.PVload" & i & " npts=1440 minterval=1.0 csvfile=PV" & location & "_" & Tmonth & "_" & clearness & "_" & PVsize & ".txt"
-    DSSText.Command = "new Generator.PV" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=10 PF=1 Daily=PVload" & i
+    DSSText.Command = "new generator.PV" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=10 PF=1 Daily=PVload" & i
 
 
 Next
