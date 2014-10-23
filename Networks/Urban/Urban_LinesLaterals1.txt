@@ -37,7 +37,7 @@ New Line.Feeder1.35	Bus1=1_34	Bus2=1_35	Length=1	units=m	Linecode=Line_185
 
 New Line.Feeder1.36	Bus1=1_35	Bus2=1_36	Length=1	units=m	Linecode=Line_185
 
-New Line.Lateral1_start_1	Bus1=1_35	Bus2=1_37	Length=1	units=m	Linecode=Line_95
+New Line.Lateral1_start_1 Bus1=1_35	Bus2=1_37	Length=1	units=m	Linecode=Line_95
 New Line.Lateral1.38	Bus1=1_37	Bus2=1_38	Length=1	units=m	Linecode=Line_95
 New Line.Lateral1.39	Bus1=1_38	Bus2=1_39	Length=1	units=m	Linecode=Line_95
 New Line.Lateral1.40	Bus1=1_39	Bus2=1_40	Length=1	units=m	Linecode=Line_95
@@ -253,8 +253,7 @@ New Line.Feeder1.243 Bus1=1_242 Bus2=1_243 units=m Linecode=Line_185 Length=1
 
 New Line.Lateral1_start_2 Bus1=1_242 Bus2=1_244 units=m Linecode=Line_95 Length=1 
 New Line.Lateral1.245 Bus1=1_244 Bus2=1_245 units=m Linecode=Line_95 Length=1 
-
-New Line.Lateral1.246 Bus1=1_176 Bus2=1_246 units=m Linecode=Line_95 Length=1
+New Line.Lateral1.246 Bus1=1_245 Bus2=1_246 units=m Linecode=Line_95 Length=1
 New Line.Lateral1.247 Bus1=1_246 Bus2=1_247 units=m Linecode=Line_95 Length=1 
 New Line.Lateral1.248 Bus1=1_247 Bus2=1_248 units=m Linecode=Line_95 Length=1 
 New Line.Lateral1.249 Bus1=1_248 Bus2=1_249 units=m Linecode=Line_95 Length=1 

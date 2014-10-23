@@ -247,7 +247,7 @@ New Line.Feeder3.243 Bus1=3_242 Bus2=3_243 units=m Linecode=Line_185 Length=1
 
 New Line.Lateral3_start_2 Bus1=3_242 Bus2=3_244 units=m Linecode=Line_95 Length=1 
 New Line.Lateral3.245 Bus1=3_244 Bus2=3_245 units=m Linecode=Line_95 Length=1 
-New Line.Lateral3.246 Bus1=3_176 Bus2=3_246 units=m Linecode=Line_95 Length=1
+New Line.Lateral3.246 Bus1=3_245 Bus2=3_246 units=m Linecode=Line_95 Length=1
 New Line.Lateral3.247 Bus1=3_246 Bus2=3_247 units=m Linecode=Line_95 Length=1 
 New Line.Lateral3.248 Bus1=3_247 Bus2=3_248 units=m Linecode=Line_95 Length=1 
 New Line.Lateral3.249 Bus1=3_248 Bus2=3_249 units=m Linecode=Line_95 Length=1 
