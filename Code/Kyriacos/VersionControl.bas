@@ -8,7 +8,7 @@ With ThisWorkbook.VBProject
     For i% = 1 To .VBComponents.Count
         If .VBComponents(i%).CodeModule.CountOfLines > 0 Then
             sName$ = .VBComponents(i%).CodeModule.name
-            .VBComponents(i%).Export "C:\Users\Kyriacos\Desktop\Project\future-networks-tool\Code\Kyriacos\" & sName$ & ".vba"
+            .VBComponents(i%).Export "C:\Users\Kyriacos\Desktop\Project\future-networks-tool\Code\Kyriacos\" & sName$ & ".bas"
         End If
     Next i
 End With
