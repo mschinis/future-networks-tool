@@ -4,7 +4,7 @@ Public Network As String
 Public Sub Preset_Network()
 
 Dim stime As Single
-    Dim EVPenetration, PVPenetration As Double
+    Dim EVPenetration, PVPenetration, HPPenetration, CHPPenetration As Double
     Dim location, Tmonth, Tday, clearness, customers As Integer
     Network = ChooseNetwork.SelectNetwork.Value ' Select Network from Dropdown Menu
     Dim File_Location As String
@@ -44,7 +44,19 @@ Dim stime As Single
         PVPenetration = ChooseNetwork.PVPeneText.Value / 100
         location = ChooseNetwork.SelectLocation.ListIndex + 1
         clearness = ChooseNetwork.ClearnessText.Value
-        'Call Assign_PV_Profiles(customers, PVPenetration, location, Tmonth, clearness)
+        Call Assign_PV_Profiles(customers, PVPenetration, location, Tmonth, clearness)
+    End If
+    
+    If ChooseNetwork.HPEnable.Value = True Then
+        HPPenetration = ChooseNetwork.HPPeneText.Value / 100
+        location = ChooseNetwork.SelectLocation1.ListIndex + 1
+        'Call Assign_HP_Profiles(customers, HPPenetration, Tmonth, Tday, location)
+    End If
+    
+    If ChooseNetwork.CHPEnable.Value = True Then
+        HPPenetration = ChooseNetwork.HPPeneText.Value / 100
+        location = ChooseNetwork.SelectLocation1.ListIndex + 1
+        'Call Assign_CHP_Profiles(customers, HPPenetration, Tmonth, Tday, location)
     End If
     
 

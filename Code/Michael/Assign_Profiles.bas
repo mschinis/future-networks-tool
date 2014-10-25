@@ -1,10 +1,11 @@
 Attribute VB_Name = "Assign_Profiles"
 
-Function Assign_PV_Profiles(NoCustomers As Integer, penetration As Double, location As Integer, Tmonth As Integer, clearness As Integer)
+Function Assign_PV_Profiles(ByVal NoCustomers As Integer, ByVal penetration As Double, ByVal location As Integer, ByVal Tmonth As Integer, ByVal clearness As Integer)
 
 Dim LoadshapeNumber As Integer
 Dim PVsize As Integer
-Dim CustomersArray(1 To NoCustomers) As Variant
+Dim CustomersArray() As Variant
+ReDim CustomersArray(1 To NoCustomers)
 
 
 For i = 1 To 4
@@ -25,7 +26,7 @@ For i = 1 To (penetration * NoCustomers)
 
     
     DSSText.Command = "new loadshape.PVload" & i & " npts=1440 minterval=1.0 csvfile=PV" & location & "_" & Tmonth & "_" & clearness & "_" & PVsize & ".txt"
-    DSSText.Command = "new Generator.PV" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=10 PF=1 Daily=PVload" & i
+    DSSText.Command = "new generator.PV" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=10 PF=1 Daily=PVload" & i
 
 
 Next
@@ -73,15 +74,25 @@ Next
 
 End Function
 
-Function Assign_HP_Profiles(NoCustomers As Integer, penetration As Integer, Tmonth As Integer, Tday As Integer, ETemp As Integer)
+Function Assign_HP_Profiles(ByVal NoCustomers As Integer, ByVal penetration As Double, ByVal Tmonth As Integer, ByVal Tday As Integer, ByVal location As Integer)
 
-Dim CustomersArray(1 To NoCustomers) As Variant
+Dim CustomersArray() As Variant
+ReDim CustomersArray(1 To NoCustomers)
 
 If Tmonth >= 1 And Tmonth <= 2 Then Tmonth = 1
 If Tmonth = 12 Then Tmonth = 1
 If Tmonth >= 3 And Tmonth <= 5 Then Tmonth = 2
 If Tmonth >= 9 And Tmonth <= 11 Then Tmonth = 2
 If Tmonth >= 6 And Tmonth <= 8 Then Tmonth = 3
+
+If location = 2 Or location = 3 Then
+    location = 2
+ElseIf location = 4 Or location = 5 Or location = 6 Or location = 7 Or location = 8 Then
+    location = 3
+ElseIf location = 9 Or location = 10 Or location = 11 Then
+    location = 4
+End If
+
 
 For i = 1 To 4
     For y = 1 To NoCustomers / 4
@@ -98,7 +109,7 @@ DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\HP"
 For i = 1 To (NoCustomers)
 
 
-    
+    repetition = Int((20 - 1 + 1) * Rnd + 1)
     occupants = 5
 
     If i < (NoCustomers * 0.93) Then occupants = 4
@@ -106,23 +117,34 @@ For i = 1 To (NoCustomers)
     If i < (NoCustomers * 0.65) Then occupants = 2
     If i < (NoCustomers * 0.3) Then occupants = 1
     
-    DSSText.Command = "new loadshape.HPload" & i & " npts=1440 minterval=1.0 csvfile=HP" & Tmonth & "_" & Tday & "_" & occupants & "_" & ETemp & ".txt"
-    DSSText.Command = "new load.HP" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=10 PF=0.95 Daily=HPload" & i
+    DSSText.Command = "new loadshape.HPload" & i & " npts=1440 minterval=1.0 csvfile=HP" & Tmonth & "_" & Tday & "_" & location & "_" & THouse & "_" & occupants & "_" & repetition & ".txt"
+    DSSText.Command = "new load.HP" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=10 PF=1 Daily=HPload" & i
 
 
 Next
 
 End Function
 
-Function Assign_CHP_Profiles(NoCustomers As Integer, penetration As Integer, Tmonth As Integer, Tday As Integer, ETemp As Integer)
+Function Assign_CHP_Profiles(ByVal NoCustomers As Integer, ByVal penetration As Double, ByVal Tmonth As Integer, Tday As Integer, ByVal location As Integer)
 
-Dim CustomersArray(1 To NoCustomers) As Variant
+Dim CustomersArray() As Variant
+ReDim CustomersArray(1 To NoCustomers)
 
 If Tmonth >= 1 And Tmonth <= 2 Then Tmonth = 1
 If Tmonth = 12 Then Tmonth = 1
 If Tmonth >= 3 And Tmonth <= 5 Then Tmonth = 2
 If Tmonth >= 9 And Tmonth <= 11 Then Tmonth = 2
 If Tmonth >= 6 And Tmonth <= 8 Then Tmonth = 3
+
+If location = 2 Or location = 3 Then
+    location = 2
+ElseIf location = 4 Or location = 5 Or location = 6 Or location = 7 Or location = 8 Then
+    location = 3
+ElseIf location = 9 Or location = 10 Or location = 11 Then
+    location = 4
+End If
+
+
 
 For i = 1 To 4
     For y = 1 To NoCustomers / 4
@@ -139,7 +161,7 @@ DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\CHP"
 For i = 1 To (NoCustomers)
 
 
-    
+    repetition = Int((20 - 1 + 1) * Rnd + 1)
     occupants = 5
 
     If i < (NoCustomers * 0.93) Then occupants = 4
@@ -147,8 +169,8 @@ For i = 1 To (NoCustomers)
     If i < (NoCustomers * 0.65) Then occupants = 2
     If i < (NoCustomers * 0.3) Then occupants = 1
     
-    DSSText.Command = "new loadshape.CHPload" & i & " npts=1440 minterval=1.0 csvfile=HP" & Tmonth & "_" & Tday & "_" & occupants & "_" & ETemp & ".txt"
-    DSSText.Command = "new generator.CHP" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=10 PF=0.95 Daily=HPload" & i
+    DSSText.Command = "new loadshape.CHPload" & i & " npts=1440 minterval=1.0 csvfile=CHP" & Tmonth & "_" & Tday & "_" & location & "_" & THouse & "_" & occupants & "_" & repetition & ".txt"
+    DSSText.Command = "new generator.CHP" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=10 PF=1 Daily=CHPload" & i
 
 
 Next

@@ -41,11 +41,17 @@ Public Sub Start()
     
 ' ----- start coding here -----
     Dim i As Integer
-    
+    Dim TransformerArray() As Double
+    Dim Feeders() As Double
+    Dim Laterals() As Double
+    ReDim TransformerArray(1 To RunHours, 1 To 4) ' (iteration, 1 = transformerpwoer, 2-4 voltages)
+    ReDim Feeders(1 To RunHours, 1 To 4, 1 To 3) ' (iteration, feeder, currentstarts)
+    ReDim Laterals(1 To RunHours, 1 To 4, 1 To 4, 1 To 9) ' (iteration, feeder, lateral, 1-9 currents / voltagesstart / voltagesend)
 
     For i = 1 To RunHours
     
         DSSobj.ActiveCircuit.Solution.Solve
+        Call CheckValuesPreset(i, TransformerArray, Feeders, Laterals)
         
     Next
 
@@ -56,4 +62,3 @@ Public Sub Start()
     MsgBox ("Total time " + Trim(Str(Timer - stime)))
     
 End Sub
-
