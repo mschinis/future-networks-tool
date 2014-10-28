@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ChooseNetwork 
-   ClientHeight    =   6705
+   ClientHeight    =   7290
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   4230
@@ -153,6 +153,10 @@ Private Sub HPPeneText_Change()
     
 End Sub
 
+Private Sub MultiPage1_Change()
+
+End Sub
+
 Private Sub PVEnable_Click()
     
     If PVEnable = False Then
@@ -210,7 +214,7 @@ Private Sub SelectLocation2_Change()
 
 End Sub
 
-Public Sub UserForm_Initialize()
+Public Sub UserForm_initialize()
     Dim filename As String
     
     filename = Dir(ThisWorkbook.Path & "/Networks/", 16)
@@ -257,19 +261,33 @@ Public Sub UserForm_Initialize()
     SelectLocation2.Visible = False
     HPPeneText.Value = 0
     
-    SelectLocation.AddItem "Scotland"
-    SelectLocation.AddItem "North East"
-    SelectLocation.AddItem "North West"
-    SelectLocation.AddItem "Yorkshire and Humber"
-    SelectLocation.AddItem "East Midlands"
-    SelectLocation.AddItem "West Midlands"
-    SelectLocation.AddItem "East"
-    SelectLocation.AddItem "Wales"
-    SelectLocation.AddItem "London"
-    SelectLocation.AddItem "South East"
-    SelectLocation.AddItem "South West"
-
+    With SelectLocation
+        .AddItem "Scotland"
+        .AddItem "North East"
+        .AddItem "North West"
+        .AddItem "Yorkshire and Humber"
+        .AddItem "East Midlands"
+        .AddItem "West Midlands"
+        .AddItem "East"
+        .AddItem "Wales"
+        .AddItem "London"
+        .AddItem "South East"
+        .AddItem "South West"
+    End With
+    
     SelectLocation1.List = SelectLocation.List
     SelectLocation2.List = SelectLocation.List
+    
+    With TransformerTap
+        .AddItem "-5"
+        .AddItem "-2.5"
+        .AddItem "0"
+        .AddItem "2.5"
+        .AddItem "5"
+    End With
+    
+    TransformerTap.Value = "0"
+
+
     
 End Sub

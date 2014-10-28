@@ -1,11 +1,13 @@
 Attribute VB_Name = "PresetNetwork"
 Public Network As String
+Public customers As Integer
+
 
 Public Sub Preset_Network()
 
 Dim stime As Single
     Dim EVPenetration, PVPenetration, HPPenetration, CHPPenetration As Double
-    Dim location, Tmonth, Tday, clearness, customers As Integer
+    Dim location, Tmonth, Tday, clearness As Integer
     Network = ChooseNetwork.SelectNetwork.Value ' Select Network from Dropdown Menu
     Dim File_Location As String
     
@@ -59,9 +61,9 @@ Dim stime As Single
         'Call Assign_CHP_Profiles(customers, HPPenetration, Tmonth, Tday, location)
     End If
     
-
     '------------------------------
     
+    DSSText.Command = "Transformer.LV_Transformer.tap=" & (1 + (ChooseNetwork.TransformerTap.Value / 100)) 'Adjust the Off-Load Tap position
 
 
 End Sub

@@ -110,7 +110,7 @@ Private Sub NoFeeders_Change()
     
 End Sub
 
-Private Sub UserForm_Initialize()
+Private Sub UserForm_initialize()
 
     CommandButton1.Visible = False
 

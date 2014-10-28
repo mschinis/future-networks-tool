@@ -70,7 +70,7 @@ New Line.Lateral2.68 Bus1=2_67 Bus2=2_68 Length=1 units=m Linecode=Line_95
 New Line.Lateral2.69 Bus1=2_68 Bus2=2_69 Length=1 units=m Linecode=Line_95
 New Line.Lateral2.70 Bus1=2_69	Bus2=2_70 Length=1 units=m Linecode=Line_95
 New Line.Lateral2.71 Bus1=2_70	Bus2=2_71 Length=1 units=m Linecode=Line_95
-New Line.Lateral2.72 Bus1=2_71	Bus2=2_72	Len th=1	units=m	Linecode=Line_95
+New Line.Lateral2.72 Bus1=2_71	Bus2=2_72	Length=1	units=m	Linecode=Line_95
 New Line.Lateral2.73 Bus1=2_72	Bus2=2_73	Length=1	units=m	Linecode=Line_95
 New Line.Lateral2.74 Bus1=2_73	Bus2=2_74	Length=1	units=m	Linecode=Line_95
 New Line.Lateral2.75 Bus1=2_74	Bus2=2_75	Length=1	units=m	Linecode=Line_95

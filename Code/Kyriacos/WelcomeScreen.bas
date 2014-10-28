@@ -24,3 +24,9 @@ Private Sub CommandButton2_Click()
 
     
 End Sub
+
+Private Sub UserForm_initialize()
+    
+    ChooseNetwork.finished = False
+
+End Sub

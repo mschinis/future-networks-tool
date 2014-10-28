@@ -261,4 +261,47 @@ Public Sub Monitors()
     
 End Sub
 
+Public Sub Customers_Voltage()
+
+    Worksheets("test").Range("A1:CCC632").Clear
+    Dim i, y, iter, place As Integer
+    
+    For i = 1 To 4
+        For y = 1 To PresetNetwork.customers / 4
+            For iter = 1 To Start.RunHours
+                place = (i * (PresetNetwork.customers / 4) - (PresetNetwork.customers / 4)) + y
+                Worksheets("Test").Cells(place, iter).Value = Start.CustomersLimits(i, y, iter)
+            Next
+        Next
+    Next
+    Dim cs As ColorScale
+    
+    Worksheets("Test").Activate
+    With Worksheets("Test").Range(Cells(1, 1), Cells(PresetNetwork.customers, Start.RunHours))
+        .FormatConditions.Delete
+        Set cs = .FormatConditions.AddColorScale(colorscaletype:=2)
+        With cs.ColorScaleCriteria(1)
+            .Type = xlConditionValueNumber
+            .Value = 0
+            With .FormatColor
+                .Color = vbGreen
+                ' TintAndShade takes a value between -1 and 1.
+                ' -1 is darkest, 1 is lightest.
+                .TintAndShade = -0.25
+            End With
+        End With
+   
+        ' Format the second color as green, at the highest value.
+        With cs.ColorScaleCriteria(2)
+            .Type = xlConditionValueNumber
+            .Value = 1
+            With .FormatColor
+                .Color = vbRed
+                .TintAndShade = 0
+            End With
+        End With
+    End With
+    
+End Sub
+
 

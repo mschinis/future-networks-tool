@@ -1,5 +1,7 @@
 Attribute VB_Name = "Assign_Profiles"
 
+
+
 Function Assign_PV_Profiles(ByVal NoCustomers As Integer, ByVal penetration As Double, ByVal location As Integer, ByVal Tmonth As Integer, ByVal clearness As Integer)
 
 Dim LoadshapeNumber As Integer
