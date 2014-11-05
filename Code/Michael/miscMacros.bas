@@ -37,6 +37,7 @@ Public Sub Monitors()
     Dim Direc As String
     RunHours = Start.RunHours
     Dim character As String
+    Dim iextrastr As String
     
     character = Chr(68)
     
@@ -71,7 +72,7 @@ Public Sub Monitors()
     
 
     
-    Direc = PresetNetwork.Network & "LVNetwork_Mon_" '
+    Direc = PresetNetwork.Network & "LVNetwork_" '
     
     ' Export dem monitors
     DSSText.Command = "Export monitors SSTransformer"
@@ -90,12 +91,54 @@ Public Sub Monitors()
     ' Start, End of each lateral
     
     ' >>>> time series results (P and Q) for GSP
-    Set WorkingSheet = Worksheets("Transformer")
+    
     'using ParserX
     Set Parser = Nothing ' destroy old object should it already exist
     Set Parser = New ParserXControl.ParserX
     Parser.AutoIncrement = True
     FileNum = FreeFile
+    
+    ' Energy meter for transformer
+    Open Direc & "EXP_METERS.CSV" For Input As #FileNum
+    Line Input #FileNum, s
+    Line Input #FileNum, s
+    Parser.CmdString = s
+    iextra = Parser.IntValue
+    iextra = Parser.IntValue
+    iextra = Parser.IntValue
+    iextrastr = Parser.StrValue
+    
+    Dim kWh As Integer
+    kWh = Parser.IntValue
+    Dim kVarh As Integer
+    kVarh = Parser.IntValue
+    
+    For i = 1 To 10
+        iextra = Parser.IntValue
+    Next
+    
+    Dim zoneLosseskWh As Integer
+    zoneLosseskWh = Parser.IntValue ' Zone Losses kWh
+    
+    Dim zoneLosseskVarh As Integer
+    zoneLosseskVarh = Parser.IntValue
+    
+    Set WorkingSheet = Worksheets("Results Summary")
+    WorkingSheet.Range("C3").Value = CheckValues.MinVoltage
+    WorkingSheet.Range("C4").Value = CheckValues.MaxVoltage
+    WorkingSheet.Range("C5").Value = CheckValues.MinCurrentUseFeeder
+    WorkingSheet.Range("C6").Value = CheckValues.MaxCurrentUseFeeder
+    WorkingSheet.Range("C7").Value = CheckValues.MinCurrentUseLateral
+    WorkingSheet.Range("C8").Value = CheckValues.MaxCurrentUseLateral
+    WorkingSheet.Range("C9").Value = CheckValues.MinTransformerUse
+    WorkingSheet.Range("C10").Value = CheckValues.MaxTransformerUse
+    WorkingSheet.Range("C11").Value = ((zoneLosseskWh ^ 2 + zoneLosseskVarh ^ 2) ^ 0.5 / (kWh ^ 2 + kVarh ^ 2) ^ 0.5) 'Calculate losses %
+    
+    Close
+    
+    Set WorkingSheet = Worksheets("Transformer")
+    Direc = Direc & "Mon_"
+    ' Monitors for transformer
     i = 0
     Open Direc & "transformer.csv" For Input As #FileNum
     Line Input #FileNum, s  ' skip first line
@@ -192,13 +235,13 @@ Public Sub Monitors()
                 ' Currents
                 ILateralStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra < 40 Or iextra > -140 Then ILateralStart(counter, 1) = -ILateralStart(counter, 1)
+                If iextra < 40 And iextra > -140 Then ILateralStart(counter, 1) = -ILateralStart(counter, 1)
                 ILateralStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
                 If iextra > 100 Or iextra < -80 Then ILateralStart(counter, 2) = -ILateralStart(counter, 2)
                 ILateralStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > -20 Or iextra < 160 Then ILateralStart(counter, 3) = -ILateralStart(counter, 3)
+                If iextra > -20 And iextra < 160 Then ILateralStart(counter, 3) = -ILateralStart(counter, 3)
                 
                 VLValues(counter, 1) = VLateralStart(counter, 1) / 230
                 VLValues(counter, 2) = VLateralStart(counter, 2) / 230

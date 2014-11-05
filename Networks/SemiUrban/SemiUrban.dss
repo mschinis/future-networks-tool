@@ -18,6 +18,7 @@ Redirect SemiUrban_Consumers3.txt
 Redirect SemiUrban_Consumers4.txt
 
 Redirect Monitors.txt
+Redirect EnergyMeters.txt
 
 Set voltagebases=[11 0.4]
 CalcVoltageBases
