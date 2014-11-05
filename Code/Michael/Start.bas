@@ -1,8 +1,10 @@
 Attribute VB_Name = "Start"
 Public RunHours As Integer
+Public CustomersLimits() As Byte
 
 Public Sub Start()
 ' Create a new instance of the DSS
+    Reset
     Set DSSobj = New OpenDSSengine.DSS
            
     ' Start the DSS
@@ -44,21 +46,30 @@ Public Sub Start()
     Dim TransformerArray() As Double
     Dim Feeders() As Double
     Dim Laterals() As Double
+    Dim CustomersVoltages() As Double
     ReDim TransformerArray(1 To RunHours, 1 To 4) ' (iteration, 1 = transformerpwoer, 2-4 voltages)
     ReDim Feeders(1 To RunHours, 1 To 4, 1 To 3) ' (iteration, feeder, currentstarts)
     ReDim Laterals(1 To RunHours, 1 To 4, 1 To 4, 1 To 9) ' (iteration, feeder, lateral, 1-9 currents / voltagesstart / voltagesend)
+    ReDim CustomersVoltages(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
+    ReDim CustomersLimits(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
 
+
+    
     For i = 1 To RunHours
     
         DSSobj.ActiveCircuit.Solution.Solve
-        Call CheckValuesPreset(i, TransformerArray, Feeders, Laterals)
+        Call CheckValuesPreset(PresetNetwork.customers, i, TransformerArray, Feeders, Laterals, CustomersVoltages, CustomersLimits)
         
     Next
+    
 
     DSSText.Command = "Export monitors Transformer"
 ' ----- end coding here -----
+   
+   
+   Call Monitors
 
-    Call Monitors
-    MsgBox ("Total time " + Trim(Str(Timer - stime)))
+
     
+    MsgBox ("Total time " + Trim(Str(Timer - stime)))
 End Sub

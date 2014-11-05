@@ -5,7 +5,7 @@ New Circuit.SemiurbanLVNetwork
 
 Edit Vsource.Source BasekV=11 pu=1.00 angle=0 ISC3=3000 ISC1=2500
 
-New transformer.LV_Transformer Buses=(Sourcebus, Main_Busbar)  Conns=(Delta, Wye) kvs=(11, 0.4) kvas=(500, 500) xhl=4.5 
+New transformer.LV_Transformer Buses=(Sourcebus, Main_Busbar)  Conns=(Delta, Wye) kvs=(11, 0.433) kvas=(500, 500) xhl=4.5 
 
 Redirect Linecodes.txt
 Redirect SemiUrban_LinesLaterals1.txt

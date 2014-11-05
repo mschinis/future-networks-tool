@@ -1,8 +1,9 @@
 Attribute VB_Name = "CheckValues"
    
-Public Sub CheckValuesPreset(ByVal iter As Integer, ByRef TransformerArray() As Double, ByRef Feeders() As Double, ByRef Laterals() As Double)
+Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer, ByRef TransformerArray() As Double, ByRef Feeders() As Double, ByRef Laterals() As Double, ByRef CustomersVoltages() As Double, ByRef CustomersLimits() As Byte)
     
     Dim TempArray As Variant
+    Dim dValue As Double
     Network = PresetNetwork.Network
     
     If Network = "Urban" Then
@@ -154,7 +155,31 @@ Public Sub CheckValuesPreset(ByVal iter As Integer, ByRef TransformerArray() As 
 
           
             Next
-        Next
+            
+            For Z = 1 To (NoCustomers / 4)
+                DSSCircuit.SetActiveElement ("Line.Consumer" & i & "_" & Z)
+                TempArray = DSSCircuit.ActiveCktElement.Voltages
+                A = (TempArray(LBound(TempArray)) ^ 2 + TempArray(LBound(TempArray) + 1) ^ 2) ^ 0.5 / 230
+                
+                CustomersVoltages(i, Z, iter) = A
+                
+                dValue = 0
+                If A > 1.1 Or A < 0.9 Then
+                    CustomersLimits(i, Z, iter) = 1
+                ElseIf iter > 10 Then
+                    For j = 1 To 10
+                        dValue = CustomersVoltages(i, Z, iter - j) + dValue
+                    Next
+                    dValue = dValue / 10
+                    If dValue < 0.94 Then
+                        CustomersLimits(i, Z, iter) = 1
+                    End If
+                End If
+                
 
+                
+            Next
+        Next
+    
 
 End Sub

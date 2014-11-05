@@ -144,10 +144,15 @@ Public Sub Monitors()
                 ' Currents
                 IFeederStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
+              
+              
+                If iextra > 40 Or iextra < -140 Then IFeederStart(counter, 1) = -IFeederStart(counter, 1)
                 IFeederStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
+                If iextra > 100 Or iextra > -80 Then IFeederStart(counter, 2) = -IFeederStart(counter, 2)
                 IFeederStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
+                If iextra < -5 Or iextra > 175 Then IFeederStart(counter, 3) = -IFeederStart(counter, 3)
                 
                 VFValues(counter, 1) = VFeederStart(counter, 1) / 230
                 VFValues(counter, 2) = VFeederStart(counter, 2) / 230
@@ -187,10 +192,13 @@ Public Sub Monitors()
                 ' Currents
                 ILateralStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
+                If iextra < 40 Or iextra > -140 Then ILateralStart(counter, 1) = -ILateralStart(counter, 1)
                 ILateralStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
+                If iextra > 100 Or iextra < -80 Then ILateralStart(counter, 2) = -ILateralStart(counter, 2)
                 ILateralStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
+                If iextra > -20 Or iextra < 160 Then ILateralStart(counter, 3) = -ILateralStart(counter, 3)
                 
                 VLValues(counter, 1) = VLateralStart(counter, 1) / 230
                 VLValues(counter, 2) = VLateralStart(counter, 2) / 230
@@ -258,6 +266,49 @@ Public Sub Monitors()
     Set WorkingSheet = Worksheets("Transformer")
     WorkingSheet.Range(WorkingSheet.Cells(3, 3), WorkingSheet.Cells(RunHours + 2, 5)).Value = VFValues
     
+    
+End Sub
+
+Public Sub Customers_Voltage()
+
+    Worksheets("test").Range("A1:CCC632").Clear
+    Dim i, y, iter, place As Integer
+    
+    For i = 1 To 4
+        For y = 1 To PresetNetwork.customers / 4
+            For iter = 1 To Start.RunHours
+                place = (i * (PresetNetwork.customers / 4) - (PresetNetwork.customers / 4)) + y
+                Worksheets("Test").Cells(place, iter).Value = Start.CustomersLimits(i, y, iter)
+            Next
+        Next
+    Next
+    Dim cs As ColorScale
+    
+    Worksheets("Test").Activate
+    With Worksheets("Test").Range(Cells(1, 1), Cells(PresetNetwork.customers, Start.RunHours))
+        .FormatConditions.Delete
+        Set cs = .FormatConditions.AddColorScale(colorscaletype:=2)
+        With cs.ColorScaleCriteria(1)
+            .Type = xlConditionValueNumber
+            .Value = 0
+            With .FormatColor
+                .Color = vbGreen
+                ' TintAndShade takes a value between -1 and 1.
+                ' -1 is darkest, 1 is lightest.
+                .TintAndShade = -0.25
+            End With
+        End With
+   
+        ' Format the second color as green, at the highest value.
+        With cs.ColorScaleCriteria(2)
+            .Type = xlConditionValueNumber
+            .Value = 1
+            With .FormatColor
+                .Color = vbRed
+                .TintAndShade = 0
+            End With
+        End With
+    End With
     
 End Sub
 
