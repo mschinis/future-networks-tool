@@ -8,34 +8,21 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub ShowExtra_Click()
+    If Sheet10.Visible <> xlSheetVisible Then
+        ShowExtra.Caption = "Hide output tabs"
+    Else
+        ShowExtra.Caption = "Show output tabs"
+    End If
     
-    Sheet10.Visible = True
-    Sheet11.Visible = True
-    Sheet12.Visible = True
-    Sheet13.Visible = True
-    Sheet14.Visible = True
-    Sheet7.Visible = True
-    Sheet8.Visible = True
-    Sheet9.Visible = True
-    Sheet1.Visible = True
-    HideExtra.Visible = True
-    ShowExtra.Visible = False
-
-
-End Sub
-Private Sub HideExtra_Click()
-    
-    Sheet10.Visible = False
-    Sheet11.Visible = False
-    Sheet12.Visible = False
-    Sheet13.Visible = False
-    Sheet14.Visible = False
-    Sheet7.Visible = False
-    Sheet8.Visible = False
-    Sheet9.Visible = False
-    Sheet1.Visible = False
-    ShowExtra.Visible = True
-    HideExtra.Visible = False
+    Sheet10.Visible = Not Sheet11.Visible
+    Sheet11.Visible = Not Sheet11.Visible
+    Sheet12.Visible = Not Sheet12.Visible
+    Sheet13.Visible = Not Sheet13.Visible
+    Sheet14.Visible = Not Sheet14.Visible
+    Sheet7.Visible = Not Sheet7.Visible
+    Sheet8.Visible = Not Sheet8.Visible
+    Sheet9.Visible = Not Sheet9.Visible
+    Sheet1.Visible = Not Sheet1.Visible
 
 
 End Sub

@@ -144,10 +144,15 @@ Public Sub Monitors()
                 ' Currents
                 IFeederStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
+              
+              
+                If iextra > 40 Or iextra < -140 Then IFeederStart(counter, 1) = -IFeederStart(counter, 1)
                 IFeederStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
+                If iextra > 100 Or iextra > -80 Then IFeederStart(counter, 2) = -IFeederStart(counter, 2)
                 IFeederStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
+                If iextra < -5 Or iextra > 175 Then IFeederStart(counter, 3) = -IFeederStart(counter, 3)
                 
                 VFValues(counter, 1) = VFeederStart(counter, 1) / 230
                 VFValues(counter, 2) = VFeederStart(counter, 2) / 230
@@ -187,10 +192,13 @@ Public Sub Monitors()
                 ' Currents
                 ILateralStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
+                If iextra < 40 And iextra > -140 Then ILateralStart(counter, 1) = -ILateralStart(counter, 1)
                 ILateralStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
+                If iextra > 100 Or iextra < -80 Then ILateralStart(counter, 2) = -ILateralStart(counter, 2)
                 ILateralStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
+                If iextra > -20 And iextra < 160 Then ILateralStart(counter, 3) = -ILateralStart(counter, 3)
                 
                 VLValues(counter, 1) = VLateralStart(counter, 1) / 230
                 VLValues(counter, 2) = VLateralStart(counter, 2) / 230
@@ -303,5 +311,7 @@ Public Sub Customers_Voltage()
     End With
     
 End Sub
+
+
 
 

@@ -19,12 +19,9 @@ Private Sub CommandButton1_Click()
 
 
 End Sub
-
 Private Sub CommandButton2_Click()
 
-    
 End Sub
-
 Private Sub UserForm_initialize()
     
     ChooseNetwork.finished = False

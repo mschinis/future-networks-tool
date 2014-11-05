@@ -1,5 +1,16 @@
 Attribute VB_Name = "CheckValues"
-   
+Public NotCompliant As Integer
+
+Public MaxTransformerUse As Double
+Public MinTransformerUse As Double
+Public MaxCurrentUseFeeder As Double
+Public MinCurrentUseFeeder As Double
+Public MaxCurrentUseLateral As Double
+Public MinCurrentUseLateral As Double
+Public MaxVoltage As Double
+Public MinVoltage As Double
+Public VoltageCompliance As Double
+
 Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer, ByRef TransformerArray() As Double, ByRef Feeders() As Double, ByRef Laterals() As Double, ByRef CustomersVoltages() As Double, ByRef CustomersLimits() As Byte)
     
     Dim TempArray As Variant
@@ -44,13 +55,17 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         A = (TempArray(LBound(TempArray)) ^ 2 + TempArray(LBound(TempArray) + 1) ^ 2) ^ 0.5
         B = (TempArray(LBound(TempArray) + 2) ^ 2 + TempArray(LBound(TempArray) + 3) ^ 2) ^ 0.5
         C = (TempArray(LBound(TempArray) + 4) ^ 2 + TempArray(LBound(TempArray) + 5) ^ 2) ^ 0.5
-        TransformerUse = (kVAphaseA + kVAphaseB + kVAphaseC)
+        TransformerUse = (A + B + C)
 
         TransformerArray(iter, 1) = TransformerUse
         
         TransformerUse = TransformerUse / TransformerMax
         If TransformerUse > 1 Then
         End If
+        
+        If TransformerUse > MaxTransformerUse Then MaxTransformerUse = TransformerUse
+        If TransformerUse < MinTransformerUse Then MinTransformerUse = TransformerUse
+    
 
         'Check Voltages on Busbar
         DSSCircuit.SetActiveElement ("Line.Feeder1.1")
@@ -62,6 +77,13 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         TransformerArray(iter, 2) = A
         TransformerArray(iter, 3) = B
         TransformerArray(iter, 4) = C
+        
+        If A > MaxVoltage Then MaxVoltage = A
+        If B > MaxVoltage Then MaxVoltage = B
+        If C > MaxVoltage Then MaxVoltage = C
+        If A < MinVoltage Then MinVoltage = A
+        If B < MinVoltage Then MinVoltage = B
+        If C < MinVoltage Then MinVoltage = C
         
         If A > 1.1 Or A < 0.94 Then
         End If
@@ -86,6 +108,14 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
             A = A / FeederCurrentMax
             B = B / FeederCurrentMax
             C = C / FeederCurrentMax
+            
+            If A > MaxCurrentUseFeeder Then MaxCurrentUseFeeder = A
+            If B > MaxCurrentUseFeeder Then MaxCurrentUseFeeder = B
+            If C > MaxCurrentUseFeeder Then MaxCurrentUseFeeder = C
+            If A < MinCurrentUseFeeder Then MinCurrentUseFeeder = A
+            If B < MinCurrentUseFeeder Then MinCurrentUseFeeder = B
+            If C < MinCurrentUseFeeder Then MinCurrentUseFeeder = C
+            
             If A > 1 Then
             End If
             If B > 1 Then
@@ -109,6 +139,14 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 A = A / LateralCurrentMax
                 B = B / LateralCurrentMax
                 C = C / LateralCurrentMax
+                
+                If A > MaxCurrentUseLateral Then MaxCurrentUseLateral = A
+                If B > MaxCurrentUseLateral Then MaxCurrentUseLateral = B
+                If C > MaxCurrentUseLateral Then MaxCurrentUseLateral = C
+                If A < MinCurrentUseLateral Then MinCurrentUseLateral = A
+                If B < MinCurrentUseLateral Then MinCurrentUseLateral = B
+                If C < MinCurrentUseLateral Then MinCurrentUseLateral = C
+                
                 If A > 1 Then
                 End If
                 If B > 1 Then
@@ -126,6 +164,13 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 Laterals(iter, i, y, 4) = A
                 Laterals(iter, i, y, 5) = B
                 Laterals(iter, i, y, 6) = C
+                
+                If A > MaxVoltage Then MaxVoltage = A
+                If B > MaxVoltage Then MaxVoltage = B
+                If C > MaxVoltage Then MaxVoltage = C
+                If A < MinVoltage Then MinVoltage = A
+                If B < MinVoltage Then MinVoltage = B
+                If C < MinVoltage Then MinVoltage = C
                     
                 If A > 1.1 Or A < 0.94 Then
                 End If
@@ -144,7 +189,13 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 Laterals(iter, i, y, 7) = A
                 Laterals(iter, i, y, 8) = B
                 Laterals(iter, i, y, 9) = C
-                    
+                
+                If A > MaxVoltage Then MaxVoltage = A
+                If B > MaxVoltage Then MaxVoltage = B
+                If C > MaxVoltage Then MaxVoltage = C
+                If A < MinVoltage Then MinVoltage = A
+                If B < MinVoltage Then MinVoltage = B
+                If C < MinVoltage Then MinVoltage = C
                     
                 If A > 1.1 Or A < 0.94 Then
                 End If
@@ -166,6 +217,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 dValue = 0
                 If A > 1.1 Or A < 0.9 Then
                     CustomersLimits(i, Z, iter) = 1
+                    NotCompliant = NotCompliant + 1
                 ElseIf iter > 10 Then
                     For j = 1 To 10
                         dValue = CustomersVoltages(i, Z, iter - j) + dValue
@@ -173,6 +225,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                     dValue = dValue / 10
                     If dValue < 0.94 Then
                         CustomersLimits(i, Z, iter) = 1
+                        NotCompliant = NotCompliant + 1
                     End If
                 End If
                 
@@ -180,6 +233,18 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 
             Next
         Next
+    
+
+End Sub
+
+Public Sub Check_Compliance()
+
+    Dim compliance As Double
+    Dim maxcompliant As Long
+    
+    
+    maxcompliant = CLng(PresetNetwork.customers) * CLng(Start.RunHours)
+    VoltageCompliance = (maxcompliant - CheckValues.NotCompliant) / maxcompliant
     
 
 End Sub

@@ -3,6 +3,18 @@ Public RunHours As Integer
 Public CustomersLimits() As Byte
 
 Public Sub Start()
+
+'initialise values with imposibru values
+
+CheckValues.MaxCurrentUseLateral = 0
+CheckValues.MinCurrentUseLateral = 10
+CheckValues.MaxTransformerUse = 0
+CheckValues.MinTransformerUse = 10
+CheckValues.MaxVoltage = 0
+CheckValues.MinVoltage = 2
+CheckValues.MaxCurrentUseFeeder = 0
+CheckValues.MinCurrentUseFeeder = 10
+
 ' Create a new instance of the DSS
     Reset
     Set DSSobj = New OpenDSSengine.DSS
@@ -62,7 +74,9 @@ Public Sub Start()
         
     Next
     
-
+    
+    Call Check_Compliance
+    
     DSSText.Command = "Export monitors Transformer"
 ' ----- end coding here -----
    
@@ -72,6 +86,4 @@ Public Sub Start()
 
     
     MsgBox ("Total time " + Trim(Str(Timer - stime)))
-
-    
 End Sub
