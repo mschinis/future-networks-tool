@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "Sheet2"
+Attribute VB_Name = "Sheet17"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -31,6 +31,7 @@ Private Sub ShowExtra_Click()
     Sheet8.Visible = Not Sheet8.Visible
     Sheet9.Visible = Not Sheet9.Visible
     Sheet1.Visible = Not Sheet1.Visible
+    Sheets("limits").Visible = Not Sheets("limits").Visible
 
 
 End Sub

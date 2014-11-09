@@ -51,14 +51,14 @@ Dim stime As Single
     
     If ChooseNetwork.HPEnable.Value = True Then
         HPPenetration = ChooseNetwork.HPPeneText.Value / 100
-        location = ChooseNetwork.SelectLocation1.ListIndex + 1
-        'Call Assign_HP_Profiles(customers, HPPenetration, Tmonth, Tday, location)
+        location = ChooseNetwork.SelectLocation.ListIndex + 1
+        Call Assign_HP_Profiles(customers, HPPenetration, Tmonth, Tday, location)
     End If
     
     If ChooseNetwork.CHPEnable.Value = True Then
-        HPPenetration = ChooseNetwork.HPPeneText.Value / 100
-        location = ChooseNetwork.SelectLocation1.ListIndex + 1
-        'Call Assign_CHP_Profiles(customers, HPPenetration, Tmonth, Tday, location)
+        CHPPenetration = ChooseNetwork.CHPPeneText.Value / 100
+        location = ChooseNetwork.SelectLocation.ListIndex + 1
+        Call Assign_CHP_Profiles(customers, CHPPenetration, Tmonth, Tday, location)
     End If
     
     '------------------------------

@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ChooseNetwork 
-   ClientHeight    =   7290
+   ClientHeight    =   7515
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   4230
@@ -19,17 +19,14 @@ Private Sub CHPEnable_Click()
 
     If CHPEnable = False Then
         Label16.Visible = False
-        Label18.Visible = False
         CHPPeneText.Visible = False
         CHPPeneScroll.Visible = False
-        SelectLocation2.Visible = False
 
     Else
         Label16.Visible = True
-        Label18.Visible = True
         CHPPeneText.Visible = True
         CHPPeneScroll.Visible = True
-        SelectLocation2.Visible = True
+
     End If
 End Sub
 
@@ -126,17 +123,17 @@ Private Sub HPEnable_Click()
 
     If HPEnable = False Then
         Label12.Visible = False
-        Label14.Visible = False
+
         HPPeneText.Visible = False
         HPPeneScroll.Visible = False
-        SelectLocation1.Visible = False
+
 
     Else
         Label12.Visible = True
-        Label14.Visible = True
+
         HPPeneText.Visible = True
         HPPeneScroll.Visible = True
-        SelectLocation1.Visible = True
+
     End If
 End Sub
 
@@ -153,27 +150,37 @@ Private Sub HPPeneText_Change()
     
 End Sub
 
-Private Sub MultiPage1_Change()
+Private Sub Label21_Click()
+
+    SelectLocationForm.Show
 
 End Sub
+
+Private Sub Label22_Click()
+
+    NetworkSpecifications.Show
+    
+End Sub
+
+
 
 Private Sub PVEnable_Click()
     
     If PVEnable = False Then
         Label8.Visible = False
-        Label10.Visible = False
+
         PVPeneText.Visible = False
         PVPeneScroll.Visible = False
-        SelectLocation.Visible = False
+
         ClearnessText.Visible = False
         ClearnessScroll.Visible = False
         Label11.Visible = False
     Else
         Label8.Visible = True
-        Label10.Visible = True
+
         PVPeneText.Visible = True
         PVPeneScroll.Visible = True
-        SelectLocation.Visible = True
+
         ClearnessText.Visible = True
         ClearnessScroll.Visible = True
         Label11.Visible = True
@@ -193,28 +200,7 @@ Private Sub PVPeneText_Change()
         
 End Sub
 
-Private Sub SelectLocation_Change()
-
-    SelectLocation1.Value = SelectLocation.Value
-    SelectLocation2.Value = SelectLocation.Value
-
-End Sub
-
-Private Sub SelectLocation1_Change()
-
-    SelectLocation.Value = SelectLocation1.Value
-    SelectLocation2.Value = SelectLocation1.Value
-
-End Sub
-
-Private Sub SelectLocation2_Change()
-
-    SelectLocation1.Value = SelectLocation2.Value
-    SelectLocation.Value = SelectLocation2.Value
-
-End Sub
-
-Public Sub UserForm_initialize()
+Public Sub UserForm_Initialize()
     Dim filename As String
     
     filename = Dir(ThisWorkbook.Path & "/Networks/", 16)
@@ -235,11 +221,11 @@ Public Sub UserForm_initialize()
 
     'PVPage
     Label8.Visible = False
-    Label10.Visible = False
+
     PVPeneText.Visible = False
     PVPeneScroll.Visible = False
     PVPeneText.Value = 0
-    SelectLocation.Visible = False
+
     ClearnessText.Value = 1
     ClearnessText.Visible = False
     ClearnessScroll.Visible = False
@@ -247,19 +233,19 @@ Public Sub UserForm_initialize()
     
     'HPPage
     Label12.Visible = False
-    Label14.Visible = False
+
     HPPeneText.Visible = False
     HPPeneScroll.Visible = False
-    SelectLocation1.Visible = False
+
     HPPeneText.Value = 0
     
     'CHPPage
     Label16.Visible = False
-    Label18.Visible = False
+
     CHPPeneText.Visible = False
     CHPPeneScroll.Visible = False
-    SelectLocation2.Visible = False
-    HPPeneText.Value = 0
+
+    CHPPeneText.Value = 0
     
     With SelectLocation
         .AddItem "Scotland"
@@ -275,8 +261,6 @@ Public Sub UserForm_initialize()
         .AddItem "South West"
     End With
     
-    SelectLocation1.List = SelectLocation.List
-    SelectLocation2.List = SelectLocation.List
     
     With TransformerTap
         .AddItem "-5"

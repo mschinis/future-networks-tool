@@ -29,7 +29,7 @@ End Function
 
 Public Sub Monitors()
 
-    Dim WorkingSheet As Worksheet
+    Dim workingsheet As Worksheet
     Dim i, j, counter, iextra As Long
     Dim s As String
     Dim FileNum As Long
@@ -37,6 +37,7 @@ Public Sub Monitors()
     Dim Direc As String
     RunHours = Start.RunHours
     Dim character As String
+    Dim iextrastr As String
     
     character = Chr(68)
     
@@ -71,7 +72,7 @@ Public Sub Monitors()
     
 
     
-    Direc = PresetNetwork.Network & "LVNetwork_Mon_" '
+    Direc = PresetNetwork.Network & "LVNetwork_" '
     
     ' Export dem monitors
     DSSText.Command = "Export monitors SSTransformer"
@@ -90,12 +91,56 @@ Public Sub Monitors()
     ' Start, End of each lateral
     
     ' >>>> time series results (P and Q) for GSP
-    Set WorkingSheet = Worksheets("Transformer")
+    
     'using ParserX
     Set Parser = Nothing ' destroy old object should it already exist
     Set Parser = New ParserXControl.ParserX
     Parser.AutoIncrement = True
     FileNum = FreeFile
+    
+    ' Energy meter for transformer
+    Open Direc & "EXP_METERS.CSV" For Input As #FileNum
+    Line Input #FileNum, s
+    Line Input #FileNum, s
+    Parser.CmdString = s
+    iextra = Parser.IntValue
+    iextra = Parser.IntValue
+    iextra = Parser.IntValue
+    iextrastr = Parser.StrValue
+    
+    Dim kWh As Integer
+    kWh = Parser.IntValue
+    Dim kVarh As Integer
+    kVarh = Parser.IntValue
+    
+    For i = 1 To 10
+        iextra = Parser.IntValue
+    Next
+    
+    Dim zoneLosseskWh As Integer
+    zoneLosseskWh = Parser.IntValue ' Zone Losses kWh
+    
+    Dim zoneLosseskVarh As Integer
+    zoneLosseskVarh = Parser.IntValue
+    
+    Set workingsheet = Worksheets("Results Summary")
+    workingsheet.Range("C3").Value = CheckValues.MinVoltage
+    workingsheet.Range("C4").Value = CheckValues.MaxVoltage
+    workingsheet.Range("C6").Value = CheckValues.MinCurrentUseFeeder
+    workingsheet.Range("C7").Value = CheckValues.MaxCurrentUseFeeder
+    workingsheet.Range("C9").Value = CheckValues.MinCurrentUseLateral
+    workingsheet.Range("C10").Value = CheckValues.MaxCurrentUseLateral
+    workingsheet.Range("C12").Value = CheckValues.MinTransformerUse
+    workingsheet.Range("C13").Value = CheckValues.MaxTransformerUse
+    workingsheet.Range("C15").Value = ((zoneLosseskWh ^ 2 + zoneLosseskVarh ^ 2) ^ 0.5 / (kWh ^ 2 + kVarh ^ 2) ^ 0.5) 'Calculate losses %
+    workingsheet.Range("C17").Value = CheckValues.VoltageCompliance
+    workingsheet.Range("C18").Value = CheckValues.PercentageCustomersVoltage
+    
+    Close
+    
+    Set workingsheet = Worksheets("Transformer")
+    Direc = Direc & "Mon_"
+    ' Monitors for transformer
     i = 0
     Open Direc & "transformer.csv" For Input As #FileNum
     Line Input #FileNum, s  ' skip first line
@@ -118,12 +163,12 @@ Public Sub Monitors()
 
     Loop
     Close
-    WorkingSheet.Range("B3:B" & (RunHours + 2)).Value = Values
+    workingsheet.Range("B3:B" & (RunHours + 2)).Value = Values
     
     ' Feeders
     For i = 1 To 4
     counter = 0
-    Set WorkingSheet = Worksheets("Feeder" & i & "Start")
+    Set workingsheet = Worksheets("Feeder" & i & "Start")
         Open Direc & "vifeeder" & i & ".csv" For Input As #FileNum
         Line Input #FileNum, s
         Do While Not EOF(FileNum)
@@ -210,16 +255,16 @@ Public Sub Monitors()
             Loop
             Close
             ' Display Lateral Voltages
-            WorkingSheet.Range(WorkingSheet.Cells(4, j * 3 - 1), WorkingSheet.Cells(RunHours + 3, j * 3 + 1)).Value = VLValues
+            workingsheet.Range(workingsheet.Cells(4, j * 3 - 1), workingsheet.Cells(RunHours + 3, j * 3 + 1)).Value = VLValues
             ' Display Lateral Currents
-            WorkingSheet.Range(WorkingSheet.Cells(4, 12 + j * 3 - 1), WorkingSheet.Cells(RunHours + 3, 12 + j * 3 + 1)).Value = ILValues
+            workingsheet.Range(workingsheet.Cells(4, 12 + j * 3 - 1), workingsheet.Cells(RunHours + 3, 12 + j * 3 + 1)).Value = ILValues
             
             ' Display Feeder Currents
-            WorkingSheet.Range(WorkingSheet.Cells(4, 26), WorkingSheet.Cells(RunHours + 3, 28)).Value = IFValues
+            workingsheet.Range(workingsheet.Cells(4, 26), workingsheet.Cells(RunHours + 3, 28)).Value = IFValues
        Next
        For j = 1 To 4
             Open Direc & "vilateral" & i & "_" & j & "_end.csv" For Input As #FileNum
-            Set WorkingSheet = Worksheets("Feeder" & i & "End")
+            Set workingsheet = Worksheets("Feeder" & i & "End")
             counter = 0
             Line Input #FileNum, s
             Do While Not EOF(FileNum)
@@ -256,16 +301,24 @@ Public Sub Monitors()
             Loop
             Close
             ' Display Lateral Voltages
-            WorkingSheet.Range(WorkingSheet.Cells(4, j * 3 - 1), WorkingSheet.Cells(RunHours + 3, j * 3 + 1)).Value = VLValues
+            workingsheet.Range(workingsheet.Cells(4, j * 3 - 1), workingsheet.Cells(RunHours + 3, j * 3 + 1)).Value = VLValues
             ' Display Lateral Currents
-            WorkingSheet.Range(WorkingSheet.Cells(4, 12 + j * 3 - 1), WorkingSheet.Cells(RunHours + 3, 12 + j * 3 + 1)).Value = ILValues
+            workingsheet.Range(workingsheet.Cells(4, 12 + j * 3 - 1), workingsheet.Cells(RunHours + 3, 12 + j * 3 + 1)).Value = ILValues
         Next
         ' Display Feeders
     Next
     ' Display Feeder Voltages
-    Set WorkingSheet = Worksheets("Transformer")
-    WorkingSheet.Range(WorkingSheet.Cells(3, 3), WorkingSheet.Cells(RunHours + 2, 5)).Value = VFValues
+    Set workingsheet = Worksheets("Transformer")
+    workingsheet.Range(workingsheet.Cells(3, 3), workingsheet.Cells(RunHours + 2, 5)).Value = VFValues
     
+    
+    Set workingsheet = Worksheets("Limits")
+    workingsheet.Range("D4:D1443").Value = CheckValues.lateralcurrentmax
+    'workingsheet.Range("E4:E1443").Value = -CheckValues.lateralcurrentmax
+    workingsheet.Range("E4:F1443").Value = CheckValues.feedercurrentmax
+    workingsheet.Range("F4:F1443").Value = -CheckValues.feedercurrentmax
+    workingsheet.Range("G4:G1443").Value = CheckValues.TransformerMax
+    workingsheet.Range("H4:H1443").Value = -CheckValues.TransformerMax
     
 End Sub
 
@@ -311,7 +364,5 @@ Public Sub Customers_Voltage()
     End With
     
 End Sub
-
-
 
 

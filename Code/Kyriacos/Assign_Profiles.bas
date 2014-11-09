@@ -77,6 +77,18 @@ Function Assign_HP_Profiles(ByVal NoCustomers As Integer, ByVal penetration As D
 Dim CustomersArray() As Variant
 ReDim CustomersArray(1 To NoCustomers)
 Dim HouseTypeArray(1 To 100) As Integer
+Dim InsulationTypeArray(1 To 100) As Integer
+
+
+For i = 1 To 100
+    If i <= 19 Then
+        InsulationTypeArray(i) = 1
+    ElseIf i <= 19 + 44 Then
+        InsulationTypeArray(i) = 2
+    Else
+        InsulationTypeArray(i) = 3
+    End If
+Next
 
 For i = 1 To 100
     If i <= 25 Then
@@ -101,9 +113,9 @@ If Tmonth >= 6 And Tmonth <= 8 Then Tmonth = 3
 If location = 2 Or location = 3 Then
     location = 2
 ElseIf location = 4 Or location = 5 Or location = 6 Or location = 7 Or location = 8 Then
-    location = 3
+    location = 4
 ElseIf location = 9 Or location = 10 Or location = 11 Then
-    location = 3
+    location = 4
 End If
 
 
@@ -119,11 +131,12 @@ CustomersArrayShuffled = ShuffleArray(CustomersArray)
 
 DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\HP"
 
-For i = 1 To (NoCustomers)
+For i = 1 To (NoCustomers) * penetration
 
 
     repetition = Int((20 - 1 + 1) * Rnd + 1)
     Thouse = HouseTypeArray(Int((100 - 1 + 1) * Rnd + 1))
+    Tinsulation = InsulationTypeArray(Int((100 - 1 + 1) * Rnd + 1))
     occupants = 5
 
     If i < (NoCustomers * 0.93) Then occupants = 4
@@ -139,10 +152,23 @@ Next
 
 End Function
 
-Function Assign_CHP_Profiles(ByVal NoCustomers As Integer, ByVal penetration As Double, ByVal Tmonth As Integer, Tday As Integer, ByVal location As Integer)
+Function Assign_CHP_Profiles(ByVal NoCustomers As Integer, ByVal penetration As Double, ByVal Tmonth As Integer, ByVal Tday As Integer, ByVal location As Integer)
 
 Dim CustomersArray() As Variant
 ReDim CustomersArray(1 To NoCustomers)
+Dim InsulationTypeArray(1 To 100) As Integer
+Dim HouseTypeArray(1 To 100) As Integer
+
+
+For i = 1 To 100
+    If i <= 19 Then
+        InsulationTypeArray(i) = 1
+    ElseIf i <= 19 + 44 Then
+        InsulationTypeArray(i) = 2
+    Else
+        InsulationTypeArray(i) = 3
+    End If
+Next
 
 If Tmonth >= 1 And Tmonth <= 2 Then Tmonth = 1
 If Tmonth = 12 Then Tmonth = 1
@@ -166,9 +192,9 @@ Next
 If location = 2 Or location = 3 Then
     location = 2
 ElseIf location = 4 Or location = 5 Or location = 6 Or location = 7 Or location = 8 Then
-    location = 3
+    location = 4
 ElseIf location = 9 Or location = 10 Or location = 11 Then
-    location = 3
+    location = 4
 End If
 
 
@@ -185,12 +211,13 @@ CustomersArrayShuffled = ShuffleArray(CustomersArray)
 
 DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\CHP"
 
-For i = 1 To (NoCustomers)
+For i = 1 To (NoCustomers) * penetration
 
 
     repetition = Int((20 - 1 + 1) * Rnd + 1)
     occupants = 5
     Thouse = HouseTypeArray(Int((100 - 1 + 1) * Rnd + 1))
+    Tinsulation = InsulationTypeArray(Int((100 - 1 + 1) * Rnd + 1))
 
     If i < (NoCustomers * 0.93) Then occupants = 4
     If i < (NoCustomers * 0.8) Then occupants = 3
@@ -198,8 +225,9 @@ For i = 1 To (NoCustomers)
     If i < (NoCustomers * 0.3) Then occupants = 1
     
     DSSText.Command = "new loadshape.CHPload" & i & " npts=1440 minterval=1.0 csvfile=CHP" & Tmonth & "_" & Tday & "_" & location & "_" & Thouse & "_" & Tinsulation & "_" & occupants & "_" & repetition & ".txt"
+    something = "new loadshape.CHPload" & i & " npts=1440 minterval=1.0 csvfile=CHP" & Tmonth & "_" & Tday & "_" & location & "_" & Thouse & "_" & Tinsulation & "_" & occupants & "_" & repetition & ".txt"
     DSSText.Command = "new generator.CHP" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=1 PF=1 Daily=CHPload" & i
-
+    something = "new generator.CHP" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=1 PF=1 Daily=CHPload" & i
 
 Next
 

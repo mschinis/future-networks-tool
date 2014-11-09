@@ -22,7 +22,7 @@ End Sub
 Private Sub CommandButton2_Click()
 
 End Sub
-Private Sub UserForm_initialize()
+Private Sub UserForm_Initialize()
     
     ChooseNetwork.finished = False
 

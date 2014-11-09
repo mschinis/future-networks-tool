@@ -1,5 +1,5 @@
 Attribute VB_Name = "CheckValues"
-Public NotCompliant As Integer
+Public NotCompliant As Long
 
 Public MaxTransformerUse As Double
 Public MinTransformerUse As Double
@@ -10,6 +10,12 @@ Public MinCurrentUseLateral As Double
 Public MaxVoltage As Double
 Public MinVoltage As Double
 Public VoltageCompliance As Double
+Public PercentageCustomersVoltage As Double
+
+Public TransformerMax As Integer
+Public feedercurrentmax As Integer
+Public lateralcurrentmax As Integer
+
 
 Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer, ByRef TransformerArray() As Double, ByRef Feeders() As Double, ByRef Laterals() As Double, ByRef CustomersVoltages() As Double, ByRef CustomersLimits() As Byte)
     
@@ -20,31 +26,31 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
     If Network = "Urban" Then
         TransformerMax = 800
         If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-            FeederCurrentMax = 309
-            LateralCurrentMax = 209
+            feedercurrentmax = 309
+            lateralcurrentmax = 209
         Else
-            FeederCurrentMax = 297
-            LateralCurrentMax = 202
+            feedercurrentmax = 297
+            lateralcurrentmax = 202
         End If
         
     ElseIf Network = "SemiUrban" Then
         TransformerMax = 500
         If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-            FeederCurrentMax = 309
-            LateralCurrentMax = 209
+            feedercurrentmax = 309
+            lateralcurrentmax = 209
         Else
-            FeederCurrentMax = 297
-            LateralCurrentMax = 202
+            feedercurrentmax = 297
+            lateralcurrentmax = 202
         End If
         
     ElseIf Network = "Rural" Then
         TransformerMax = 200
         If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-            FeederCurrentMax = 404
-            LateralCurrentMax = 263
+            feedercurrentmax = 404
+            lateralcurrentmax = 263
         Else
-            FeederCurrentMax = 350
-            LateralCurrentMax = 230
+            feedercurrentmax = 350
+            lateralcurrentmax = 230
         End If
     End If
         
@@ -105,9 +111,9 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
             Feeders(iter, i, 2) = B
             Feeders(iter, i, 3) = C
                     
-            A = A / FeederCurrentMax
-            B = B / FeederCurrentMax
-            C = C / FeederCurrentMax
+            A = A / feedercurrentmax
+            B = B / feedercurrentmax
+            C = C / feedercurrentmax
             
             If A > MaxCurrentUseFeeder Then MaxCurrentUseFeeder = A
             If B > MaxCurrentUseFeeder Then MaxCurrentUseFeeder = B
@@ -136,9 +142,9 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 Laterals(iter, i, y, 2) = B
                 Laterals(iter, i, y, 3) = C
                     
-                A = A / LateralCurrentMax
-                B = B / LateralCurrentMax
-                C = C / LateralCurrentMax
+                A = A / lateralcurrentmax
+                B = B / lateralcurrentmax
+                C = C / lateralcurrentmax
                 
                 If A > MaxCurrentUseLateral Then MaxCurrentUseLateral = A
                 If B > MaxCurrentUseLateral Then MaxCurrentUseLateral = B
@@ -211,13 +217,14 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 DSSCircuit.SetActiveElement ("Line.Consumer" & i & "_" & Z)
                 TempArray = DSSCircuit.ActiveCktElement.Voltages
                 A = (TempArray(LBound(TempArray)) ^ 2 + TempArray(LBound(TempArray) + 1) ^ 2) ^ 0.5 / 230
-                
+
                 CustomersVoltages(i, Z, iter) = A
-                
+
                 dValue = 0
                 If A > 1.1 Or A < 0.9 Then
                     CustomersLimits(i, Z, iter) = 1
                     NotCompliant = NotCompliant + 1
+                    Start.CustomerVoltageLimit(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
                 ElseIf iter > 10 Then
                     For j = 1 To 10
                         dValue = CustomersVoltages(i, Z, iter - j) + dValue
@@ -226,11 +233,12 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                     If dValue < 0.94 Then
                         CustomersLimits(i, Z, iter) = 1
                         NotCompliant = NotCompliant + 1
+                        Start.CustomerVoltageLimit(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
                     End If
                 End If
-                
 
-                
+
+
             Next
         Next
     
@@ -247,4 +255,19 @@ Public Sub Check_Compliance()
     VoltageCompliance = (maxcompliant - CheckValues.NotCompliant) / maxcompliant
     
 
+End Sub
+
+Public Sub Customer_Voltage_Percentage()
+
+    Dim adder As Integer
+    adder = 0
+    
+    For i = 1 To PresetNetwork.customers
+    
+        adder = adder + Start.CustomerVoltageLimit(i)
+    
+    Next
+    
+    PercentageCustomersVoltage = adder / PresetNetwork.customers
+    
 End Sub

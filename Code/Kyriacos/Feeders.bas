@@ -24,7 +24,7 @@ Private Sub TextBox1_Change()
 
 End Sub
 
-Private Sub UserForm_initialize()
+Private Sub UserForm_Initialize()
 
     For i = 1 To 10
         Me.MultiPage1.Pages("Feeder" & i).Visible = False

@@ -1,6 +1,8 @@
 Attribute VB_Name = "Start"
 Public RunHours As Integer
 Public CustomersLimits() As Byte
+Public CustomerVoltageLimit() As Byte
+
 
 Public Sub Start()
 
@@ -14,6 +16,12 @@ CheckValues.MaxVoltage = 0
 CheckValues.MinVoltage = 2
 CheckValues.MaxCurrentUseFeeder = 0
 CheckValues.MinCurrentUseFeeder = 10
+CheckValues.NotCompliant = 0
+
+Sheets("Network").Activate
+Cells.Select
+Selection.Delete Shift:=xlUp
+Sheets("Main").Activate
 
 ' Create a new instance of the DSS
     Reset
@@ -28,7 +36,7 @@ CheckValues.MinCurrentUseFeeder = 10
         Set DSSText = DSSobj.Text
     End If
 
-
+    ChooseNetwork.finished = False
     WelcomeScreen.Show ' Goes into either Preset or Custom Network after this
     If ChooseNetwork.finished <> True Then Exit Sub
     
@@ -64,6 +72,8 @@ CheckValues.MinCurrentUseFeeder = 10
     ReDim Laterals(1 To RunHours, 1 To 4, 1 To 4, 1 To 9) ' (iteration, feeder, lateral, 1-9 currents / voltagesstart / voltagesend)
     ReDim CustomersVoltages(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
     ReDim CustomersLimits(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
+    ReDim CustomerVoltageLimit(1 To PresetNetwork.customers)
+    
 
 
     
@@ -74,16 +84,17 @@ CheckValues.MinCurrentUseFeeder = 10
         
     Next
     
-    
+
     Call Check_Compliance
+    Call Customer_Voltage_Percentage
     
     DSSText.Command = "Export monitors Transformer"
+    DSSText.Command = "Export meters"
 ' ----- end coding here -----
    
    
    Call Monitors
-
-
+   
     
     MsgBox ("Total time " + Trim(Str(Timer - stime)))
 End Sub
