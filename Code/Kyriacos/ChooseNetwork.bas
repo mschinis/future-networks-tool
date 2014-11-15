@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ChooseNetwork 
-   ClientHeight    =   7515
+   ClientHeight    =   8160
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   4230
@@ -14,6 +14,12 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public Tday As Integer
 Public finished As Boolean
+
+Private Sub CHP_info_Click()
+
+    HPinfo.Show
+    
+End Sub
 
 Private Sub CHPEnable_Click()
 
@@ -39,6 +45,9 @@ End Sub
 Private Sub CHPPeneText_Change()
 
     If CHPPeneText.Value <> "" Then CHPPeneScroll.Value = CHPPeneText.Value
+    If Int(HPPeneText.Value) + Int(CHPPeneText.Value) > 100 Then
+        HPPeneText.Value = 100 - CHPPeneText.Value
+    End If
 
 End Sub
 
@@ -91,6 +100,23 @@ End Sub
 
 
 
+Private Sub CommandButton2_Click()
+    
+    If SelectNetwork.Value = "" Or MonthVal.Value = "" Or MonthVal.Value > 12 Or MonthVal.Value < 1 Then
+        msg2 = MsgBox("Please select a network and/or input a valid month before accessing the Advanced Settings", vbOKOnly, "Warning!")
+    Else
+        AdvancedProperties.Show
+    End If
+    
+
+End Sub
+
+Private Sub EV_Info_Click()
+
+    EVinfo.Show
+
+End Sub
+
 Private Sub EVEnable_Click()
 
     If EVEnable = True Then
@@ -117,6 +143,12 @@ Private Sub EVPeneText_Change()
 
    If EVPeneText.Value <> "" Then EVPeneScroll.Value = EVPeneText.Value
     
+End Sub
+
+Private Sub HP_info_Click()
+
+    HPinfo.Show
+
 End Sub
 
 Private Sub HPEnable_Click()
@@ -147,6 +179,9 @@ End Sub
 Private Sub HPPeneText_Change()
 
     If HPPeneText.Value <> "" Then HPPeneScroll.Value = HPPeneText.Value
+    If Int(HPPeneText.Value) + Int(CHPPeneText.Value) > 100 Then
+        CHPPeneText.Value = 100 - HPPeneText.Value
+    End If
     
 End Sub
 
@@ -163,6 +198,12 @@ Private Sub Label22_Click()
 End Sub
 
 
+
+Private Sub PV_info_Click()
+
+    PVinfo.Show
+
+End Sub
 
 Private Sub PVEnable_Click()
     
@@ -237,7 +278,7 @@ Public Sub UserForm_Initialize()
     HPPeneText.Visible = False
     HPPeneScroll.Visible = False
 
-    HPPeneText.Value = 0
+    HPPeneText.Value = Int(0)
     
     'CHPPage
     Label16.Visible = False
@@ -245,7 +286,7 @@ Public Sub UserForm_Initialize()
     CHPPeneText.Visible = False
     CHPPeneScroll.Visible = False
 
-    CHPPeneText.Value = 0
+    CHPPeneText.Value = Int(0)
     
     With SelectLocation
         .AddItem "Scotland"

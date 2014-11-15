@@ -11,6 +11,9 @@ Dim stime As Single
     Network = ChooseNetwork.SelectNetwork.Value ' Select Network from Dropdown Menu
     Dim File_Location As String
     
+    Assign_Profiles.CHPStopPoint = 0
+    Assign_Profiles.HPStopPoint = 0
+    
     File_Location = "Networks\" & Trim(Network) & "\" & Trim(Network)
     
     File_Exists_Check = miscMacros.File_Exists(File_Location & ".dss")
@@ -33,8 +36,11 @@ Dim stime As Single
     If Network = "SemiUrban" Then customers = 468
     If Network = "Rural" Then customers = 132
     
+    If Start.OverrideDefault = True Then
+        DSSText.Command = "Transformer.LV_Transformer.kvs=(11, " & (AdvancedProperties.TransformerVoltage) / 1000 & ")"
+    End If
     
-    Call Assign_House_Profiles(customers, Tmonth, Tday)
+
     
     
     If ChooseNetwork.EVEnable.Value = True Then
@@ -60,6 +66,8 @@ Dim stime As Single
         location = ChooseNetwork.SelectLocation.ListIndex + 1
         Call Assign_CHP_Profiles(customers, CHPPenetration, Tmonth, Tday, location)
     End If
+    
+    Call Assign_House_Profiles(customers, Tmonth, Tday)
     
     '------------------------------
     

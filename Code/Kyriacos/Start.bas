@@ -2,6 +2,7 @@ Attribute VB_Name = "Start"
 Public RunHours As Integer
 Public CustomersLimits() As Byte
 Public CustomerVoltageLimit() As Byte
+Public OverrideDefault As Boolean
 
 
 Public Sub Start()
@@ -17,6 +18,28 @@ CheckValues.MinVoltage = 2
 CheckValues.MaxCurrentUseFeeder = 0
 CheckValues.MinCurrentUseFeeder = 10
 CheckValues.NotCompliant = 0
+
+OverrideDefault = False
+
+
+''''''''''''''''''''''''''''''''''''
+    Dim StatusOld As Boolean, CalcOld As XlCalculation
+
+    ' Capture Initial Settings
+    StatusOld = Application.DisplayStatusBar
+
+    '      Doing these will speed up your code
+    CalcOld = Application.Calculation
+    Application.Calculation = xlCalculationManual
+    Application.ScreenUpdating = False
+    Application.EnableEvents = False
+
+    On Error GoTo EH
+
+    Application.StatusBar = "Simulation running - 0%"
+'
+''''''''''''''''''''''''
+
 
 Sheets("Network").Activate
 Cells.Select
@@ -74,16 +97,19 @@ Sheets("Main").Activate
     ReDim CustomersLimits(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
     ReDim CustomerVoltageLimit(1 To PresetNetwork.customers)
     
-
-
+    progresscounter = 0
+    Application.StatusBar = "Simulation running - 10%"
     
     For i = 1 To RunHours
-    
+        If i Mod 180 = 0 Then
+            progresscounter = progresscounter + 1
+            Application.StatusBar = "Simulation running - " & (progresscounter * 10 + 10) & "%"
+        End If
         DSSobj.ActiveCircuit.Solution.Solve
         Call CheckValuesPreset(PresetNetwork.customers, i, TransformerArray, Feeders, Laterals, CustomersVoltages, CustomersLimits)
-        
     Next
-    
+
+
 
     Call Check_Compliance
     Call Customer_Voltage_Percentage
@@ -95,6 +121,22 @@ Sheets("Main").Activate
    
    Call Monitors
    
+   Application.StatusBar = "Simulation running - 100%"
     
     MsgBox ("Total time " + Trim(Str(Timer - stime)))
+    
+    
+    
+    ActiveWorkbook.RefreshAll
+    Application.StatusBar = False
+    Application.Calculation = CalcOld
+    Application.DisplayStatusBar = StatusOld
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+
+EH:
+
+    'Error handler
+
+
 End Sub

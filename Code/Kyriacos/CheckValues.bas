@@ -15,6 +15,10 @@ Public PercentageCustomersVoltage As Double
 Public TransformerMax As Integer
 Public feedercurrentmax As Integer
 Public lateralcurrentmax As Integer
+Public VoltageMax As Double
+Public VoltageMin As Double
+Public VoltageAverageMin As Double
+
 
 
 Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer, ByRef TransformerArray() As Double, ByRef Feeders() As Double, ByRef Laterals() As Double, ByRef CustomersVoltages() As Double, ByRef CustomersLimits() As Byte)
@@ -23,35 +27,52 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
     Dim dValue As Double
     Network = PresetNetwork.Network
     
-    If Network = "Urban" Then
-        TransformerMax = 800
-        If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-            feedercurrentmax = 309
-            lateralcurrentmax = 209
-        Else
-            feedercurrentmax = 297
-            lateralcurrentmax = 202
-        End If
+    If Start.OverrideDefault = False Then
+        VoltageMax = 1.1
+        VoltageMin = 0.9
+        VoltageAverageMin = 0.94
+    
+        If Network = "Urban" Then
+            TransformerMax = 800
+
+            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+                feedercurrentmax = 309
+                lateralcurrentmax = 209
+            Else
+                feedercurrentmax = 297
+                lateralcurrentmax = 202
+            End If
         
-    ElseIf Network = "SemiUrban" Then
-        TransformerMax = 500
-        If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-            feedercurrentmax = 309
-            lateralcurrentmax = 209
-        Else
-            feedercurrentmax = 297
-            lateralcurrentmax = 202
-        End If
+        ElseIf Network = "SemiUrban" Then
+            TransformerMax = 500
+            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+                feedercurrentmax = 309
+                lateralcurrentmax = 209
+            Else
+                feedercurrentmax = 297
+                lateralcurrentmax = 202
+            End If
         
-    ElseIf Network = "Rural" Then
-        TransformerMax = 200
-        If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-            feedercurrentmax = 404
-            lateralcurrentmax = 263
-        Else
-            feedercurrentmax = 350
-            lateralcurrentmax = 230
+        ElseIf Network = "Rural" Then
+            TransformerMax = 200
+            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+                feedercurrentmax = 404
+                lateralcurrentmax = 263
+            Else
+                feedercurrentmax = 350
+                lateralcurrentmax = 230
+            End If
         End If
+    
+    Else
+    
+        feedercurrentmax = AdvancedProperties.FeederMax
+        lateralcurrentmax = AdvancedProperties.LateralMax
+        TransformerMax = AdvancedProperties.TransformerMax
+        VoltageMax = AdvancedProperties.VoltageMax
+        VoltageMin = AdvancedProperties.VoltageMin
+        VoltageAverageMin = AdvancedProperties.VoltageAverageMin
+        
     End If
         
         
@@ -221,7 +242,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 CustomersVoltages(i, Z, iter) = A
 
                 dValue = 0
-                If A > 1.1 Or A < 0.9 Then
+                If A > VoltageMax Or A < VoltageMin Then
                     CustomersLimits(i, Z, iter) = 1
                     NotCompliant = NotCompliant + 1
                     Start.CustomerVoltageLimit(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
@@ -230,7 +251,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                         dValue = CustomersVoltages(i, Z, iter - j) + dValue
                     Next
                     dValue = dValue / 10
-                    If dValue < 0.94 Then
+                    If dValue < VoltageAverageMin Then
                         CustomersLimits(i, Z, iter) = 1
                         NotCompliant = NotCompliant + 1
                         Start.CustomerVoltageLimit(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
