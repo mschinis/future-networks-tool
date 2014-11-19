@@ -3,6 +3,8 @@ Public RunHours As Integer
 Public CustomersLimits() As Byte
 Public CustomerVoltageLimit() As Byte
 Public OverrideDefault As Boolean
+Public CurrentFlags() As Byte
+
 
 
 Public Sub Start()
@@ -61,7 +63,7 @@ Sheets("Main").Activate
 
     ChooseNetwork.finished = False
     WelcomeScreen.Show ' Goes into either Preset or Custom Network after this
-    If ChooseNetwork.finished <> True Then Exit Sub
+    If ChooseNetwork.finished <> True Then GoTo ENDLINE
     
     DSSText.Command = "Set Datapath =" & ActiveWorkbook.Path & "\output"
     DSSText.Command = "new monitor.Transformer element=transformer.LV_Transformer terminal=1 mode=1 ppolar=yes"
@@ -96,6 +98,7 @@ Sheets("Main").Activate
     ReDim CustomersVoltages(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
     ReDim CustomersLimits(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
     ReDim CustomerVoltageLimit(1 To PresetNetwork.customers)
+    ReDim CurrentFlags(1 To 4, 1 To 5)
     
     progresscounter = 0
     Application.StatusBar = "Simulation running - 10%"
@@ -106,7 +109,7 @@ Sheets("Main").Activate
             Application.StatusBar = "Simulation running - " & (progresscounter * 10 + 10) & "%"
         End If
         DSSobj.ActiveCircuit.Solution.Solve
-        Call CheckValuesPreset(PresetNetwork.customers, i, TransformerArray, Feeders, Laterals, CustomersVoltages, CustomersLimits)
+        Call CheckValuesPreset(PresetNetwork.customers, i, TransformerArray, Feeders, Laterals, CustomersVoltages, CustomersLimits, CurrentFlags)
     Next
 
 
@@ -126,7 +129,7 @@ Sheets("Main").Activate
     MsgBox ("Total time " + Trim(Str(Timer - stime)))
     
     
-    
+ENDLINE:
     ActiveWorkbook.RefreshAll
     Application.StatusBar = False
     Application.Calculation = CalcOld

@@ -21,7 +21,7 @@ Public VoltageAverageMin As Double
 
 
 
-Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer, ByRef TransformerArray() As Double, ByRef Feeders() As Double, ByRef Laterals() As Double, ByRef CustomersVoltages() As Double, ByRef CustomersLimits() As Byte)
+Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer, ByRef TransformerArray() As Double, ByRef Feeders() As Double, ByRef Laterals() As Double, ByRef CustomersVoltages() As Double, ByRef CustomersLimits() As Byte, ByRef CurrentFlags() As Byte)
     
     Dim TempArray As Variant
     Dim dValue As Double
@@ -144,10 +144,13 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
             If C < MinCurrentUseFeeder Then MinCurrentUseFeeder = C
             
             If A > 1 Then
+                CurrentFlags(i, 1) = 1
             End If
             If B > 1 Then
+                CurrentFlags(i, 1) = 1
             End If
             If C > 1 Then
+                CurrentFlags(i, 1) = 1
             End If
             
             For y = 1 To 4 'Lateral Number
@@ -175,10 +178,13 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 If C < MinCurrentUseLateral Then MinCurrentUseLateral = C
                 
                 If A > 1 Then
+                    CurrentFlags(i, y + 1) = 1
                 End If
                 If B > 1 Then
+                    CurrentFlags(i, y + 1) = 1
                 End If
                 If C > 1 Then
+                    CurrentFlags(i, y + 1) = 1
                 End If
                 
                 'Check Voltages at Start of Lateral

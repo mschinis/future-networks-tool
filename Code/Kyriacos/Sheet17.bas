@@ -12,6 +12,8 @@ Private Sub CommandButton1_Click()
     If PresetNetwork.Network = "Urban" Then Call DrawUrban
     If PresetNetwork.Network = "Rural" Then Call DrawRural
     If PresetNetwork.Network = "SemiUrban" Then Call DrawSemiUrban
+    
+    Call CurrentOverload
 
 End Sub
 

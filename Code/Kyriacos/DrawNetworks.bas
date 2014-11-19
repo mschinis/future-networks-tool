@@ -609,3 +609,62 @@ Sub NetworkLabels()
     ActiveWindow.SmallScroll Down:=-200
 End Sub
 
+Sub CurrentOverload()
+'
+' CurrentOverload Macro
+'
+
+    Dim LateralNo(1 To 5) As Double
+    Dim FeederNo(1 To 4) As Double
+    
+    FeederNo(1) = 64
+    FeederNo(2) = 585
+    FeederNo(3) = 1104
+    FeederNo(4) = 1625
+    
+    LateralNo(1) = 6
+    LateralNo(2) = 259
+    LateralNo(3) = 759
+    LateralNo(4) = 1181
+    LateralNo(5) = 1298
+    
+    
+    For i = 1 To 4
+        For y = 1 To 5
+            If Start.CurrentFlags(i, y) = 1 Then
+                
+                ActiveSheet.Shapes.AddTextbox(msoTextOrientationHorizontal, LateralNo(y), FeederNo(i), 65.25, 37.5).Select
+                Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = "CURRENT EXCEEDED"
+                With Selection.ShapeRange.Fill
+                    .Visible = msoTrue
+                    .ForeColor.RGB = RGB(255, 0, 0)
+                    .Transparency = 0
+                    .Solid
+                End With
+                
+                With Selection.ShapeRange(1).TextFrame2.TextRange.Characters(1, 16). _
+                    ParagraphFormat
+                    .FirstLineIndent = 0
+                    .Alignment = msoAlignCenter
+                End With
+                With Selection.ShapeRange(1).TextFrame2.TextRange.Characters(1, 16).Font
+                    .NameComplexScript = "+mn-cs"
+                    .NameFarEast = "+mn-ea"
+                    .Fill.Visible = msoTrue
+                    .Fill.ForeColor.ObjectThemeColor = msoThemeColorDark1
+                    .Fill.ForeColor.TintAndShade = 0
+                    .Fill.ForeColor.Brightness = 0
+                    .Fill.Transparency = 0
+                    .Fill.Solid
+                    .Size = 11
+                    .name = "+mn-lt"
+                End With
+                 
+            End If
+        Next
+    Next
+
+    
+End Sub
+
+
