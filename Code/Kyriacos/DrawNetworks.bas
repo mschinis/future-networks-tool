@@ -46,7 +46,7 @@ For y = 1 To 4
     End With
 
     'Draw Lateral 4
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 40, 50 + (y * 500 - 500), 250 * 5 + 40, _
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, 50 + (y * 500 - 500), 250 * 5 + 100, _
         50 + (y * 500 - 500) + 450).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -62,6 +62,8 @@ Sub DrawSemiUrban()
 ' DrawRural Macro
 
 Dim customer As Integer
+Dim var As Integer
+
 Dim WorkingSheet As Worksheet
 Set WorkingSheet = Sheets("Network")
 customer = 0
@@ -73,9 +75,13 @@ For y = 1 To 4
 
 For i = 1 To 12
     customer = customer + 1
-
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
         
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 12)), 250 + 30, _
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 12)), 250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 12))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -100,8 +106,12 @@ Next
 
 For i = 1 To 39
     customer = customer + 1
-      
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 39)), 750 + 30, _
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 39)), 750 + var, _
         (100 + (y * 500 - 500) + (400 * i / 39))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -126,8 +136,12 @@ Next
 
 For i = 1 To 33
     customer = customer + 1
-    
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 - 30, _
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 - var, _
         (100 + (y * 500 - 500) + (400 * i / 33))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -152,8 +166,12 @@ Next
 
 For i = 1 To 33
     customer = customer + 1
-        
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 40, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 + 40 + 30, _
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 + 100 + var, _
         (100 + (y * 500 - 500) + (400 * i / 33))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -183,7 +201,7 @@ End Sub
 
 Sub DrawUrban()
 '
-' DrawRural Macro
+
 
 Dim customer As Integer
 Dim WorkingSheet As Worksheet
@@ -197,9 +215,13 @@ For y = 1 To 4
 
 For i = 1 To 17
     customer = customer + 1
-
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
         
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 17)), 250 + 30, _
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 17)), 250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 17))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -224,8 +246,12 @@ Next
 
 For i = 1 To 53
     customer = customer + 1
-      
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 53)), 750 + 30, _
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 53)), 750 + var, _
         (100 + (y * 500 - 500) + (400 * i / 53))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -250,8 +276,12 @@ Next
 
 For i = 1 To 44
     customer = customer + 1
-    
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 - 30, _
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 - var, _
         (100 + (y * 500 - 500) + (400 * i / 44))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -276,8 +306,12 @@ Next
 
 For i = 1 To 44
     customer = customer + 1
-        
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 40, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 + 40 + 30, _
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 + 100 + var, _
         (100 + (y * 500 - 500) + (400 * i / 44))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -321,9 +355,13 @@ For y = 1 To 4
 
 For i = 1 To 4
     customer = customer + 1
-
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
         
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 4)), 250 + 30, _
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 4)), 250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 4))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -348,8 +386,12 @@ Next
 
 For i = 1 To 11
     customer = customer + 1
-      
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 11)), 750 + 30, _
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 11)), 750 + var, _
         (100 + (y * 500 - 500) + (400 * i / 11))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -374,8 +416,12 @@ Next
 
 For i = 1 To 9
     customer = customer + 1
-    
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 9)), 1250 - 30, _
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 9)), 1250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 9))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -400,8 +446,12 @@ Next
 
 For i = 1 To 9
     customer = customer + 1
-        
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 40, (100 + (y * 500 - 500) + (400 * i / 9)), 1250 + 40 + 30, _
+    If i Mod 2 = 1 Then
+        var = 30
+    Else
+        var = -30
+    End If
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, (100 + (y * 500 - 500) + (400 * i / 9)), 1250 + 100 + var, _
         (100 + (y * 500 - 500) + (400 * i / 9))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -622,59 +672,63 @@ End Sub
 Sub CurrentOverload()
 '
 ' CurrentOverload Macro
-'
-
-    Dim LateralNo(1 To 5) As Double
-    Dim FeederNo(1 To 4) As Double
-    
-    FeederNo(1) = 64
-    FeederNo(2) = 585
-    FeederNo(3) = 1104
-    FeederNo(4) = 1625
-    
-    LateralNo(1) = 6
-    LateralNo(2) = 259
-    LateralNo(3) = 759
-    LateralNo(4) = 1181
-    LateralNo(5) = 1298
-    
     
     For i = 1 To 4
         For y = 1 To 5
-            If Start.CurrentFlags(i, y) = 1 Then
-                
-                ActiveSheet.Shapes.AddTextbox(msoTextOrientationHorizontal, LateralNo(y), FeederNo(i), 65.25, 37.5).Select
-                Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = "CURRENT EXCEEDED"
-                With Selection.ShapeRange.Fill
-                    .Visible = msoTrue
-                    .ForeColor.RGB = RGB(255, 0, 0)
-                    .Transparency = 0
-                    .Solid
-                End With
-                
-                With Selection.ShapeRange(1).TextFrame2.TextRange.Characters(1, 16). _
-                    ParagraphFormat
-                    .FirstLineIndent = 0
-                    .Alignment = msoAlignCenter
-                End With
-                With Selection.ShapeRange(1).TextFrame2.TextRange.Characters(1, 16).Font
-                    .NameComplexScript = "+mn-cs"
-                    .NameFarEast = "+mn-ea"
-                    .Fill.Visible = msoTrue
-                    .Fill.ForeColor.ObjectThemeColor = msoThemeColorDark1
-                    .Fill.ForeColor.TintAndShade = 0
-                    .Fill.ForeColor.Brightness = 0
-                    .Fill.Transparency = 0
-                    .Fill.Solid
-                    .Size = 11
-                    .name = "+mn-lt"
-                End With
-                 
-            End If
-        Next
-    Next
-
-    
+        If Start.CurrentFlags(i, y) = 1 Then
+            Sheets("Network").Shapes("Feeder1Lateral1").Visible = True
+        Else
+'    Dim LateralNo(1 To 5) As Double
+'    Dim FeederNo(1 To 4) As Double
+'
+'    FeederNo(1) = 64
+'    FeederNo(2) = 585
+'    FeederNo(3) = 1104
+'    FeederNo(4) = 1625
+'
+'    LateralNo(1) = 6
+'    LateralNo(2) = 259
+'    LateralNo(3) = 759
+'    LateralNo(4) = 1181
+'    LateralNo(5) = 1298
+'
+'
+'    For i = 1 To 4
+'        For y = 1 To 5
+'            If Start.CurrentFlags(i, y) = 1 Then
+'
+'                ActiveSheet.Shapes.AddTextbox(msoTextOrientationHorizontal, LateralNo(y), FeederNo(i), 65.25, 37.5).Select
+'                Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = "CURRENT EXCEEDED"
+'                With Selection.ShapeRange.Fill
+'                    .Visible = msoTrue
+'                    .ForeColor.RGB = RGB(255, 0, 0)
+'                    .Transparency = 0
+'                    .Solid
+'                End With
+'
+'                With Selection.ShapeRange(1).TextFrame2.TextRange.Characters(1, 16). _
+'                    ParagraphFormat
+'                    .FirstLineIndent = 0
+'                    .Alignment = msoAlignCenter
+'                End With
+'                With Selection.ShapeRange(1).TextFrame2.TextRange.Characters(1, 16).Font
+'                    .NameComplexScript = "+mn-cs"
+'                    .NameFarEast = "+mn-ea"
+'                    .Fill.Visible = msoTrue
+'                    .Fill.ForeColor.ObjectThemeColor = msoThemeColorDark1
+'                    .Fill.ForeColor.TintAndShade = 0
+'                    .Fill.ForeColor.Brightness = 0
+'                    .Fill.Transparency = 0
+'                    .Fill.Solid
+'                    .Size = 11
+'                    .name = "+mn-lt"
+'                End With
+'
+'            End If
+'        Next
+'    Next
+'
+'
 End Sub
 
 
