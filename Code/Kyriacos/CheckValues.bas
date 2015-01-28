@@ -1,5 +1,5 @@
 Attribute VB_Name = "CheckValues"
-Public NotCompliant As Long
+Public compliance As Integer
 
 Public MaxTransformerUse As Double
 Public MinTransformerUse As Double
@@ -27,53 +27,53 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
     Dim dValue As Double
     Network = PresetNetwork.Network
     
-    If Start.OverrideDefault = False Then
-        VoltageMax = 1.1
-        VoltageMin = 0.9
-        VoltageAverageMin = 0.94
-    
-        If Network = "Urban" Then
-            TransformerMax = 800
-
-            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-                feedercurrentmax = 309
-                lateralcurrentmax = 209
-            Else
-                feedercurrentmax = 297
-                lateralcurrentmax = 202
-            End If
-        
-        ElseIf Network = "SemiUrban" Then
-            TransformerMax = 500
-            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-                feedercurrentmax = 309
-                lateralcurrentmax = 209
-            Else
-                feedercurrentmax = 297
-                lateralcurrentmax = 202
-            End If
-        
-        ElseIf Network = "Rural" Then
-            TransformerMax = 200
-            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-                feedercurrentmax = 404
-                lateralcurrentmax = 263
-            Else
-                feedercurrentmax = 350
-                lateralcurrentmax = 230
-            End If
-        End If
-    
-    Else
-    
-        feedercurrentmax = AdvancedProperties.FeederMax
-        lateralcurrentmax = AdvancedProperties.LateralMax
-        TransformerMax = AdvancedProperties.TransformerMax
+'    If Start.OverrideDefault = False Then
         VoltageMax = AdvancedProperties.VoltageMax
         VoltageMin = AdvancedProperties.VoltageMin
         VoltageAverageMin = AdvancedProperties.VoltageAverageMin
+    
+        If Network = "Urban" Then
+            TransformerMax = 800 * AdvancedProperties.TransformerMax / 100
+
+            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+                feedercurrentmax = 309 * AdvancedProperties.FeederMax / 100
+                lateralcurrentmax = 209 * AdvancedProperties.LateralMax / 100
+            Else
+                feedercurrentmax = 297 * AdvancedProperties.FeederMax / 100
+                lateralcurrentmax = 202 * AdvancedProperties.LateralMax / 100
+            End If
         
-    End If
+        ElseIf Network = "SemiUrban" Then
+            TransformerMax = 500 * AdvancedProperties.TransformerMax / 100
+            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+                feedercurrentmax = 309 * AdvancedProperties.FeederMax / 100
+                lateralcurrentmax = 209 * AdvancedProperties.LateralMax / 100
+            Else
+                feedercurrentmax = 297 * AdvancedProperties.FeederMax / 100
+                lateralcurrentmax = 202 * AdvancedProperties.LateralMax / 100
+            End If
+        
+        ElseIf Network = "Rural" Then
+            TransformerMax = 200 * AdvancedProperties.TransformerMax / 100
+            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+                feedercurrentmax = 404 * AdvancedProperties.FeederMax / 100
+                lateralcurrentmax = 263 * AdvancedProperties.LateralMax / 100
+            Else
+                feedercurrentmax = 350 * AdvancedProperties.FeederMax / 100
+                lateralcurrentmax = 230 * AdvancedProperties.LateralMax / 100
+            End If
+        End If
+    
+'    Else
+'
+'        feedercurrentmax = AdvancedProperties.FeederMax
+'        lateralcurrentmax = AdvancedProperties.LateralMax
+'        TransformerMax = AdvancedProperties.TransformerMax
+'        VoltageMax = AdvancedProperties.VoltageMax
+'        VoltageMin = AdvancedProperties.VoltageMin
+'        VoltageAverageMin = AdvancedProperties.VoltageAverageMin
+'
+'    End If
         
         
         'Check Transformer
@@ -250,7 +250,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 dValue = 0
                 If A > VoltageMax Or A < VoltageMin Then
                     CustomersLimits(i, Z, iter) = 1
-                    NotCompliant = NotCompliant + 1
+                    Start.NotCompliant(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = Start.NotCompliant(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) + 1
                     Start.CustomerVoltageLimit(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
                 ElseIf iter > 10 Then
                     For j = 1 To 10
@@ -259,7 +259,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                     dValue = dValue / 10
                     If dValue < VoltageAverageMin Then
                         CustomersLimits(i, Z, iter) = 1
-                        NotCompliant = NotCompliant + 1
+                        Start.NotCompliant(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = Start.NotCompliant(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) + 1
                         Start.CustomerVoltageLimit(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
                     End If
                 End If
@@ -274,12 +274,19 @@ End Sub
 
 Public Sub Check_Compliance()
 
-    Dim compliance As Double
     Dim maxcompliant As Long
+    compliance = 0
+    VoltageCompliance = 0
     
+    For i = 1 To PresetNetwork.customers
+        Start.NotCompliant(i) = Start.NotCompliant(i) / Start.RunHours
+        If Start.NotCompliant(i) > 0.05 Then VoltageCompliance = VoltageCompliance + 1
+    Next
     
-    maxcompliant = CLng(PresetNetwork.customers) * CLng(Start.RunHours)
-    VoltageCompliance = (maxcompliant - CheckValues.NotCompliant) / maxcompliant
+    VoltageCompliance = (PresetNetwork.customers - VoltageCompliance) / PresetNetwork.customers
+    
+'    maxcompliant = CLng(PresetNetwork.customers) * CLng(Start.RunHours)
+'    VoltageCompliance = (maxcompliant - CheckValues.NotCompliant) / maxcompliant
     
 
 End Sub

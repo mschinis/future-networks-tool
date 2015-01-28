@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} SelectLocationForm 
-   Caption         =   "UserForm1"
+   Caption         =   "Select location"
    ClientHeight    =   7605
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   8535
+   ClientWidth     =   7215
    OleObjectBlob   =   "SelectLocationForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

@@ -1,5 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AdvancedProperties 
+   Caption         =   "Advanced Settings"
    ClientHeight    =   6990
    ClientLeft      =   45
    ClientTop       =   390
@@ -12,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Private Sub CommandButton1_Click()
     
     Call UserForm_Initialize
@@ -44,6 +44,12 @@ Private Sub FeederMax_Change()
 Start.OverrideDefault = True
 End Sub
 
+
+
+Private Sub Label10_Click()
+
+End Sub
+
 Private Sub LateralMax_Change()
 Start.OverrideDefault = True
 End Sub
@@ -64,37 +70,43 @@ If Start.OverrideDefault = False Then
     VoltageMin.Value = 0.9
     VoltageMax.Value = 1.1
     VoltageAverageMin.Value = 0.94
-    If ChooseNetwork.SelectNetwork = "Urban" Then
-        TransformerMax.Value = 800
-        If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-            FeederMax.Value = 309
-            LateralMax.Value = 209
-        Else
-            FeederMax.Value = 297
-            LateralMax.Value = 202
-        End If
-        
-    ElseIf ChooseNetwork.SelectNetwork = "SemiUrban" Then
-        TransformerMax.Value = 500
-        If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-            FeederMax.Value = 309
-            LateralMax.Value = 209
-        Else
-            FeederMax.Value = 297
-            LateralMax.Value = 202
-        End If
-        
-    ElseIf ChooseNetwork.SelectNetwork = "Rural" Then
-        TransformerMax.Value = 200
-        If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
-            FeederMax.Value = 404
-            LateralMax.Value = 263
-        Else
-            FeederMax.Value = 350
-            LateralMax.Value = 230
-        End If
-    End If
+    TransformerMax.Value = 100
+    FeederMax.Value = 100
+    LateralMax.Value = 100
+    
+''    If ChooseNetwork.SelectNetwork = "Urban" Then
+''        TransformerMax.Value = 800
+''        If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+''            FeederMax.Value = 309
+''            LateralMax.Value = 209
+''        Else
+''            FeederMax.Value = 297
+''            LateralMax.Value = 202
+''        End If
+''
+''    ElseIf ChooseNetwork.SelectNetwork = "SemiUrban" Then
+''        TransformerMax.Value = 500
+''        If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+''            FeederMax.Value = 309
+''            LateralMax.Value = 209
+''        Else
+''            FeederMax.Value = 297
+''            LateralMax.Value = 202
+''        End If
+''
+''    ElseIf ChooseNetwork.SelectNetwork = "Rural" Then
+''        TransformerMax.Value = 200
+''        If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+''            FeederMax.Value = 404
+''            LateralMax.Value = 263
+''        Else
+''            FeederMax.Value = 350
+''            LateralMax.Value = 230
+''        End If
+''    End If
 End If
+
+
 
 
 Start.OverrideDefault = False

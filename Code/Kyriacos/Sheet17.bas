@@ -17,6 +17,10 @@ Private Sub CommandButton1_Click()
 
 End Sub
 
+Private Sub CommandButton2_Click()
+    SelectGraphsForm.Show
+End Sub
+
 Private Sub ShowExtra_Click()
     If Sheet10.Visible <> xlSheetVisible Then
         ShowExtra.Caption = "Hide output tabs"
@@ -24,6 +28,7 @@ Private Sub ShowExtra_Click()
         ShowExtra.Caption = "Show output tabs"
     End If
     
+    Sheet16.Visible = Not Sheet16.Visible
     Sheet10.Visible = Not Sheet11.Visible
     Sheet11.Visible = Not Sheet11.Visible
     Sheet12.Visible = Not Sheet12.Visible
@@ -33,6 +38,11 @@ Private Sub ShowExtra_Click()
     Sheet8.Visible = Not Sheet8.Visible
     Sheet9.Visible = Not Sheet9.Visible
     Sheet1.Visible = Not Sheet1.Visible
+    Sheet3.Visible = Not Sheet3.Visible
+    Sheet4.Visible = Not Sheet4.Visible
+    Sheet5.Visible = Not Sheet5.Visible
+    Sheet6.Visible = Not Sheet6.Visible
+    
     Sheets("limits").Visible = Not Sheets("limits").Visible
 
 

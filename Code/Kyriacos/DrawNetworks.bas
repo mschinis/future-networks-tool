@@ -1,141 +1,60 @@
 Attribute VB_Name = "DrawNetworks"
-Sub DrawRural()
+Sub DrawBasicNetwork()
 '
-' DrawRural Macro
 
 Dim customer As Integer
-Dim workingsheet As Worksheet
-Set workingsheet = Sheets("Network")
-customer = 0
+Dim WorkingSheet As Worksheet
+Set WorkingSheet = Sheets("Network")
+
 
 Sheets("Network").Activate
 Cells.Select
 Selection.Delete Shift:=xlUp
 
 For y = 1 To 4
-For i = 1 To 250
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, i * 5 - 5, 50 + (y * 500 - 500), i * 5, _
+
+'Draw Feeder
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 0, 50 + (y * 500 - 500), 250 * 5, _
         50 + (y * 500 - 500)).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3.5
     End With
-Next
 
-For i = 1 To 196
-
-    If i Mod 49 = 1 Then customer = customer + 1
+    'Draw Lateral 1
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, 50 + (y * 500 - 500), 250, _
+        50 + (y * 500 - 500) + 450).Select
+    With Selection.ShapeRange.Line
+        .Visible = msoTrue
+        .Weight = 3
+    End With
         
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250, 50 + (y * 500 - 500) + (i * 2) - 2, 250, _
-        50 + (y * 500 - 500) + (i * 2)).Select
+    'Draw Lateral 2
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, 50 + (y * 500 - 500), 150 * 5, _
+        50 + (y * 500 - 500) + 450).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
-    If Start.CustomerVoltageLimit(customer) = 1 Then
-        
-        With Selection.ShapeRange.Line
-            .Visible = msoTrue
-            .ForeColor.RGB = RGB(255, 0, 0)
-            .Transparency = 0
-        End With
-    Else
-        With Selection.ShapeRange.Line
-            .Visible = msoTrue
-            .ForeColor.RGB = RGB(0, 0, 0)
-            .Transparency = 0
-        End With
-    End If
-Next
-
-For i = 1 To 196
-
-    If i Mod 18 = 1 Then customer = customer + 1
-        
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 150 * 5, 50 + (y * 500 - 500) + (i * 2) - 2, 150 * 5, _
-        50 + (y * 500 - 500) + (i * 2)).Select
+    'Draw Lateral 3
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, 50 + (y * 500 - 500), 250 * 5, _
+        50 + (y * 500 - 500) + 450).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
-    If Start.CustomerVoltageLimit(customer) = 1 Then
-        
-        With Selection.ShapeRange.Line
-            .Visible = msoTrue
-            .ForeColor.RGB = RGB(255, 0, 0)
-            .Transparency = 0
-        End With
-    Else
-        With Selection.ShapeRange.Line
-            .Visible = msoTrue
-            .ForeColor.RGB = RGB(0, 0, 0)
-            .Transparency = 0
-        End With
-    End If
-Next
-
-For i = 1 To 196
-
-    If i Mod 22 = 1 Then customer = customer + 1
-        
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250 * 5, 50 + (y * 500 - 500) + (i * 2) - 2, 250 * 5, _
-        50 + (y * 500 - 500) + (i * 2)).Select
+    'Draw Lateral 4
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 40, 50 + (y * 500 - 500), 250 * 5 + 40, _
+        50 + (y * 500 - 500) + 450).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
-    If Start.CustomerVoltageLimit(customer) = 1 Then
-        
-        With Selection.ShapeRange.Line
-            .Visible = msoTrue
-            .ForeColor.RGB = RGB(255, 0, 0)
-            .Transparency = 0
-        End With
-    Else
-        With Selection.ShapeRange.Line
-            .Visible = msoTrue
-            .ForeColor.RGB = RGB(0, 0, 0)
-            .Transparency = 0
-        End With
-    End If
 Next
 
-
-For i = 1 To 196
-
-    If i Mod 22 = 1 Then customer = customer + 1
-        
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250 * 5 + 40, 50 + (y * 500 - 500) + (i * 2) - 2, 250 * 5 + 40, _
-        50 + (y * 500 - 500) + (i * 2)).Select
-    With Selection.ShapeRange.Line
-        .Visible = msoTrue
-        .Weight = 3
-    End With
-
-
-    If Start.CustomerVoltageLimit(customer) = 1 Then
-        
-        With Selection.ShapeRange.Line
-            .Visible = msoTrue
-            .ForeColor.RGB = RGB(255, 0, 0)
-            .Transparency = 0
-        End With
-    Else
-        With Selection.ShapeRange.Line
-            .Visible = msoTrue
-            .ForeColor.RGB = RGB(0, 0, 0)
-            .Transparency = 0
-        End With
-    End If
-Next
-Next
-Call NetworkLabels
 
 End Sub
 Sub DrawSemiUrban()
@@ -143,38 +62,28 @@ Sub DrawSemiUrban()
 ' DrawRural Macro
 
 Dim customer As Integer
-Dim workingsheet As Worksheet
-Set workingsheet = Sheets("Network")
+Dim WorkingSheet As Worksheet
+Set WorkingSheet = Sheets("Network")
 customer = 0
 
-Sheets("Network").Activate
-Cells.Select
-Selection.Delete Shift:=xlUp
+Call DrawBasicNetwork
+
 
 For y = 1 To 4
-For i = 1 To 250
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, i * 5 - 5, 50 + (y * 500 - 500), i * 5, _
-        50 + (y * 500 - 500)).Select
-    With Selection.ShapeRange.Line
-        .Visible = msoTrue
-        .Weight = 3.5
-    End With
-Next
 
-For i = 1 To 196
+For i = 1 To 12
+    customer = customer + 1
 
-    If i Mod 17 = 1 Then customer = customer + 1 '12
         
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250, 50 + (y * 500 - 500) + (i * 2) - 2, 250, _
-        50 + (y * 500 - 500) + (i * 2)).Select
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 12)), 250 + 30, _
+        (100 + (y * 500 - 500) + (400 * i / 12))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
     If Start.CustomerVoltageLimit(customer) = 1 Then
-        
+
         With Selection.ShapeRange.Line
             .Visible = msoTrue
             .ForeColor.RGB = RGB(255, 0, 0)
@@ -189,20 +98,18 @@ For i = 1 To 196
     End If
 Next
 
-For i = 1 To 195
-
-    If i Mod 5 = 1 Then customer = customer + 1 '51
-        
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 150 * 5, 50 + (y * 500 - 500) + (i * 2) - 2, 150 * 5, _
-        50 + (y * 500 - 500) + (i * 2)).Select
+For i = 1 To 39
+    customer = customer + 1
+      
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 39)), 750 + 30, _
+        (100 + (y * 500 - 500) + (400 * i / 39))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
     If Start.CustomerVoltageLimit(customer) = 1 Then
-        
+
         With Selection.ShapeRange.Line
             .Visible = msoTrue
             .ForeColor.RGB = RGB(255, 0, 0)
@@ -217,20 +124,18 @@ For i = 1 To 195
     End If
 Next
 
-For i = 1 To 196
-
-    If i Mod 6 = 1 Then customer = customer + 1 '84
-        
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250 * 5, 50 + (y * 500 - 500) + (i * 2) - 2, 250 * 5, _
-        50 + (y * 500 - 500) + (i * 2)).Select
+For i = 1 To 33
+    customer = customer + 1
+    
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 - 30, _
+        (100 + (y * 500 - 500) + (400 * i / 33))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
     If Start.CustomerVoltageLimit(customer) = 1 Then
-        
+
         With Selection.ShapeRange.Line
             .Visible = msoTrue
             .ForeColor.RGB = RGB(255, 0, 0)
@@ -245,21 +150,18 @@ For i = 1 To 196
     End If
 Next
 
-
-For i = 1 To 196
-
-    If i Mod 6 = 1 Then customer = customer + 1 '117
+For i = 1 To 33
+    customer = customer + 1
         
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250 * 5 + 40, 50 + (y * 500 - 500) + (i * 2) - 2, 250 * 5 + 40, _
-        50 + (y * 500 - 500) + (i * 2)).Select
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 40, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 + 40 + 30, _
+        (100 + (y * 500 - 500) + (400 * i / 33))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
     If Start.CustomerVoltageLimit(customer) = 1 Then
-        
+
         With Selection.ShapeRange.Line
             .Visible = msoTrue
             .ForeColor.RGB = RGB(255, 0, 0)
@@ -273,8 +175,9 @@ For i = 1 To 196
         End With
     End If
 Next
+
 Next
-Call NetworkLabels
+'Call NetworkLabels
 
 End Sub
 
@@ -282,40 +185,29 @@ Sub DrawUrban()
 '
 ' DrawRural Macro
 
-
 Dim customer As Integer
-Dim workingsheet As Worksheet
-Set workingsheet = Sheets("Network")
+Dim WorkingSheet As Worksheet
+Set WorkingSheet = Sheets("Network")
 customer = 0
 
-Sheets("Network").Activate
-Cells.Select
-Selection.Delete Shift:=xlUp
+Call DrawBasicNetwork
+
 
 For y = 1 To 4
-For i = 1 To 250
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, i * 5 - 5, 50 + (y * 500 - 500), i * 5, _
-        50 + (y * 500 - 500)).Select
-    With Selection.ShapeRange.Line
-        .Visible = msoTrue
-        .Weight = 3.5
-    End With
-Next
 
-For i = 1 To 196
+For i = 1 To 17
+    customer = customer + 1
 
-    If i Mod 12 = 1 Then customer = customer + 1
         
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250, 50 + (y * 500 - 500) + (i * 2) - 2, 250, _
-        50 + (y * 500 - 500) + (i * 2)).Select
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 17)), 250 + 30, _
+        (100 + (y * 500 - 500) + (400 * i / 17))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
     If Start.CustomerVoltageLimit(customer) = 1 Then
-        
+
         With Selection.ShapeRange.Line
             .Visible = msoTrue
             .ForeColor.RGB = RGB(255, 0, 0)
@@ -330,20 +222,18 @@ For i = 1 To 196
     End If
 Next
 
-For i = 1 To 196 * 4
-
-    If i Mod 15 = 1 Then customer = customer + 1
-        
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 150 * 5, 50 + (y * 500 - 500) + (i * 0.5) - 0.5, 150 * 5, _
-        50 + (y * 500 - 500) + (i * 0.5)).Select
+For i = 1 To 53
+    customer = customer + 1
+      
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 53)), 750 + 30, _
+        (100 + (y * 500 - 500) + (400 * i / 53))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
     If Start.CustomerVoltageLimit(customer) = 1 Then
-        
+
         With Selection.ShapeRange.Line
             .Visible = msoTrue
             .ForeColor.RGB = RGB(255, 0, 0)
@@ -358,20 +248,18 @@ For i = 1 To 196 * 4
     End If
 Next
 
-For i = 1 To 196 * 2
-
-    If i Mod 9 = 1 Then customer = customer + 1
-        
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250 * 5, 50 + (y * 500 - 500) + (i * 1) - 1, 250 * 5, _
-        50 + (y * 500 - 500) + (i * 1)).Select
+For i = 1 To 44
+    customer = customer + 1
+    
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 - 30, _
+        (100 + (y * 500 - 500) + (400 * i / 44))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
     If Start.CustomerVoltageLimit(customer) = 1 Then
-        
+
         With Selection.ShapeRange.Line
             .Visible = msoTrue
             .ForeColor.RGB = RGB(255, 0, 0)
@@ -386,21 +274,18 @@ For i = 1 To 196 * 2
     End If
 Next
 
-
-For i = 1 To 196 * 2
-
-    If i Mod 9 = 1 Then customer = customer + 1
+For i = 1 To 44
+    customer = customer + 1
         
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250 * 5 + 40, 50 + (y * 500 - 500) + (i * 1) - 1, 250 * 5 + 40, _
-        50 + (y * 500 - 500) + (i * 1)).Select
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 40, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 + 40 + 30, _
+        (100 + (y * 500 - 500) + (400 * i / 44))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
         .Weight = 3
     End With
 
-
     If Start.CustomerVoltageLimit(customer) = 1 Then
-        
+
         With Selection.ShapeRange.Line
             .Visible = msoTrue
             .ForeColor.RGB = RGB(255, 0, 0)
@@ -414,8 +299,133 @@ For i = 1 To 196 * 2
         End With
     End If
 Next
+
 Next
-Call NetworkLabels
+'Call NetworkLabels
+
+End Sub
+
+Sub DrawRural()
+'
+' DrawRural Macro
+
+Dim customer As Integer
+Dim WorkingSheet As Worksheet
+Set WorkingSheet = Sheets("Network")
+customer = 0
+
+Call DrawBasicNetwork
+
+
+For y = 1 To 4
+
+For i = 1 To 4
+    customer = customer + 1
+
+        
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 4)), 250 + 30, _
+        (100 + (y * 500 - 500) + (400 * i / 4))).Select
+    With Selection.ShapeRange.Line
+        .Visible = msoTrue
+        .Weight = 3
+    End With
+
+    If Start.CustomerVoltageLimit(customer) = 1 Then
+
+        With Selection.ShapeRange.Line
+            .Visible = msoTrue
+            .ForeColor.RGB = RGB(255, 0, 0)
+            .Transparency = 0
+        End With
+    Else
+        With Selection.ShapeRange.Line
+            .Visible = msoTrue
+            .ForeColor.RGB = RGB(0, 0, 0)
+            .Transparency = 0
+        End With
+    End If
+Next
+
+For i = 1 To 11
+    customer = customer + 1
+      
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 11)), 750 + 30, _
+        (100 + (y * 500 - 500) + (400 * i / 11))).Select
+    With Selection.ShapeRange.Line
+        .Visible = msoTrue
+        .Weight = 3
+    End With
+
+    If Start.CustomerVoltageLimit(customer) = 1 Then
+
+        With Selection.ShapeRange.Line
+            .Visible = msoTrue
+            .ForeColor.RGB = RGB(255, 0, 0)
+            .Transparency = 0
+        End With
+    Else
+        With Selection.ShapeRange.Line
+            .Visible = msoTrue
+            .ForeColor.RGB = RGB(0, 0, 0)
+            .Transparency = 0
+        End With
+    End If
+Next
+
+For i = 1 To 9
+    customer = customer + 1
+    
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 9)), 1250 - 30, _
+        (100 + (y * 500 - 500) + (400 * i / 9))).Select
+    With Selection.ShapeRange.Line
+        .Visible = msoTrue
+        .Weight = 3
+    End With
+
+    If Start.CustomerVoltageLimit(customer) = 1 Then
+
+        With Selection.ShapeRange.Line
+            .Visible = msoTrue
+            .ForeColor.RGB = RGB(255, 0, 0)
+            .Transparency = 0
+        End With
+    Else
+        With Selection.ShapeRange.Line
+            .Visible = msoTrue
+            .ForeColor.RGB = RGB(0, 0, 0)
+            .Transparency = 0
+        End With
+    End If
+Next
+
+For i = 1 To 9
+    customer = customer + 1
+        
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 40, (100 + (y * 500 - 500) + (400 * i / 9)), 1250 + 40 + 30, _
+        (100 + (y * 500 - 500) + (400 * i / 9))).Select
+    With Selection.ShapeRange.Line
+        .Visible = msoTrue
+        .Weight = 3
+    End With
+
+    If Start.CustomerVoltageLimit(customer) = 1 Then
+
+        With Selection.ShapeRange.Line
+            .Visible = msoTrue
+            .ForeColor.RGB = RGB(255, 0, 0)
+            .Transparency = 0
+        End With
+    Else
+        With Selection.ShapeRange.Line
+            .Visible = msoTrue
+            .ForeColor.RGB = RGB(0, 0, 0)
+            .Transparency = 0
+        End With
+    End If
+Next
+
+Next
+'Call NetworkLabels
 
 End Sub
 

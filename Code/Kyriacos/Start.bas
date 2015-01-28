@@ -4,8 +4,7 @@ Public CustomersLimits() As Byte
 Public CustomerVoltageLimit() As Byte
 Public OverrideDefault As Boolean
 Public CurrentFlags() As Byte
-
-
+Public NotCompliant() As Double
 
 Public Sub Start()
 
@@ -19,7 +18,6 @@ CheckValues.MaxVoltage = 0
 CheckValues.MinVoltage = 2
 CheckValues.MaxCurrentUseFeeder = 0
 CheckValues.MinCurrentUseFeeder = 10
-CheckValues.NotCompliant = 0
 
 OverrideDefault = False
 
@@ -99,6 +97,7 @@ Sheets("Main").Activate
     ReDim CustomersLimits(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
     ReDim CustomerVoltageLimit(1 To PresetNetwork.customers)
     ReDim CurrentFlags(1 To 4, 1 To 5)
+    ReDim NotCompliant(1 To PresetNetwork.customers)
     
     progresscounter = 0
     Application.StatusBar = "Simulation running - 10%"
