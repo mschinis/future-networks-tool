@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ChooseNetwork 
-   ClientHeight    =   8160
+   ClientHeight    =   10650
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   4230
+   ClientWidth     =   4815
    OleObjectBlob   =   "ChooseNetwork.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -16,49 +16,26 @@ Public Tday As Integer
 Public finished As Boolean
 
 Private Sub CHP_info_Click()
-
     HPinfo.Show
-    
-End Sub
-
-Private Sub CHPEnable_Click()
-
-    If CHPEnable = False Then
-        Label16.Visible = False
-        CHPPeneText.Visible = False
-        CHPPeneScroll.Visible = False
-
-    Else
-        Label16.Visible = True
-        CHPPeneText.Visible = True
-        CHPPeneScroll.Visible = True
-
-    End If
 End Sub
 
 Private Sub CHPPeneScroll_Change()
-
     CHPPeneText.Value = CHPPeneScroll.Value
-
 End Sub
 
 Private Sub CHPPeneText_Change()
-
     If CHPPeneText.Value <> "" Then CHPPeneScroll.Value = CHPPeneText.Value
     If Int(HPPeneText.Value) + Int(CHPPeneText.Value) > 100 Then
         HPPeneText.Value = 100 - CHPPeneText.Value
     End If
-
 End Sub
 
 Private Sub ClearnessScroll_Change()
-
     ClearnessText.Value = ClearnessScroll.Value
-
 End Sub
 
-Private Sub CommandButton1_Click()
-
+Private Sub ContinueBtn_Click()
+    
     If SelectNetwork.Value = "" Then
             MsgBox "Please select a network"
             Exit Sub
@@ -73,7 +50,6 @@ Private Sub CommandButton1_Click()
             Exit Sub
     End If
     
-    
     If MonthVal.Value > 12 Or MonthVal.Value < 1 Then
         MsgBox "Please input a correct month"
         Exit Sub
@@ -84,7 +60,7 @@ Private Sub CommandButton1_Click()
         Exit Sub
     End If
     
-    If PVEnable.Value = True Or HPEnable.Value = True Or CHPEnable.Value = True Then
+    If ChooseNetwork.PVPeneScroll.Value <> 0 Or ChooseNetwork.HPPeneScroll.Value <> 0 Or ChooseNetwork.CHPPeneScroll.Value <> 0 Then
         If SelectLocation.Value = "" Then
             MsgBox "Please select a location"
             Exit Sub
@@ -117,20 +93,6 @@ Private Sub EV_Info_Click()
 
 End Sub
 
-Private Sub EVEnable_Click()
-
-    If EVEnable = True Then
-        Label6.Visible = True
-        EVPeneText.Visible = True
-        EVPeneScroll.Visible = True
-        
-    Else
-        Label6.Visible = False
-        EVPeneText.Visible = False
-        EVPeneScroll.Visible = False
-    End If
-
-End Sub
 
 Private Sub EVPeneScroll_Change()
 
@@ -150,25 +112,6 @@ Private Sub HP_info_Click()
     HPinfo.Show
 
 End Sub
-
-Private Sub HPEnable_Click()
-
-    If HPEnable = False Then
-        Label12.Visible = False
-
-        HPPeneText.Visible = False
-        HPPeneScroll.Visible = False
-
-
-    Else
-        Label12.Visible = True
-
-        HPPeneText.Visible = True
-        HPPeneScroll.Visible = True
-
-    End If
-End Sub
-
 Private Sub HPPeneScroll_Change()
 
     HPPeneText.Value = HPPeneScroll.Value
@@ -184,7 +127,6 @@ Private Sub HPPeneText_Change()
     End If
     
 End Sub
-
 Private Sub Label21_Click()
 
     SelectLocationForm.Show
@@ -197,35 +139,9 @@ Private Sub Label22_Click()
     
 End Sub
 
-
-
 Private Sub PV_info_Click()
 
     PVinfo.Show
-
-End Sub
-
-Private Sub PVEnable_Click()
-    
-    If PVEnable = False Then
-        Label8.Visible = False
-
-        PVPeneText.Visible = False
-        PVPeneScroll.Visible = False
-
-        ClearnessText.Visible = False
-        ClearnessScroll.Visible = False
-        Label11.Visible = False
-    Else
-        Label8.Visible = True
-
-        PVPeneText.Visible = True
-        PVPeneScroll.Visible = True
-
-        ClearnessText.Visible = True
-        ClearnessScroll.Visible = True
-        Label11.Visible = True
-    End If
 
 End Sub
 
@@ -253,40 +169,6 @@ Public Sub UserForm_Initialize()
         End If
     filename = Dir()
     Loop
-
-    'EVPage
-    Label6.Visible = False
-    EVPeneText.Visible = False
-    EVPeneScroll.Visible = False
-    EVPeneText.Value = 0
-
-    'PVPage
-    Label8.Visible = False
-
-    PVPeneText.Visible = False
-    PVPeneScroll.Visible = False
-    PVPeneText.Value = 0
-
-    ClearnessText.Value = 1
-    ClearnessText.Visible = False
-    ClearnessScroll.Visible = False
-    Label11.Visible = False
-    
-    'HPPage
-    Label12.Visible = False
-
-    HPPeneText.Visible = False
-    HPPeneScroll.Visible = False
-
-    HPPeneText.Value = Int(0)
-    
-    'CHPPage
-    Label16.Visible = False
-
-    CHPPeneText.Visible = False
-    CHPPeneScroll.Visible = False
-
-    CHPPeneText.Value = Int(0)
     
     With SelectLocation
         .AddItem "Scotland"

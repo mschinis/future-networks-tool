@@ -26,7 +26,6 @@ Public Function File_Exists(ByVal File As String) As Boolean
     End If
 
 End Function
-
 Public Sub Monitors()
 
     Dim WorkingSheet As Worksheet
@@ -38,6 +37,8 @@ Public Sub Monitors()
     RunHours = Start.RunHours
     Dim character As String
     Dim iextrastr As String
+    Dim z As Integer
+    
     
     character = Chr(68)
     
@@ -124,14 +125,14 @@ Public Sub Monitors()
     zoneLosseskVarh = Parser.IntValue
     
     Set WorkingSheet = Worksheets("Results Summary")
-    WorkingSheet.Range("C3").Value = CheckValues.MinVoltage
-    WorkingSheet.Range("C4").Value = CheckValues.MaxVoltage
-    WorkingSheet.Range("C6").Value = CheckValues.MinCurrentUseFeeder
-    WorkingSheet.Range("C7").Value = CheckValues.MaxCurrentUseFeeder
-    WorkingSheet.Range("C9").Value = CheckValues.MinCurrentUseLateral
-    WorkingSheet.Range("C10").Value = CheckValues.MaxCurrentUseLateral
-    WorkingSheet.Range("C12").Value = CheckValues.MinTransformerUse
-    WorkingSheet.Range("C13").Value = CheckValues.MaxTransformerUse
+'    WorkingSheet.Range("C3").Value = CheckValues.MinVoltage
+'    WorkingSheet.Range("C4").Value = CheckValues.MaxVoltage
+'    WorkingSheet.Range("C6").Value = CheckValues.MinCurrentUseFeeder
+'    WorkingSheet.Range("C7").Value = CheckValues.MaxCurrentUseFeeder
+'    WorkingSheet.Range("C9").Value = CheckValues.MinCurrentUseLateral
+'    WorkingSheet.Range("C10").Value = CheckValues.MaxCurrentUseLateral
+'    WorkingSheet.Range("C12").Value = CheckValues.MinTransformerUse
+'    WorkingSheet.Range("C13").Value = CheckValues.MaxTransformerUse
     WorkingSheet.Range("C15").Value = ((zoneLosseskWh ^ 2 + zoneLosseskVarh ^ 2) ^ 0.5 / (kWh ^ 2 + kVarh ^ 2) ^ 0.5) 'Calculate losses %
     WorkingSheet.Range("C17").Value = CheckValues.VoltageCompliance
     WorkingSheet.Range("C18").Value = CheckValues.PercentageCustomersVoltage
@@ -143,7 +144,9 @@ Public Sub Monitors()
     ' Monitors for transformer
     i = 0
     Open Direc & "transformer.csv" For Input As #FileNum
-    Line Input #FileNum, s  ' skip first line
+    For z = 1 To 421
+        Line Input #FileNum, s  ' skip first 7 hours
+    Next
     Do While Not EOF(FileNum)
         Line Input #FileNum, s
         Parser.CmdString = s
@@ -170,7 +173,9 @@ Public Sub Monitors()
     counter = 0
     Set WorkingSheet = Worksheets("Feeder" & i & "Start")
         Open Direc & "vifeeder" & i & ".csv" For Input As #FileNum
-        Line Input #FileNum, s
+        For z = 1 To 421
+            Line Input #FileNum, s  ' skip first 7 hours
+        Next
         Do While Not EOF(FileNum)
             Line Input #FileNum, s
             Parser.CmdString = s
@@ -217,7 +222,9 @@ Public Sub Monitors()
             character = Chr(Asc(character) + 1)
             Open Direc & "vilateral" & i & "_" & j & "_start.csv" For Input As #FileNum
             counter = 0
-            Line Input #FileNum, s
+            For z = 1 To 421
+                Line Input #FileNum, s  ' skip first 7 hours
+            Next
             Do While Not EOF(FileNum)
                 Line Input #FileNum, s
                 Parser.CmdString = s
@@ -266,7 +273,9 @@ Public Sub Monitors()
             Open Direc & "vilateral" & i & "_" & j & "_end.csv" For Input As #FileNum
             Set WorkingSheet = Worksheets("Feeder" & i & "End")
             counter = 0
-            Line Input #FileNum, s
+            For z = 1 To 421
+                Line Input #FileNum, s  ' skip first 7 hours
+            Next
             Do While Not EOF(FileNum)
                 Line Input #FileNum, s
                 Parser.CmdString = s

@@ -9,9 +9,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub CommandButton1_Click()
 
-    If PresetNetwork.Network = "Urban" Then Call DrawUrban
-    If PresetNetwork.Network = "Rural" Then Call DrawRural
-    If PresetNetwork.Network = "SemiUrban" Then Call DrawSemiUrban
+    If PresetNetwork.Network = "Urban" Then Call DrawNetworks.DrawUrban
+    If PresetNetwork.Network = "Rural" Then Call DrawNetworks.DrawRural
+    If PresetNetwork.Network = "SemiUrban" Then Call DrawNetworks.DrawSemiUrban
     
     Call CurrentOverload
 
@@ -42,6 +42,10 @@ Private Sub ShowExtra_Click()
     Sheet4.Visible = Not Sheet4.Visible
     Sheet5.Visible = Not Sheet5.Visible
     Sheet6.Visible = Not Sheet6.Visible
+    Sheet20.Visible = Not Sheet20.Visible
+    Sheet23.Visible = Not Sheet23.Visible
+    Sheet24.Visible = Not Sheet24.Visible
+    Sheet25.Visible = Not Sheet25.Visible
     
     Sheets("limits").Visible = Not Sheets("limits").Visible
 

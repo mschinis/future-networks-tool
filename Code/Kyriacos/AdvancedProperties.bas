@@ -44,12 +44,6 @@ Private Sub FeederMax_Change()
 Start.OverrideDefault = True
 End Sub
 
-
-
-Private Sub Label10_Click()
-
-End Sub
-
 Private Sub LateralMax_Change()
 Start.OverrideDefault = True
 End Sub
@@ -105,8 +99,6 @@ If Start.OverrideDefault = False Then
 ''        End If
 ''    End If
 End If
-
-
 
 
 Start.OverrideDefault = False

@@ -321,10 +321,6 @@ Private Sub SelectGraphsFeederOneList_Click()
 
 End Sub
 
-Private Sub SelectGraphsList_Click()
-
-End Sub
-
 Private Sub UserForm_Initialize()
     With SelectGraphsList
         .AddItem "Transformer Power Output"

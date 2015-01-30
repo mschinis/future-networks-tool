@@ -3,6 +3,9 @@ Public Network As String
 Public customers As Integer
 
 
+
+
+
 Public Sub Preset_Network()
 
 Dim stime As Single
@@ -40,28 +43,25 @@ Dim stime As Single
         DSSText.Command = "Transformer.LV_Transformer.kvs=(11, " & (AdvancedProperties.TransformerVoltage) / 1000 & ")"
     End If
     
-
-    
-    
-    If ChooseNetwork.EVEnable.Value = True Then
+    If ChooseNetwork.EVPeneScroll.Value <> 0 Then
         EVPenetration = ChooseNetwork.EVPeneText.Value / 100
         Call Assign_EV_Profiles(customers, EVPenetration)
     End If
     
-    If ChooseNetwork.PVEnable.Value = True Then
+    If ChooseNetwork.PVPeneScroll.Value <> 0 Then
         PVPenetration = ChooseNetwork.PVPeneText.Value / 100
         location = ChooseNetwork.SelectLocation.ListIndex + 1
         clearness = ChooseNetwork.ClearnessText.Value
         Call Assign_PV_Profiles(customers, PVPenetration, location, Tmonth, clearness)
     End If
     
-    If ChooseNetwork.HPEnable.Value = True Then
+    If ChooseNetwork.HPPeneScroll.Value <> 0 Then
         HPPenetration = ChooseNetwork.HPPeneText.Value / 100
         location = ChooseNetwork.SelectLocation.ListIndex + 1
         Call Assign_HP_Profiles(customers, HPPenetration, Tmonth, Tday, location)
     End If
     
-    If ChooseNetwork.CHPEnable.Value = True Then
+    If ChooseNetwork.CHPPeneScroll.Value <> 0 Then
         CHPPenetration = ChooseNetwork.CHPPeneText.Value / 100
         location = ChooseNetwork.SelectLocation.ListIndex + 1
         Call Assign_CHP_Profiles(customers, CHPPenetration, Tmonth, Tday, location)

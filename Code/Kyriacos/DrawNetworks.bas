@@ -5,20 +5,28 @@ Sub DrawBasicNetwork()
 Dim customer As Integer
 Dim WorkingSheet As Worksheet
 Set WorkingSheet = Sheets("Network")
+Sheets("Network").Activate
+
+Dim Shp As Shape
+For Each Shp In ActiveSheet.Shapes
+    If Shp.Type = 1 Then
+        Shp.Delete
+    End If
+Next Shp
 
 
 Sheets("Network").Activate
-Cells.Select
-Selection.Delete Shift:=xlUp
+'Cells.Select
+'Selection.Delete Shift:=xlUp
 
 For y = 1 To 4
 
 'Draw Feeder
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 0, 50 + (y * 500 - 500), 250 * 5, _
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 0, 50 + (y * 500 - 500), 1350, _
         50 + (y * 500 - 500)).Select
     With Selection.ShapeRange.Line
+        .Weight = 4
         .Visible = msoTrue
-        .Weight = 3.5
     End With
 
     'Draw Lateral 1
@@ -141,7 +149,7 @@ For i = 1 To 33
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 - var, _
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 33))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -195,13 +203,12 @@ For i = 1 To 33
 Next
 
 Next
-'Call NetworkLabels
 
+    ActiveSheet.Shapes.Range(Array("Group 1")).Select
+    Selection.ShapeRange.ZOrder msoBringToFront
 End Sub
 
 Sub DrawUrban()
-'
-
 
 Dim customer As Integer
 Dim WorkingSheet As Worksheet
@@ -209,7 +216,6 @@ Set WorkingSheet = Sheets("Network")
 customer = 0
 
 Call DrawBasicNetwork
-
 
 For y = 1 To 4
 
@@ -281,7 +287,7 @@ For i = 1 To 44
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 - var, _
+    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 44))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -335,8 +341,9 @@ For i = 1 To 44
 Next
 
 Next
-'Call NetworkLabels
 
+    ActiveSheet.Shapes.Range(Array("Group 1")).Select
+    Selection.ShapeRange.ZOrder msoBringToFront
 End Sub
 
 Sub DrawRural()
@@ -475,260 +482,52 @@ For i = 1 To 9
 Next
 
 Next
-'Call NetworkLabels
+    ActiveSheet.Shapes.Range(Array("Group 1")).Select
+    Selection.ShapeRange.ZOrder msoBringToFront
 
 End Sub
 
-Sub NetworkLabels()
-'
-' NetworkLabels Macro
-'
 
-'
-    Range("A3").Select
-    ActiveCell.FormulaR1C1 = "Feeder 1"
-    Range("A3").Select
-    Selection.Font.Bold = True
-    With Selection.Font
-        .name = "Arial"
-        .Size = 15
-        .Strikethrough = False
-        .Superscript = False
-        .Subscript = False
-        .OutlineFont = False
-        .Shadow = False
-        .Underline = xlUnderlineStyleNone
-        .ColorIndex = xlAutomatic
-        .TintAndShade = 0
-        .ThemeFont = xlThemeFontNone
-    End With
-    Range("C9").Select
-
-    Range("A42").Select
-
-    Range("A3").Select
-    Selection.Copy
-
-    Range("A42").Select
-    ActiveSheet.Paste
-    Application.CutCopyMode = False
-    ActiveCell.FormulaR1C1 = "Feeder 2"
-    Range("A43").Select
-
-    Range("A81").Select
-
-    Range("A42").Select
-    Selection.Copy
-
-    Range("A81").Select
-    ActiveSheet.Paste
-    Application.CutCopyMode = False
-    ActiveCell.FormulaR1C1 = "Feeder 3"
-    Range("A82").Select
-
-    Range("A120").Select
-
-    Range("A81").Select
-    Selection.Copy
-
-    Range("A120").Select
-    ActiveSheet.Paste
-    Application.CutCopyMode = False
-    ActiveCell.FormulaR1C1 = "Feeder 4"
-    Range("A121").Select
-
-    Range("F37").Select
-
-    ActiveCell.FormulaR1C1 = "Lateral 1"
-    Range("F37").Select
-    Selection.Font.Bold = True
-    With Selection.Font
-        .name = "Arial"
-        .Size = 15
-        .Strikethrough = False
-        .Superscript = False
-        .Subscript = False
-        .OutlineFont = False
-        .Shadow = False
-        .Underline = xlUnderlineStyleNone
-        .ColorIndex = xlAutomatic
-        .TintAndShade = 0
-        .ThemeFont = xlThemeFontNone
-    End With
-    Range("P37").Select
-
-    ActiveCell.FormulaR1C1 = ""
-    Range("F37").Select
-    Selection.Copy
-    Range("P37").Select
-    ActiveSheet.Paste
-    Application.CutCopyMode = False
-    ActiveCell.FormulaR1C1 = "Lateral 2"
-    Range("P37").Select
-    Selection.Copy
-    Range("Z37").Select
-    ActiveSheet.Paste
-    Application.CutCopyMode = False
-    ActiveCell.FormulaR1C1 = "Lateral 3"
-    Range("Z37").Select
-    Selection.Copy
-    Range("AB35").Select
-    ActiveSheet.Paste
-    Application.CutCopyMode = False
-    ActiveCell.FormulaR1C1 = "Lateral 4"
-    Range("AB36").Select
-
-    Range("F37").Select
-    Selection.Copy
-
-    Range("F76").Select
-    ActiveSheet.Paste
-
-    Range("P37").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("P76").Select
-    ActiveSheet.Paste
-
-    Range("Z37").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("Z76").Select
-    ActiveSheet.Paste
-
-    Range("AB35").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("AB75").Select
-
-    Range("AB74").Select
-
-    ActiveSheet.Paste
-
-    Range("F76").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("F115").Select
-    ActiveSheet.Paste
-
-    Range("P76").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("P115").Select
-    ActiveSheet.Paste
-
-    Range("Z76").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("Z115").Select
-    ActiveSheet.Paste
-
-    Range("AB74").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("AB114").Select
-    ActiveSheet.Paste
-
-    Range("F115").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("F154").Select
-    ActiveSheet.Paste
- 
-    Range("P115").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("P154").Select
-    ActiveSheet.Paste
-
-    Range("Z115").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("Z154").Select
-
-    ActiveSheet.Paste
-    Range("AB114").Select
-    Application.CutCopyMode = False
-    Selection.Copy
-
-    Range("AB153").Select
-    ActiveSheet.Paste
-
-    'ActiveWindow.Zoom = 70
-    ActiveWindow.DisplayGridlines = False
-    ActiveWindow.SmallScroll Down:=-200
-End Sub
 
 Sub CurrentOverload()
-'
-' CurrentOverload Macro
+
+
+   Dim CurrentFlags(1 To 4, 1 To 5) As Boolean
+    
+    If Sheets("FeederCurrentRollingAverages").Range("C1390").Value > 1 Or Sheets("FeederCurrentRollingAverages").Range("C1389").Value < -1 Then CurrentFlags(1, 1) = True
+    If Sheets("CurrentRollingAverages").Range("E1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("E1391").Value < -1 Then CurrentFlags(1, 2) = True
+    If Sheets("CurrentRollingAverages").Range("F1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("F1391").Value < -1 Then CurrentFlags(1, 3) = True
+    If Sheets("CurrentRollingAverages").Range("I1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("I1391").Value < -1 Then CurrentFlags(1, 4) = True
+    If Sheets("CurrentRollingAverages").Range("L1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("L1391").Value < -1 Then CurrentFlags(1, 5) = True
+    
+    If Sheets("FeederCurrentRollingAverages").Range("F1390").Value > 1 Or Sheets("FeederCurrentRollingAverages").Range("F1389").Value < -1 Then CurrentFlags(2, 1) = True
+    If Sheets("CurrentRollingAverages").Range("O1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("O1391").Value < -1 Then CurrentFlags(2, 2) = True
+    If Sheets("CurrentRollingAverages").Range("R1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("R1391").Value < -1 Then CurrentFlags(2, 3) = True
+    If Sheets("CurrentRollingAverages").Range("U1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("U1391").Value < -1 Then CurrentFlags(2, 4) = True
+    If Sheets("CurrentRollingAverages").Range("X1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("X1391").Value < -1 Then CurrentFlags(2, 5) = True
+    
+    If Sheets("FeederCurrentRollingAverages").Range("I1390").Value > 1 Or Sheets("FeederCurrentRollingAverages").Range("I1389").Value < -1 Then CurrentFlags(3, 1) = True
+    If Sheets("CurrentRollingAverages").Range("AA1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("AA1391").Value < -1 Then CurrentFlags(3, 2) = True
+    If Sheets("CurrentRollingAverages").Range("AD1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("AD1391").Value < -1 Then CurrentFlags(3, 3) = True
+    If Sheets("CurrentRollingAverages").Range("AG1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("AG1391").Value < -1 Then CurrentFlags(3, 4) = True
+    If Sheets("CurrentRollingAverages").Range("AJ1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("AJ1391").Value < -1 Then CurrentFlags(3, 5) = True
+    
+    If Sheets("FeederCurrentRollingAverages").Range("L1390").Value > 1 Or Sheets("FeederCurrentRollingAverages").Range("L1389").Value < -1 Then CurrentFlags(4, 1) = True
+    If Sheets("CurrentRollingAverages").Range("AM1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("AM1391").Value < -1 Then CurrentFlags(4, 2) = True
+    If Sheets("CurrentRollingAverages").Range("AP1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("AP1391").Value < -1 Then CurrentFlags(4, 3) = True
+    If Sheets("CurrentRollingAverages").Range("AS1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("AS1391").Value < -1 Then CurrentFlags(4, 4) = True
+    If Sheets("CurrentRollingAverages").Range("AV1392").Value > 1 Or Sheets("CurrentRollingAverages").Range("AV1391").Value < -1 Then CurrentFlags(4, 5) = True
     
     For i = 1 To 4
         For y = 1 To 5
-        If Start.CurrentFlags(i, y) = 1 Then
-            Sheets("Network").Shapes("Feeder1Lateral1").Visible = True
+        If CurrentFlags(i, y) = True Then
+            Sheets("Network").Shapes("Feeder" & i & "Lateral" & y - 1).Visible = True
         Else
-'    Dim LateralNo(1 To 5) As Double
-'    Dim FeederNo(1 To 4) As Double
-'
-'    FeederNo(1) = 64
-'    FeederNo(2) = 585
-'    FeederNo(3) = 1104
-'    FeederNo(4) = 1625
-'
-'    LateralNo(1) = 6
-'    LateralNo(2) = 259
-'    LateralNo(3) = 759
-'    LateralNo(4) = 1181
-'    LateralNo(5) = 1298
-'
-'
-'    For i = 1 To 4
-'        For y = 1 To 5
-'            If Start.CurrentFlags(i, y) = 1 Then
-'
-'                ActiveSheet.Shapes.AddTextbox(msoTextOrientationHorizontal, LateralNo(y), FeederNo(i), 65.25, 37.5).Select
-'                Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = "CURRENT EXCEEDED"
-'                With Selection.ShapeRange.Fill
-'                    .Visible = msoTrue
-'                    .ForeColor.RGB = RGB(255, 0, 0)
-'                    .Transparency = 0
-'                    .Solid
-'                End With
-'
-'                With Selection.ShapeRange(1).TextFrame2.TextRange.Characters(1, 16). _
-'                    ParagraphFormat
-'                    .FirstLineIndent = 0
-'                    .Alignment = msoAlignCenter
-'                End With
-'                With Selection.ShapeRange(1).TextFrame2.TextRange.Characters(1, 16).Font
-'                    .NameComplexScript = "+mn-cs"
-'                    .NameFarEast = "+mn-ea"
-'                    .Fill.Visible = msoTrue
-'                    .Fill.ForeColor.ObjectThemeColor = msoThemeColorDark1
-'                    .Fill.ForeColor.TintAndShade = 0
-'                    .Fill.ForeColor.Brightness = 0
-'                    .Fill.Transparency = 0
-'                    .Fill.Solid
-'                    .Size = 11
-'                    .name = "+mn-lt"
-'                End With
-'
-'            End If
-'        Next
-'    Next
-'
-'
+            Sheets("Network").Shapes("Feeder" & i & "Lateral" & y - 1).Visible = False
+        End If
+        Next
+    Next
+
 End Sub
 
 
