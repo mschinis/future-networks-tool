@@ -38,6 +38,8 @@ Public Sub Monitors()
     RunHours = Start.RunHours
     Dim character As String
     Dim iextrastr As String
+    Dim z As Integer
+    
     
     character = Chr(68)
     
@@ -143,7 +145,9 @@ Public Sub Monitors()
     ' Monitors for transformer
     i = 0
     Open Direc & "transformer.csv" For Input As #FileNum
-    Line Input #FileNum, s  ' skip first line
+    For z = 1 To 421
+        Line Input #FileNum, s  ' skip first 7 hours
+    Next
     Do While Not EOF(FileNum)
         Line Input #FileNum, s
         Parser.CmdString = s
@@ -170,7 +174,9 @@ Public Sub Monitors()
     counter = 0
     Set WorkingSheet = Worksheets("Feeder" & i & "Start")
         Open Direc & "vifeeder" & i & ".csv" For Input As #FileNum
-        Line Input #FileNum, s
+        For z = 1 To 421
+            Line Input #FileNum, s  ' skip first 7 hours
+        Next
         Do While Not EOF(FileNum)
             Line Input #FileNum, s
             Parser.CmdString = s
@@ -217,7 +223,9 @@ Public Sub Monitors()
             character = Chr(Asc(character) + 1)
             Open Direc & "vilateral" & i & "_" & j & "_start.csv" For Input As #FileNum
             counter = 0
-            Line Input #FileNum, s
+            For z = 1 To 421
+                Line Input #FileNum, s  ' skip first 7 hours
+            Next
             Do While Not EOF(FileNum)
                 Line Input #FileNum, s
                 Parser.CmdString = s
@@ -266,7 +274,9 @@ Public Sub Monitors()
             Open Direc & "vilateral" & i & "_" & j & "_end.csv" For Input As #FileNum
             Set WorkingSheet = Worksheets("Feeder" & i & "End")
             counter = 0
-            Line Input #FileNum, s
+            For z = 1 To 421
+                Line Input #FileNum, s  ' skip first 7 hours
+            Next
             Do While Not EOF(FileNum)
                 Line Input #FileNum, s
                 Parser.CmdString = s

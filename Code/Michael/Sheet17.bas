@@ -42,6 +42,10 @@ Private Sub ShowExtra_Click()
     Sheet4.Visible = Not Sheet4.Visible
     Sheet5.Visible = Not Sheet5.Visible
     Sheet6.Visible = Not Sheet6.Visible
+    Sheet20.Visible = Not Sheet20.Visible
+    Sheet23.Visible = Not Sheet23.Visible
+    Sheet24.Visible = Not Sheet24.Visible
+    Sheet25.Visible = Not Sheet25.Visible
     
     Sheets("limits").Visible = Not Sheets("limits").Visible
 

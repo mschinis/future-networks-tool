@@ -3,6 +3,13 @@ Public CustomersArrayShuffledHP() As Variant
 Public HPStopPoint As Integer
 Public CHPStopPoint As Integer
 
+Public PVPhases() As Integer
+Public EVPhases() As Integer
+Public HPPhases() As Integer
+Public NoPV As Integer
+Public NoEV As Integer
+Public NoHP As Integer
+
 
 Function Assign_PV_Profiles(ByVal NoCustomers As Integer, ByVal penetration As Double, ByVal location As Integer, ByVal Tmonth As Integer, ByVal clearness As Integer)
 
@@ -10,17 +17,19 @@ Dim LoadshapeNumber As Integer
 Dim PVsize As Integer
 Dim CustomersArray() As Variant
 ReDim CustomersArray(1 To NoCustomers)
+ReDim PVPhases(1 To NoCustomers * penetration)
+NoPV = NoCustomers * penetration
 
 
 For i = 1 To 4
     For y = 1 To NoCustomers / 4
-        Z = 1 + Z
-        CustomersArray(Z) = i & "_" & y
+        z = 1 + z
+        CustomersArray(z) = i & "_" & y
     Next
 Next
 
 
-CustomersArrayShuffled = ShuffleArray(CustomersArray)
+customersarrayshuffled = ShuffleArray(CustomersArray)
 
 DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\PV"
 
@@ -30,8 +39,11 @@ For i = 1 To (penetration * NoCustomers)
 
     
     DSSText.Command = "new loadshape.PVload" & i & " npts=1440 minterval=1.0 csvfile=PV" & location & "_" & Tmonth & "_" & clearness & "_" & PVsize & ".txt"
-    DSSText.Command = "new generator.PV" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=10 PF=1 Daily=PVload" & i
+    DSSText.Command = "new generator.PV" & i & " bus1=Consumer" & customersarrayshuffled(i) & ".1 Phases=1 kV=0.23 kW=10 PF=1 Daily=PVload" & i
 
+    
+    PVPhases(i) = Int(Mid(customersarrayshuffled(i), 3)) Mod 3
+    If PVPhases(i) = 0 Then PVPhases(i) = 3
 
 Next
 
@@ -49,8 +61,8 @@ Dim occupants As Integer
 If HPStopPoint = 0 And CHPStopPoint = 0 Then
     For i = 1 To 4
         For y = 1 To NoCustomers / 4
-            Z = 1 + Z
-            CustomersArray(Z) = i & "_" & y
+            z = 1 + z
+            CustomersArray(z) = i & "_" & y
         Next
     Next
     CustomersArrayShuffledHP = ShuffleArray(CustomersArray)
@@ -99,7 +111,8 @@ Dim InsulationTypeArray(1 To 100) As Integer
 Dim occupants As Integer
 Dim OccupantsArray() As Integer
 ReDim OccupantsArray(1 To NoCustomers)
-
+ReDim HPPhases(1 To NoCustomers * penetration)
+NoHP = NoCustomers * penetration
 
 
 For i = 1 To 100
@@ -158,8 +171,8 @@ End If
 
 For i = 1 To 4
     For y = 1 To NoCustomers / 4
-        Z = 1 + Z
-        CustomersArray(Z) = i & "_" & y
+        z = 1 + z
+        CustomersArray(z) = i & "_" & y
     Next
 Next
 
@@ -184,7 +197,10 @@ For i = 1 To (NoCustomers) * penetration
     LoadshapeNumber = Int((500 - 1 + 1) * Rnd + 1)
     DSSText.Command = "new loadshape.Houseload" & i & " npts=1440 minterval=1.0 csvfile=House" & Tmonth & "_" & Tday & "_" & occupants & "_" & LoadshapeNumber & ".txt"
     DSSText.Command = "new load.House" & i & " bus1=Consumer" & CustomersArrayShuffledHP(i) & ".1 Phases=1 kV=0.23 kW=10 PF=0.97 Daily=Houseload" & i
-
+    
+    HPPhases(i) = Int(Mid(CustomersArrayShuffledHP(i), 3)) Mod 3
+    If HPPhases(i) = 0 Then HPPhases(i) = 3
+    
 Next
 
 HPStopPoint = (NoCustomers * penetration)
@@ -261,8 +277,8 @@ If HPStopPoint = 0 Then
 
     For i = 1 To 4
         For y = 1 To NoCustomers / 4
-            Z = 1 + Z
-            CustomersArray(Z) = i & "_" & y
+            z = 1 + z
+            CustomersArray(z) = i & "_" & y
         Next
     Next
 
@@ -301,17 +317,18 @@ Function Assign_EV_Profiles(ByVal NoCustomers As Integer, ByVal penetration As D
 Dim LoadshapeNumber As Integer
 Dim CustomersArray() As Variant
 ReDim CustomersArray(1 To NoCustomers)
-
+ReDim EVPhases(1 To NoCustomers * penetration)
+NoEV = NoCustomers * penetration
 
 For i = 1 To 4
     For y = 1 To NoCustomers / 4
-        Z = 1 + Z
-        CustomersArray(Z) = i & "_" & y
+        z = 1 + z
+        CustomersArray(z) = i & "_" & y
     Next
 Next
 
 
-CustomersArrayShuffled = ShuffleArray(CustomersArray)
+customersarrayshuffled = ShuffleArray(CustomersArray)
 
 DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\EV"
 
@@ -321,8 +338,10 @@ For i = 1 To (penetration * NoCustomers)
     LoadshapeNumber = Int((1000 - 1 + 1) * Rnd + 1)
     
     DSSText.Command = "new loadshape.EVload" & i & " npts=1440 minterval=1.0 csvfile=EV" & LoadshapeNumber & ".txt"
-    DSSText.Command = "new load.EV" & i & " bus1=Consumer" & CustomersArrayShuffled(i) & ".1 Phases=1 kV=0.23 kW=3.3 PF=1 Daily=EVload" & i
-
+    DSSText.Command = "new load.EV" & i & " bus1=Consumer" & customersarrayshuffled(i) & ".1 Phases=1 kV=0.23 kW=3.3 PF=1 Daily=EVload" & i
+    
+    EVPhases(i) = Int(Mid(customersarrayshuffled(i), 3)) Mod 3
+    If EVPhases(i) = 0 Then EVPhases(i) = 3
 
 Next
 

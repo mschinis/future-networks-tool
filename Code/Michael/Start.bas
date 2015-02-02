@@ -41,10 +41,19 @@ OverrideDefault = False
 ''''''''''''''''''''''''
 
 
-Sheets("Network").Activate
-Cells.Select
-Selection.Delete Shift:=xlUp
-Sheets("Main").Activate
+'Sheets("Network").Activate
+'For em = 1 To 4
+'    For emm = 1 To 5
+'            Sheets("Network").Shapes("Feeder" & em & "Lateral" & emm - 1).Visible = False
+'    Next
+'Next
+'Dim Shp As Shape
+'For Each Shp In ActiveSheet.Shapes
+'    If Shp.Type = 1 Then
+'        Shp.Delete
+'    End If
+'Next Shp
+'Sheets("Main").Activate
 
 ' Create a new instance of the DSS
     Reset
@@ -102,13 +111,16 @@ Sheets("Main").Activate
     progresscounter = 0
     Application.StatusBar = "Simulation running - 10%"
     
-    For i = 1 To RunHours
-        If i Mod 180 = 0 Then
-            progresscounter = progresscounter + 1
-            Application.StatusBar = "Simulation running - " & (progresscounter * 10 + 10) & "%"
-        End If
+    For i = 1 To 1860
+           
         DSSobj.ActiveCircuit.Solution.Solve
-        Call CheckValuesPreset(PresetNetwork.customers, i, TransformerArray, Feeders, Laterals, CustomersVoltages, CustomersLimits, CurrentFlags)
+        If i > 420 Then
+            If i Mod 180 = 0 Then
+                progresscounter = progresscounter + 1
+                Application.StatusBar = "Simulation running - " & (progresscounter * 10 + 10) & "%"
+            End If
+            Call CheckValuesPreset(PresetNetwork.customers, i - 420, TransformerArray, Feeders, Laterals, CustomersVoltages, CustomersLimits, CurrentFlags)
+        End If
     Next
 
 

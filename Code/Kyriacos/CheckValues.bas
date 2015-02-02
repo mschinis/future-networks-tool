@@ -89,8 +89,6 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         TransformerArray(iter, 1) = TransformerUse
         
         TransformerUse = TransformerUse / TransformerMax
-        
-        
         If TransformerUse > 1 Then
             If (TempArray(LBound(TempArray))) + (TempArray(LBound(TempArray) + 2)) + (TempArray(LBound(TempArray) + 4)) < 0 Then
                 'insert PV AVM here
@@ -104,8 +102,6 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         
         
         End If
-        
-        
         
         If TransformerUse > MaxTransformerUse Then MaxTransformerUse = TransformerUse
         If TransformerUse < MinTransformerUse Then MinTransformerUse = TransformerUse

@@ -25,6 +25,8 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
     
     Dim TempArray As Variant
     Dim dValue As Double
+    Dim TransformerOverloaded As Boolean
+    
     Network = PresetNetwork.Network
     
 '    If Start.OverrideDefault = False Then
@@ -88,6 +90,17 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         
         TransformerUse = TransformerUse / TransformerMax
         If TransformerUse > 1 Then
+            If (TempArray(LBound(TempArray))) + (TempArray(LBound(TempArray) + 2)) + (TempArray(LBound(TempArray) + 4)) < 0 Then
+                'insert PV AVM here
+            Else
+                'insert HP and EV AVM here
+            End If
+            
+            TransformerOverloaded = True
+        
+        ElseIf TransformerOverloaded = False Then
+        
+        
         End If
         
         If TransformerUse > MaxTransformerUse Then MaxTransformerUse = TransformerUse
@@ -240,27 +253,27 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
           
             Next
             
-            For Z = 1 To (NoCustomers / 4)
-                DSSCircuit.SetActiveElement ("Line.Consumer" & i & "_" & Z)
+            For z = 1 To (NoCustomers / 4)
+                DSSCircuit.SetActiveElement ("Line.Consumer" & i & "_" & z)
                 TempArray = DSSCircuit.ActiveCktElement.Voltages
                 A = (TempArray(LBound(TempArray)) ^ 2 + TempArray(LBound(TempArray) + 1) ^ 2) ^ 0.5 / 230
 
-                CustomersVoltages(i, Z, iter) = A
+                CustomersVoltages(i, z, iter) = A
 
                 dValue = 0
                 If A > VoltageMax Or A < VoltageMin Then
-                    CustomersLimits(i, Z, iter) = 1
-                    Start.NotCompliant(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = Start.NotCompliant(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) + 1
-                    Start.CustomerVoltageLimit(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
+                    CustomersLimits(i, z, iter) = 1
+                    Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) + 1
+                    Start.CustomerVoltageLimit(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
                 ElseIf iter > 10 Then
                     For j = 1 To 10
-                        dValue = CustomersVoltages(i, Z, iter - j) + dValue
+                        dValue = CustomersVoltages(i, z, iter - j) + dValue
                     Next
                     dValue = dValue / 10
                     If dValue < VoltageAverageMin Then
-                        CustomersLimits(i, Z, iter) = 1
-                        Start.NotCompliant(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = Start.NotCompliant(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) + 1
-                        Start.CustomerVoltageLimit(Z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
+                        CustomersLimits(i, z, iter) = 1
+                        Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) + 1
+                        Start.CustomerVoltageLimit(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
                     End If
                 End If
 
