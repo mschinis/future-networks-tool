@@ -34,7 +34,7 @@ OverrideDefault = False
 '    StatusOld = Application.DisplayStatusBar
 '
 '    '      Doing these will speed up your code
-'    CalcOld = Application.Calculation
+    CalcOld = Application.Calculation
 '    Application.Calculation = xlCalculationManual
 '    Application.ScreenUpdating = False
 '    Application.EnableEvents = False

@@ -3,32 +3,138 @@ Public MaxCharge() As Integer
 Public Charge() As Integer
 Public EVFlags() As Integer
 Public achieved As Integer
-Public required As Integer
+Public achievedlaterals() As Integer
+Public achievedfeeders() As Integer
+
+
 
 
 Public Sub EVManagement(ByVal i As Integer)
 
     Call CheckEV
     
-    'if ANMEV = true then    'if ANM for EVs is enabled
-    Call TransformerManagementEV(Start.TransformerArray(i, 1) / CheckValues.TransformerMax)
+    If ChooseNetwork.ANMEV = True Then
+        
+        Call LateralManagementEV(i, Start.Laterals)
+        Call FeederManagementEV(i, Start.Feeders)
+        Call TransformerManagementEV(i, Start.Feeders, Start.TransformerArray(i, 1) / CheckValues.TransformerMax)
     
-    'end if
+    End If
+
     
 End Sub
 
-Public Sub TransformerManagementEV(ByVal TransformerUse As Double)
+Public Sub LateralManagementEV(ByVal iter As Integer, ByRef CurrentUse() As Double)
 
+Dim i, y, z, h As Integer
+Dim lateralrequired As Integer
+
+ReDim achievedlaterals(1 To 4, 1 To 4, 1 To 3)
+ReDim achievedfeeders(1 To 4, 1 To 3)
+achieved = 0
+
+For i = 1 To 4
+    For y = 1 To 4
+        For z = 1 To 3
+            If CurrentUse(iter, i, y, z) / CheckValues.lateralcurrentmax > 1 Then
+                For h = 1 To Assign_Profiles.NoEV
+                    max = 0
+                    lateralrequired = (CurrentUse(iter, i, y, z) - CheckValues.lateralcurrentmax) * 0.5 / 16
+                    For a = 1 To Assign_Profiles.NoEV
+                        If Assign_Profiles.EVLocation(1, a) = i And Assign_Profiles.EVLocation(2, a) = y And Assign_Profiles.EVLocation(3, a) = z Then
+                            If EVFlags(a) = 1 Then
+                                If max < Charge(a) Then
+                                    max = Charge(a)
+                                    comp = a
+                                End If
+                            End If
+                        End If
+                    Next
+                
+                    If achievedlaterals(i, y, z) < lateralrequired Then
+                        If comp > 0 Then
+                            If EVFlags(comp) = 1 Then
+                                EVFlags(comp) = 4
+                                achieved = achieved + 1
+                                achievedlaterals(i, y, z) = achievedlaterals(i, y, z) + 1
+                                achievedfeeders(i, z) = achievedfeeders(i, z) + 1
+                                Call DisconnectEV(comp)
+                            End If
+                        End If
+                    End If
+                    If achievedlaterals(i, y, z) = lateralrequired Then
+                        Exit For
+                    End If
+                Next
+            End If
+        Next
+    Next
+Next
+                                
+End Sub
+
+Public Sub FeederManagementEV(ByVal iter As Integer, ByRef CurrentUse() As Double)
+
+Dim i, y, z, h As Integer
+Dim feederrequired As Integer
+
+'ReDim achievedlaterals(1 To 4, 1 To 4, 1 To 3)
+'ReDim achievedfeeder(1 To 4, 1 To 3)
+'achieved = 0
+
+For i = 1 To 4
+        For z = 1 To 3
+            If CurrentUse(iter, i, z) / CheckValues.feedercurrentmax > 0.95 Then
+                For h = 1 To Assign_Profiles.NoEV
+                    max = 0
+                    feederrequired = (CurrentUse(iter, i, z) - CheckValues.feedercurrentmax) * 0.5 / 16
+                    For a = 1 To Assign_Profiles.NoEV
+                        If Assign_Profiles.EVLocation(1, a) = i And Assign_Profiles.EVLocation(3, a) = z Then
+                            If EVFlags(a) = 1 Then
+                                If max < Charge(a) Then
+                                    max = Charge(a)
+                                    comp = a
+                                End If
+                            End If
+                        End If
+                    Next
+                
+                    If achievedfeeders(i, z) < feederrequired Then
+                        If comp > 0 Then
+                            If EVFlags(comp) = 1 Then
+                                EVFlags(comp) = 4
+                                achieved = achieved + 1
+                                achievedfeeders(i, z) = achievedfeeders(i, z) + 1
+                                Call DisconnectEV(comp)
+                            End If
+                        End If
+                    End If
+                    If achievedfeeders(i, z) = feederrequired Then
+                        Exit For
+                    End If
+                Next
+            End If
+        Next
+Next
+
+
+
+End Sub
+
+Public Sub TransformerManagementEV(ByVal iter As Integer, ByRef feedercurrents() As Double, ByVal TransformerUse As Double)
+
+Dim required As Integer
 Dim max, min, comp, j, y, i, m, k As Integer
-Dim bandgap As Double
+Dim upperlimit, lowerlimit As Double
 
-bandgap = 0.97
+upperlimit = 0.96
+lowerlimit = 0.93
 
 required = (((TransformerUse * CheckValues.TransformerMax) - CheckValues.TransformerMax) * 0.5) / 3.3
 required = Abs(required)
-achieved = 0
+'achieved = 0
 
-If TransformerUse > 1 Then
+If TransformerUse > upperlimit Then
 
 For y = 1 To Assign_Profiles.NoEV
     max = 0
@@ -56,18 +162,19 @@ For y = 1 To Assign_Profiles.NoEV
     End If
 Next
 
-ElseIf TransformerUse < bandgap Then
+ElseIf TransformerUse < lowerlimit Then
 For m = 1 To Assign_Profiles.NoEV
     min = 1000
     
     For k = 1 To Assign_Profiles.NoEV
-
+        If feedercurrents(iter, Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(3, k)) / CheckValues.feedercurrentmax < 0.9 Then
             If EVFlags(k) = 2 Then
                 If min > Charge(k) Then
                     min = Charge(k)
                     comp = k
                 End If
             End If
+        End If
     Next
 
     If achieved < required Then
