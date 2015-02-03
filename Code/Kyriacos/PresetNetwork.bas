@@ -3,9 +3,6 @@ Public Network As String
 Public customers As Integer
 
 
-
-
-
 Public Sub Preset_Network()
 
 Dim stime As Single

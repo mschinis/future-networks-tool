@@ -87,21 +87,9 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         TransformerUse = (A + B + C)
 
         TransformerArray(iter, 1) = TransformerUse
+        If (TempArray(LBound(TempArray))) + (TempArray(LBound(TempArray) + 2)) + (TempArray(LBound(TempArray) + 4)) < 0 Then TransformerArray(iter, 1) = -TransformerUse
         
         TransformerUse = TransformerUse / TransformerMax
-        If TransformerUse > 1 Then
-            If (TempArray(LBound(TempArray))) + (TempArray(LBound(TempArray) + 2)) + (TempArray(LBound(TempArray) + 4)) < 0 Then
-                'insert PV AVM here
-            Else
-                'insert HP and EV AVM here
-            End If
-            
-            TransformerOverloaded = True
-        
-        ElseIf TransformerOverloaded = False Then
-        
-        
-        End If
         
         If TransformerUse > MaxTransformerUse Then MaxTransformerUse = TransformerUse
         If TransformerUse < MinTransformerUse Then MinTransformerUse = TransformerUse
