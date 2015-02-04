@@ -72,7 +72,7 @@ OverrideDefault = False
     WelcomeScreen.Show ' Goes into either Preset or Custom Network after this
     If ChooseNetwork.finished <> True Then GoTo ENDLINE
     
-    DSSText.Command = "Set Datapath =" & ActiveWorkbook.Path & "\output"
+    DSSText.Command = "Set Datapath =" & ActiveWorkbook.path & "\output"
     DSSText.Command = "new monitor.Transformer element=transformer.LV_Transformer terminal=1 mode=1 ppolar=yes"
     
     

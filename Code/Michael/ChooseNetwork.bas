@@ -160,7 +160,7 @@ End Sub
 Public Sub UserForm_Initialize()
     Dim filename As String
     
-    filename = Dir(ThisWorkbook.Path & "/Networks/", 16)
+    filename = Dir(ThisWorkbook.path & "/Networks/", 16)
     filename = Dir()
     filename = Dir()
     Do While filename <> ""

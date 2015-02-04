@@ -31,7 +31,7 @@ Next
 
 customersarrayshuffled = ShuffleArray(CustomersArray)
 
-DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\PV"
+DSSText.Command = "set Datapath=" & ActiveWorkbook.path & "\Loadshapes\PV"
 
 For i = 1 To (penetration * NoCustomers)
 
@@ -85,7 +85,7 @@ For i = 1 To 100
 Next
 
 
-DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\House"
+DSSText.Command = "set Datapath=" & ActiveWorkbook.path & "\Loadshapes\House"
 
 For i = HPStopPoint + CHPStopPoint + 1 To (NoCustomers)
 
@@ -189,11 +189,11 @@ For i = 1 To (NoCustomers) * penetration
     Tinsulation = InsulationTypeArray(Int((100 - 1 + 1) * Rnd + 1))
     occupants = OccupantsArray(Int((100 - 1 + 1) * Rnd + 1))
     
-    DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\HP"
+    DSSText.Command = "set Datapath=" & ActiveWorkbook.path & "\Loadshapes\HP"
     DSSText.Command = "new loadshape.HPload" & i & " npts=1440 minterval=1.0 csvfile=HP" & TmonthAdj & "_" & Tday & "_" & location & "_" & Thouse & "_" & Tinsulation & "_" & occupants & "_" & repetition & ".txt"
     DSSText.Command = "new load.HP" & i & " bus1=Consumer" & CustomersArrayShuffledHP(i) & ".1 Phases=1 kV=0.23 kW=1 PF=0.9 Daily=HPload" & i
     
-    DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\House"
+    DSSText.Command = "set Datapath=" & ActiveWorkbook.path & "\Loadshapes\House"
     LoadshapeNumber = Int((500 - 1 + 1) * Rnd + 1)
     DSSText.Command = "new loadshape.Houseload" & i & " npts=1440 minterval=1.0 csvfile=House" & Tmonth & "_" & Tday & "_" & occupants & "_" & LoadshapeNumber & ".txt"
     DSSText.Command = "new load.House" & i & " bus1=Consumer" & CustomersArrayShuffledHP(i) & ".1 Phases=1 kV=0.23 kW=10 PF=0.97 Daily=Houseload" & i
@@ -297,11 +297,11 @@ For i = (HPStopPoint + 1) To ((NoCustomers) * penetration) + HPStopPoint
     Tinsulation = InsulationTypeArray(Int((100 - 1 + 1) * Rnd + 1))
     occupants = OccupantsArray(Int((100 - 1 + 1) * Rnd + 1))
 
-    DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\CHP"
+    DSSText.Command = "set Datapath=" & ActiveWorkbook.path & "\Loadshapes\CHP"
     DSSText.Command = "new loadshape.CHPload" & i & " npts=1440 minterval=1.0 csvfile=CHP" & TmonthAdj & "_" & Tday & "_" & location & "_" & Thouse & "_" & Tinsulation & "_" & occupants & "_" & repetition & ".txt"
     DSSText.Command = "new generator.CHP" & i & " bus1=Consumer" & CustomersArrayShuffledHP(i) & ".1 Phases=1 kV=0.23 kW=1 PF=1 Daily=CHPload" & i
     
-    DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\House"
+    DSSText.Command = "set Datapath=" & ActiveWorkbook.path & "\Loadshapes\House"
     LoadshapeNumber = Int((500 - 1 + 1) * Rnd + 1)
     DSSText.Command = "new loadshape.Houseload" & i & " npts=1440 minterval=1.0 csvfile=House" & Tmonth & "_" & Tday & "_" & occupants & "_" & LoadshapeNumber & ".txt"
     DSSText.Command = "new load.House" & i & " bus1=Consumer" & CustomersArrayShuffledHP(i) & ".1 Phases=1 kV=0.23 kW=10 PF=0.97 Daily=Houseload" & i
@@ -330,7 +330,7 @@ Next
 
 customersarrayshuffled = ShuffleArray(CustomersArray)
 
-DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\EV"
+DSSText.Command = "set Datapath=" & ActiveWorkbook.path & "\Loadshapes\EV"
 
 For i = 1 To (penetration * NoCustomers)
 
