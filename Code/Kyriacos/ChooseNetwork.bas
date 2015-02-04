@@ -3,7 +3,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ChooseNetwork
    ClientHeight    =   10650
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   4815
+   ClientWidth     =   5775
    OleObjectBlob   =   "ChooseNetwork.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -105,6 +105,10 @@ Private Sub EVPeneText_Change()
 
    If EVPeneText.Value <> "" Then EVPeneScroll.Value = EVPeneText.Value
     
+End Sub
+
+Private Sub Frame1_Click()
+
 End Sub
 
 Private Sub HP_info_Click()
