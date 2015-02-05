@@ -1,0 +1,108 @@
+Attribute VB_Name = "CalculateLateral"
+Public Function LateralNo(ByRef customer As Integer) As Integer
+
+    If PresetNetwork.Network = "Urban" Then
+    
+        If customer <= 17 Then
+            LateralNo = 1
+        ElseIf customer <= 53 + 17 Then
+            LateralNo = 2
+        ElseIf customer <= 53 + 17 + 44 Then
+            LateralNo = 3
+        Else
+            LateralNo = 4
+        End If
+    
+    ElseIf PresetNetwork.Network = "SemiUrban" Then
+        
+        If customer <= 12 Then
+            LateralNo = 1
+        ElseIf customer <= 39 + 12 Then
+            LateralNo = 2
+        ElseIf customer <= 39 + 33 + 12 Then
+            LateralNo = 3
+        Else
+            LateralNo = 4
+        End If
+    
+    ElseIf PresetNetwork.Network = "Rural" Then
+        
+        If customer <= 4 Then
+            LateralNo = 1
+        ElseIf customer <= 4 + 11 Then
+            LateralNo = 2
+        ElseIf customer <= 4 + 11 + 9 Then
+            LateralNo = 3
+        Else
+            LateralNo = 4
+        End If
+    End If
+
+End Function
+
+Public Function FeederLength(ByVal LateralNo As Integer) As Integer
+
+    If PresetNetwork.Network = "Urban" Then
+    
+        If LateralNo = 1 Then FeederLength = 35
+        If LateralNo = 2 Then FeederLength = 35 + 69
+        If LateralNo = 3 Or LateralNo = 4 Then FeederLength = 35 + 69 + 70
+    
+    ElseIf PresetNetwork.Network = "SemiUrban" Then
+        
+        If LateralNo = 1 Then FeederLength = 47
+        If LateralNo = 2 Then FeederLength = 47 + 94
+        If LateralNo = 3 Or LateralNo = 4 Then FeederLength = 47 + 94 + 94
+    
+    ElseIf PresetNetwork.Network = "Rural" Then
+        
+        If LateralNo = 1 Then FeederLength = 50
+        If LateralNo = 2 Then FeederLength = 150
+        If LateralNo = 3 Or LateralNo = 4 Then FeederLength = 250
+
+    End If
+    
+
+End Function
+
+Public Function LateralLength(ByVal LateralNo As Integer, ByVal CustomerNo As Integer) As Integer
+    
+    If PresetNetwork.Network = "Urban" Then
+        
+        If LateralNo = 1 Then
+            LateralLength = Int(136 * CustomerNo / 17)
+        ElseIf LateralNo = 2 Then
+            LateralLength = Int(136 * (CustomerNo - 17) / 53)
+        ElseIf LateralNo = 3 Or LateralNo = 4 Then
+            LateralLength = Int(136 * (CustomerNo - 17 - 53) / 44)
+        ElseIf LateralNo = 4 Then
+            LateralLength = Int(136 * (CustomerNo - 17 - 53 - 44) / 44)
+        End If
+        
+    ElseIf PresetNetwork.Network = "SemiUrban" Then
+        
+        If LateralNo = 1 Then
+            LateralLength = Int(185 * CustomerNo / 12)
+        ElseIf LateralNo = 2 Then
+            LateralLength = Int(185 * (CustomerNo - 12) / 39)
+        ElseIf LateralNo = 3 Or LateralNo = 4 Then
+            LateralLength = Int(185 * (CustomerNo - 12 - 39) / 33)
+        ElseIf LateralNo = 4 Then
+            LateralLength = Int(185 * (CustomerNo - 12 - 39 - 33) / 44)
+        End If
+    
+    ElseIf PresetNetwork.Network = "Rural" Then
+        
+        If LateralNo = 1 Then
+            LateralLength = Int(196 * CustomerNo / 4)
+        ElseIf LateralNo = 2 Then
+            LateralLength = Int(196 * (CustomerNo - 4) / 11)
+        ElseIf LateralNo = 3 Or LateralNo = 4 Then
+            LateralLength = Int(196 * (CustomerNo - 4 - 11) / 9)
+        ElseIf LateralNo = 4 Then
+            LateralLength = Int(196 * (CustomerNo - 4 - 11 - 9) / 9)
+        End If
+
+    End If
+
+End Function

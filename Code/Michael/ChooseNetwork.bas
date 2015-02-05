@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ChooseNetwork 
-   ClientHeight    =   10650
+   ClientHeight    =   10320
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   4815
+   ClientWidth     =   5400
    OleObjectBlob   =   "ChooseNetwork.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -45,18 +45,8 @@ Private Sub ContinueBtn_Click()
             Exit Sub
     End If
     
-    If TdayVal.Value = "" Then
-            MsgBox "Please select a type of day "
-            Exit Sub
-    End If
-    
     If MonthVal.Value > 12 Or MonthVal.Value < 1 Then
         MsgBox "Please input a correct month"
-        Exit Sub
-    End If
-    
-    If TdayVal.Value <> "wd" And TdayVal.Value <> "we" Then
-        MsgBox "Please input a correct type of day"
         Exit Sub
     End If
     
@@ -66,8 +56,8 @@ Private Sub ContinueBtn_Click()
             Exit Sub
         End If
     End If
+    If TdayCheckbox.Value = True Then Tday = 1 Else Tday = 2
     
-    If TdayVal.Value = "wd" Then Tday = 1 Else Tday = 2
     ChooseNetwork.Hide
     finished = True
     Preset_Network
@@ -105,6 +95,10 @@ Private Sub EVPeneText_Change()
 
    If EVPeneText.Value <> "" Then EVPeneScroll.Value = EVPeneText.Value
     
+End Sub
+
+Private Sub Frame1_Click()
+
 End Sub
 
 Private Sub HP_info_Click()
@@ -160,7 +154,7 @@ End Sub
 Public Sub UserForm_Initialize()
     Dim filename As String
     
-    filename = Dir(ThisWorkbook.path & "/Networks/", 16)
+    filename = Dir(ThisWorkbook.Path & "/Networks/", 16)
     filename = Dir()
     filename = Dir()
     Do While filename <> ""
