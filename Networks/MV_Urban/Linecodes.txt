@@ -1,0 +1,10 @@
+New Linecode.Type-A R1=0.102 X1=0.068 R0=0.625 X0=0.085 C0=0.0 C1=0.0 units=km nphases=3
+New Linecode.Type-B R1=0.127 X1=0.073 R0=0.619 X0=0.109 C0=0.0 C1=0.0 units=km nphases=3
+New Linecode.Type-C R1=0.166 X1=0.0685 R0=0.625 X0=0.088 C0=0.0 C1=0.0 units=km nphases=3
+New Linecode.Type-D R1=0.322 X1=0.069 R0=1.201 X0=0.097 C0=0.0 C1=0.0 units=km nphases=3
+New Linecode.Type-E R1=1.2 X1=0.079 R0=1.3 X0=0.079 C0=0.0 C1=0.0 units=km nphases=1
+
+
+New Linecode.Line_MV_240 R1=0.161 X1=0.089 C1=0.48 units=km nphases=3
+New Linecode.Line_MV_120 R1=0.325 X1=0.097 C1=0.37 units=km nphases=3
+New Linecode.Line_MV_50_1 RMATRIX=[0.821] XMATRIX=[0.126] C=[0.27] units=km nphases=1
