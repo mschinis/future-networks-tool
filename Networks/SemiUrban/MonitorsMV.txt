@@ -1,0 +1,90 @@
+ ! Transformer
+new monitor.SSTransformer element=transformer.MV_Transformer terminal=1 mode=1 ppolar=no
+
+ ! Start of feeders
+new monitor.VIMVFeeder1 element=Line.MVFeeder1.1 terminal=1 mode=0
+new monitor.VIMVFeeder2 element=Line.MVFeeder2.1 terminal=1 mode=0
+new monitor.VIMVFeeder3 element=Line.MVFeeder3.1 terminal=1 mode=0
+new monitor.VIMVFeeder4 element=Line.MVFeeder4.1 terminal=1 mode=0
+
+ ! Start of lateral
+new monitor.VIMVLateral1_1_Start element=Line.MVLateral1_start_1 terminal=2 mode=0
+new monitor.VIMVLateral1_2_Start element=Line.MVLateral1_start_2 terminal=2 mode=0
+new monitor.VIMVLateral1_3_Start element=Line.MVLateral1_start_3 terminal=2 mode=0
+new monitor.VIMVLateral1_4_Start element=Line.MVLateral1_start_4 terminal=2 mode=0
+
+new monitor.VIMVLateral2_1_Start element=Line.MVLateral2_start_1 terminal=2 mode=0
+new monitor.VIMVLateral2_2_Start element=Line.MVLateral2_start_2 terminal=2 mode=0
+new monitor.VIMVLateral2_3_Start element=Line.MVLateral2_start_3 terminal=2 mode=0
+new monitor.VIMVLateral2_4_Start element=Line.MVLateral2_start_4 terminal=2 mode=0
+
+new monitor.VIMVLateral3_1_Start element=Line.MVLateral3_start_1 terminal=2 mode=0
+new monitor.VIMVLateral3_2_Start element=Line.MVLateral3_start_2 terminal=2 mode=0
+new monitor.VIMVLateral3_3_Start element=Line.MVLateral3_start_3 terminal=2 mode=0
+new monitor.VIMVLateral3_4_Start element=Line.MVLateral3_start_4 terminal=2 mode=0
+
+new monitor.VIMVLateral4_1_Start element=Line.MVLateral4_start_1 terminal=2 mode=0
+new monitor.VIMVLateral4_2_Start element=Line.MVLateral4_start_2 terminal=2 mode=0
+new monitor.VIMVLateral4_3_Start element=Line.MVLateral4_start_3 terminal=2 mode=0
+new monitor.VIMVLateral4_4_Start element=Line.MVLateral4_start_4 terminal=2 mode=0
+
+new monitor.VIMVLateral5_1_Start element=Line.MVLateral5_start_1 terminal=2 mode=0
+new monitor.VIMVLateral5_2_Start element=Line.MVLateral5_start_2 terminal=2 mode=0
+new monitor.VIMVLateral5_3_Start element=Line.MVLateral5_start_3 terminal=2 mode=0
+new monitor.VIMVLateral5_4_Start element=Line.MVLateral5_start_4 terminal=2 mode=0
+
+new monitor.VIMVLateral6_1_Start element=Line.MVLateral6_start_1 terminal=2 mode=0
+new monitor.VIMVLateral6_2_Start element=Line.MVLateral6_start_2 terminal=2 mode=0
+new monitor.VIMVLateral6_3_Start element=Line.MVLateral6_start_3 terminal=2 mode=0
+new monitor.VIMVLateral6_4_Start element=Line.MVLateral6_start_4 terminal=2 mode=0
+
+new monitor.VIMVLateral7_1_Start element=Line.MVLateral7_start_1 terminal=2 mode=0
+new monitor.VIMVLateral7_2_Start element=Line.MVLateral7_start_2 terminal=2 mode=0
+new monitor.VIMVLateral7_3_Start element=Line.MVLateral7_start_3 terminal=2 mode=0
+new monitor.VIMVLateral7_4_Start element=Line.MVLateral7_start_4 terminal=2 mode=0
+
+new monitor.VIMVLateral8_1_Start element=Line.MVLateral8_start_1 terminal=2 mode=0
+new monitor.VIMVLateral8_2_Start element=Line.MVLateral8_start_2 terminal=2 mode=0
+new monitor.VIMVLateral8_3_Start element=Line.MVLateral8_start_3 terminal=2 mode=0
+new monitor.VIMVLateral8_4_Start element=Line.MVLateral8_start_4 terminal=2 mode=0
+
+ ! End of lateral
+new monitor.VIMVLateral1_1_End element=Line.MVLateral1_end_1 terminal=2 mode=0
+new monitor.VIMVLateral1_2_End element=Line.MVLateral1_end_2 terminal=2 mode=0
+new monitor.VIMVLateral1_3_End element=Line.MVLateral1_end_3 terminal=2 mode=0
+new monitor.VIMVLateral1_4_End element=Line.MVLateral1_end_4 terminal=2 mode=0
+
+new monitor.VIMVLateral2_1_End element=Line.MVLateral2_end_1 terminal=2 mode=0
+new monitor.VIMVLateral2_2_End element=Line.MVLateral2_end_2 terminal=2 mode=0
+new monitor.VIMVLateral2_3_End element=Line.MVLateral2_end_3 terminal=2 mode=0
+new monitor.VIMVLateral2_4_End element=Line.MVLateral2_end_4 terminal=2 mode=0
+
+new monitor.VIMVLateral3_1_End element=Line.MVLateral3_end_1 terminal=2 mode=0
+new monitor.VIMVLateral3_2_End element=Line.MVLateral3_end_2 terminal=2 mode=0
+new monitor.VIMVLateral3_3_End element=Line.MVLateral3_end_3 terminal=2 mode=0
+new monitor.VIMVLateral3_4_End element=Line.MVLateral3_end_4 terminal=2 mode=0
+
+new monitor.VIMVLateral4_1_End element=Line.MVLateral4_end_1 terminal=2 mode=0
+new monitor.VIMVLateral4_2_End element=Line.MVLateral4_end_2 terminal=2 mode=0
+new monitor.VIMVLateral4_3_End element=Line.MVLateral4_end_3 terminal=2 mode=0
+new monitor.VIMVLateral4_4_End element=Line.MVLateral4_end_4 terminal=2 mode=0
+
+new monitor.VIMVLateral5_1_End element=Line.MVLateral5_end_1 terminal=2 mode=0
+new monitor.VIMVLateral5_2_End element=Line.MVLateral5_end_2 terminal=2 mode=0
+new monitor.VIMVLateral5_3_End element=Line.MVLateral5_end_3 terminal=2 mode=0
+new monitor.VIMVLateral5_4_End element=Line.MVLateral5_end_4 terminal=2 mode=0
+
+new monitor.VIMVLateral6_1_End element=Line.MVLateral6_end_1 terminal=2 mode=0
+new monitor.VIMVLateral6_2_End element=Line.MVLateral6_end_2 terminal=2 mode=0
+new monitor.VIMVLateral6_3_End element=Line.MVLateral6_end_3 terminal=2 mode=0
+new monitor.VIMVLateral6_4_End element=Line.MVLateral6_end_4 terminal=2 mode=0
+
+new monitor.VIMVLateral7_1_End element=Line.MVLateral7_end_1 terminal=2 mode=0
+new monitor.VIMVLateral7_2_End element=Line.MVLateral7_end_2 terminal=2 mode=0
+new monitor.VIMVLateral7_3_End element=Line.MVLateral7_end_3 terminal=2 mode=0
+new monitor.VIMVLateral7_4_End element=Line.MVLateral7_end_4 terminal=2 mode=0
+
+new monitor.VIMVLateral8_1_End element=Line.MVLateral8_end_1 terminal=2 mode=0
+new monitor.VIMVLateral8_2_End element=Line.MVLateral8_end_2 terminal=2 mode=0
+new monitor.VIMVLateral8_3_End element=Line.MVLateral8_end_3 terminal=2 mode=0
+new monitor.VIMVLateral8_4_End element=Line.MVLateral8_end_4 terminal=2 mode=0

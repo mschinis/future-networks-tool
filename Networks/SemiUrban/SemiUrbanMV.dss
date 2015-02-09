@@ -1,0 +1,22 @@
+Clear
+
+New Circuit.SemiUrbanMVNetwork
+
+Edit Vsource.Source BasekV=33 pu=1.00 angle=0 ISC3=3000 ISC1=2500
+
+New transformer.MV_Transformer Buses=(Sourcebus, Main_Busbar)  Conns=(Delta, Wye) kvs=(33, 11) kvas=(40000, 40000) xhl=15
+
+Redirect Linecodes.txt
+Redirect SemiUrbanMV_LinesLaterals1.txt
+Redirect SemiUrbanMV_LinesLaterals2.txt
+Redirect SemiUrbanMV_LinesLaterals3.txt
+Redirect SemiUrbanMV_LinesLaterals4.txt
+Redirect SemiUrbanMV_LinesLaterals5.txt
+Redirect SemiUrbanMV_LinesLaterals6.txt
+Redirect SemiUrbanMV_LinesLaterals7.txt
+Redirect SemiUrbanMV_LinesLaterals8.txt
+
+Redirect MonitorsMV.txt
+
+Set voltagebases=[33 11]
+CalcVoltageBases
