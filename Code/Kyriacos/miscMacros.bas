@@ -26,7 +26,13 @@ Public Function File_Exists(ByVal File As String) As Boolean
     End If
 
 End Function
+Public Sub CheckDir(strDirectoryPath As String)
 
+If Dir(strDirectoryPath) = "" Then
+    MkDir strDirectoryPath
+End If
+
+End Sub
 Public Sub Monitors()
 
     Dim WorkingSheet As Worksheet

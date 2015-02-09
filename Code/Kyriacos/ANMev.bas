@@ -1,4 +1,4 @@
-Attribute VB_Name = "ANM"
+Attribute VB_Name = "ANMev"
 Public MaxCharge() As Integer
 Public Charge() As Integer
 Public EVFlags() As Integer
@@ -7,13 +7,11 @@ Public achievedlaterals() As Integer
 Public achievedfeeders() As Integer
 
 
-
-
 Public Sub EVManagement(ByVal i As Integer)
 
     Call CheckEV
     
-    If ChooseNetwork.ANMEV = True Then
+    If ChooseNetwork.EVANM = True Then
         
         Call LateralManagementEV(i, Start.Laterals)
         Call FeederManagementEV(i, Start.Feeders)
@@ -40,12 +38,12 @@ For i = 1 To 4
                 For h = 1 To Assign_Profiles.NoEV
                     max = 0
                     lateralrequired = (CurrentUse(iter, i, y, z) - CheckValues.lateralcurrentmax) * 0.5 / 16
-                    For a = 1 To Assign_Profiles.NoEV
-                        If Assign_Profiles.EVLocation(1, a) = i And Assign_Profiles.EVLocation(2, a) = y And Assign_Profiles.EVLocation(3, a) = z Then
-                            If EVFlags(a) = 1 Then
-                                If max < Charge(a) Then
-                                    max = Charge(a)
-                                    comp = a
+                    For A = 1 To Assign_Profiles.NoEV
+                        If Assign_Profiles.EVLocation(1, A) = i And Assign_Profiles.EVLocation(2, A) = y And Assign_Profiles.EVLocation(3, A) = z Then
+                            If EVFlags(A) = 1 Then
+                                If max < Charge(A) Then
+                                    max = Charge(A)
+                                    comp = A
                                 End If
                             End If
                         End If
@@ -88,12 +86,12 @@ For i = 1 To 4
                 For h = 1 To Assign_Profiles.NoEV
                     max = 0
                     feederrequired = (CurrentUse(iter, i, z) - CheckValues.feedercurrentmax) * 0.5 / 16
-                    For a = 1 To Assign_Profiles.NoEV
-                        If Assign_Profiles.EVLocation(1, a) = i And Assign_Profiles.EVLocation(3, a) = z Then
-                            If EVFlags(a) = 1 Then
-                                If max < Charge(a) Then
-                                    max = Charge(a)
-                                    comp = a
+                    For A = 1 To Assign_Profiles.NoEV
+                        If Assign_Profiles.EVLocation(1, A) = i And Assign_Profiles.EVLocation(3, A) = z Then
+                            If EVFlags(A) = 1 Then
+                                If max < Charge(A) Then
+                                    max = Charge(A)
+                                    comp = A
                                 End If
                             End If
                         End If

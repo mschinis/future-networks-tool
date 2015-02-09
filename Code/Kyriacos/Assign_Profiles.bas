@@ -19,9 +19,10 @@ Dim LoadshapeNumber As Integer
 Dim PVsize As Integer
 Dim CustomersArray() As Variant
 ReDim CustomersArray(1 To NoCustomers)
-ReDim PVLocation(1 To 3, 1 To NoCustomers * penetration)
+ReDim PVLocation(1 To 4, 1 To NoCustomers * penetration)
 NoPV = NoCustomers * penetration
-
+ReDim ANMpv.PVFlags(1 To NoCustomers)
+ReDim ANMpv.requiredsaved(1 To 4, 1 To 3)
 
 For i = 1 To 4
     For y = 1 To NoCustomers / 4
@@ -49,8 +50,17 @@ For i = 1 To (penetration * NoCustomers)
     If PVLocation(3, i) = 0 Then PVLocation(3, i) = 3
     PVLocation(2, i) = LateralNo(Int(Mid(customersarrayshuffled(i), 3))) 'Store the lateral of each device
     
+    PVLocation(4, i) = PVsize
+    
+'    PVLocation(4, i) = FeederLength(PVLocation(2, i))
+'    PVLocation(5, i) = LateralLength(PVLocation(2, i), Int(Mid(customersarrayshuffled(i), 3)))
+    
+    ANMpv.PVFlags(i) = 1
+    
 Next
 
+ANMpv.spointPV = 1
+ANMpv.previousdisc = 0
 End Function
 
 Function Assign_House_Profiles(ByVal NoCustomers As Integer, ByVal Tmonth As Integer, ByVal Tday As Integer)
@@ -202,10 +212,10 @@ For i = 1 To (NoCustomers) * penetration
     DSSText.Command = "new loadshape.Houseload" & i & " npts=1440 minterval=1.0 csvfile=House" & Tmonth & "_" & Tday & "_" & occupants & "_" & LoadshapeNumber & ".txt"
     DSSText.Command = "new load.House" & i & " bus1=Consumer" & CustomersArrayShuffledHP(i) & ".1 Phases=1 kV=0.23 kW=10 PF=0.97 Daily=Houseload" & i
     
-    HPLocation(1, i) = Int(Left(customersarrayshuffled(i), 1)) 'Store the feeder of the device
-    HPLocation(3, i) = Int(Mid(customersarrayshuffled(i), 3)) Mod 3 'Store the phase of each device
+    HPLocation(1, i) = Int(Left(CustomersArrayShuffledHP(i), 1)) 'Store the feeder of the device
+    HPLocation(3, i) = Int(Mid(CustomersArrayShuffledHP(i), 3)) Mod 3 'Store the phase of each device
     If HPLocation(3, i) = 0 Then HPLocation(3, i) = 3
-    HPLocation(2, i) = LateralNo(Int(Mid(customersarrayshuffled(i), 3))) 'Store the lateral of each device
+    HPLocation(2, i) = LateralNo(Int(Mid(CustomersArrayShuffledHP(i), 3))) 'Store the lateral of each device
     
 Next
 
@@ -326,9 +336,9 @@ Dim LoadshapeNumber, dis As Integer
 Dim CustomersArray() As Variant
 ReDim CustomersArray(1 To NoCustomers)
 ReDim EVLocation(1 To 3, 1 To NoEV)
-ReDim ANM.Charge(1 To NoEV)
-ReDim ANM.MaxCharge(1 To NoEV)
-ReDim ANM.EVFlags(1 To NoEV)
+ReDim ANMev.Charge(1 To NoEV)
+ReDim ANMev.MaxCharge(1 To NoEV)
+ReDim ANMev.EVFlags(1 To NoEV)
 
 For i = 1 To 4
     For y = 1 To NoCustomers / 4
@@ -339,8 +349,8 @@ Next
 
 For y = 1 To NoEV
     
-    ANM.EVFlags(y) = 5
-    ANM.Charge(y) = 0
+    ANMev.EVFlags(y) = 5
+    ANMev.Charge(y) = 0
     
 '''''''''''''''''''' Create the charge required for each vehicle, based on standard deviation '''''''''''''''''''''''''''''''''''''
 
@@ -352,7 +362,7 @@ For y = 1 To NoEV
         Loop
     End If
         
-    ANM.MaxCharge(y) = dis
+    ANMev.MaxCharge(y) = dis
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Next

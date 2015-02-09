@@ -1,7 +1,7 @@
 Attribute VB_Name = "PresetNetwork"
 Public Network As String
 Public customers As Integer
-
+Public Parser As ParserXControl.ParserX
 
 Public Sub Preset_Network()
 
@@ -10,6 +10,10 @@ Dim stime As Single
     Dim location, Tmonth, Tday, clearness As Integer
     Network = ChooseNetwork.SelectNetwork.Value ' Select Network from Dropdown Menu
     Dim File_Location As String
+    
+    Dim FileNum As Long
+    Dim parserExtraStr As String
+    Dim s As String
     
     Assign_Profiles.CHPStopPoint = 0
     Assign_Profiles.HPStopPoint = 0
@@ -32,9 +36,19 @@ Dim stime As Single
     Tmonth = Int(ChooseNetwork.MonthVal.Value)
     Tday = Int(ChooseNetwork.Tday)
     
-    If Network = "Urban" Then customers = 632
-    If Network = "SemiUrban" Then customers = 468
-    If Network = "Rural" Then customers = 132
+    ' Setup parser
+    Set Parser = Nothing ' destroy old object should it already exist
+    Set Parser = New ParserXControl.ParserX
+    Parser.AutoIncrement = True
+    FileNum = FreeFile
+    
+    ' Find the number of customers from the settings.csv file of the network
+    Open ActiveWorkbook.Path & "\Networks\" & Network & "\settings.csv" For Input As #FileNum
+        Line Input #FileNum, s
+        Parser.CmdString = s
+        parserExtraStr = Parser.StrValue
+        customers = Parser.IntValue
+    Close
     
     If Start.OverrideDefault = True Then
         DSSText.Command = "Transformer.LV_Transformer.kvs=(11, " & (AdvancedProperties.TransformerVoltage) / 1000 & ")"
