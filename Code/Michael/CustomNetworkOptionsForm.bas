@@ -25,7 +25,7 @@ Private Sub ContinueButtonPressed_Click()
     transformerSize = CInt(CustomNetworkOptionsForm.TransformerSizeTextField.Text)
     noOfCustomers = CInt(CustomNetworkOptionsForm.NumberOfCustomersTextField.Text)
     
-    strpath = ActiveWorkbook.path & "\Networks\" & networkName
+    strpath = ActiveWorkbook.Path & "\Networks\" & networkName
     CheckDir (strpath)
     
     ' Create the Master file

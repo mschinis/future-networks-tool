@@ -1,0 +1,18 @@
+Clear
+
+New Circuit.RuralMVNetwork
+
+Edit Vsource.Source BasekV=33 pu=1.00 angle=0 ISC3=3000 ISC1=2500
+
+New transformer.MV_Transformer Buses=(Sourcebus, Main_Busbar)  Conns=(Delta, Wye) kvs=(33, 11) kvas=(15000, 15000) xhl=9.2 
+
+Redirect Linecodes.txt
+Redirect RuralMV_LinesLaterals1.txt
+Redirect RuralMV_LinesLaterals2.txt
+Redirect RuralMV_LinesLaterals3.txt
+Redirect RuralMV_LinesLaterals4.txt
+
+Redirect MonitorsMV.txt
+
+Set voltagebases=[33 11]
+CalcVoltageBases

@@ -22,14 +22,14 @@ Dim stime As Single
     
     File_Exists_Check = miscMacros.File_Exists(File_Location & ".dss")
     If File_Exists_Check = False Then
-        MsgBox ActiveWorkbook.path & "\" & File_Location & ".dss file not found."
+        MsgBox ActiveWorkbook.Path & "\" & File_Location & ".dss file not found."
         End
     End If
     
     ' Clear openDSS before doing anything
     DSSText.Command = "clear"
     ' Compile the script
-    DSSText.Command = "compile " + ActiveWorkbook.path + "\Networks\" + Trim(Network) + "\" + Trim(Network)
+    DSSText.Command = "compile " + ActiveWorkbook.Path + "\Networks\" + Trim(Network) + "\" + Trim(Network)
     
     ' Initialise Profiles ---------
 
@@ -43,7 +43,7 @@ Dim stime As Single
     FileNum = FreeFile
     
     ' Find the number of customers from the settings.csv file of the network
-    Open ActiveWorkbook.path & "\Networks\" & Network & "\settings.csv" For Input As #FileNum
+    Open ActiveWorkbook.Path & "\Networks\" & Network & "\settings.csv" For Input As #FileNum
         Line Input #FileNum, s
         Parser.CmdString = s
         parserExtraStr = Parser.StrValue

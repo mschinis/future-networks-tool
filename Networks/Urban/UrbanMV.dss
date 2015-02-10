@@ -1,0 +1,26 @@
+Clear
+
+New Circuit.UrbanMVNetwork
+
+Edit Vsource.Source BasekV=33 pu=1.00 angle=0 ISC3=3000 ISC1=2500
+
+New transformer.MV_Transformer Buses=(Sourcebus, Main_Busbar)  Conns=(Delta, Wye) kvs=(33, 11) kvas=(60000, 60000) xhl=20 
+
+Redirect Linecodes.txt
+Redirect UrbanMV_LinesLaterals1.txt
+Redirect UrbanMV_LinesLaterals2.txt
+Redirect UrbanMV_LinesLaterals3.txt
+Redirect UrbanMV_LinesLaterals4.txt
+Redirect UrbanMV_LinesLaterals5.txt
+Redirect UrbanMV_LinesLaterals6.txt
+Redirect UrbanMV_LinesLaterals7.txt
+Redirect UrbanMV_LinesLaterals8.txt
+Redirect UrbanMV_LinesLaterals9.txt
+Redirect UrbanMV_LinesLaterals10.txt
+Redirect UrbanMV_LinesLaterals11.txt
+Redirect UrbanMV_LinesLaterals12.txt
+
+Redirect MonitorsMV.txt
+
+Set voltagebases=[33 11]
+CalcVoltageBases

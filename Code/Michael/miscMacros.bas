@@ -13,7 +13,7 @@ Public Function File_Exists(ByVal File As String) As Boolean
     Dim FilePath As String
     Dim TestStr As String
 
-    FilePath = ActiveWorkbook.path & "\" & File
+    FilePath = ActiveWorkbook.Path & "\" & File
     
     TestStr = ""
     On Error Resume Next

@@ -6,6 +6,11 @@ Public OverrideDefault As Boolean
 Public CurrentFlags() As Byte
 Public NotCompliant() As Double
 
+Public TransformerArray() As Double
+Public Feeders() As Double
+Public Laterals() As Double
+
+
 Public Sub Start()
 
 'initialise values with imposibru values
@@ -22,23 +27,24 @@ CheckValues.MinCurrentUseFeeder = 10
 OverrideDefault = False
 
 
-''''''''''''''''''''''''''''''''''''
-    Dim StatusOld As Boolean, CalcOld As XlCalculation
-
-    ' Capture Initial Settings
-    StatusOld = Application.DisplayStatusBar
-
-    '      Doing these will speed up your code
-    CalcOld = Application.Calculation
-    Application.Calculation = xlCalculationManual
-    Application.ScreenUpdating = False
-    Application.EnableEvents = False
-
-    On Error GoTo EH
-
-    Application.StatusBar = "Simulation running - 0%"
+'''''''''''''''''''''''''''''''''''''
+'    Dim StatusOld As Boolean, CalcOld As XlCalculation
 '
-''''''''''''''''''''''''
+'    ' Capture Initial Settings
+'    StatusOld = Application.DisplayStatusBar
+'
+'    '      Doing these will speed up your code
+    CalcOld = Application.Calculation
+'    Application.Calculation = xlCalculationManual
+'    Application.ScreenUpdating = False
+'    Application.EnableEvents = False
+'
+'    On Error GoTo EH
+'
+'    Application.StatusBar = "Simulation running - 0%"
+''
+'''''''''''''''''''''''''
+
 
 
 'Sheets("Network").Activate
@@ -72,7 +78,7 @@ OverrideDefault = False
     WelcomeScreen.Show ' Goes into either Preset or Custom Network after this
     If ChooseNetwork.finished <> True Then GoTo ENDLINE
     
-    DSSText.Command = "Set Datapath =" & ActiveWorkbook.path & "\output"
+    DSSText.Command = "Set Datapath =" & ActiveWorkbook.Path & "\output"
     DSSText.Command = "new monitor.Transformer element=transformer.LV_Transformer terminal=1 mode=1 ppolar=yes"
     
     
@@ -94,10 +100,8 @@ OverrideDefault = False
     DSSText.Command = "Set Mode=daily stepsize=1m number=1"
     
 ' ----- start coding here -----
+
     Dim i As Integer
-    Dim TransformerArray() As Double
-    Dim Feeders() As Double
-    Dim Laterals() As Double
     Dim CustomersVoltages() As Double
     ReDim TransformerArray(1 To RunHours, 1 To 4) ' (iteration, 1 = transformerpwoer, 2-4 voltages)
     ReDim Feeders(1 To RunHours, 1 To 4, 1 To 3) ' (iteration, feeder, currentstarts)
@@ -120,6 +124,10 @@ OverrideDefault = False
                 Application.StatusBar = "Simulation running - " & (progresscounter * 10 + 10) & "%"
             End If
             Call CheckValuesPreset(PresetNetwork.customers, i - 420, TransformerArray, Feeders, Laterals, CustomersVoltages, CustomersLimits, CurrentFlags)
+            If ChooseNetwork.EVPeneScroll.Value <> 0 Then
+                Call EVManagement(i - 420)
+            End If
+            
         End If
     Next
 
