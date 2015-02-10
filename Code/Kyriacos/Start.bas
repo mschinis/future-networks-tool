@@ -128,7 +128,7 @@ OverrideDefault = False
                 Call EVManagement(i - 420)
             End If
             
-            If ChooseNetwork.PVPeneScroll.Value <> 0 Then
+            If ChooseNetwork.PVANM.Value = True Then
                 Call PVManagement(i - 420)
             End If
             

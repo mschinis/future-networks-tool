@@ -106,3 +106,105 @@ Public Function LateralLength(ByVal LateralNo As Integer, ByVal CustomerNo As In
     End If
 
 End Function
+
+Function LateralLocation(ByVal LateralNo As Integer, ByVal CustomerNo As Integer) As Integer
+
+    If PresetNetwork.Network = "Urban" Then
+        
+        If LateralNo = 1 Then
+            If (CustomerNo / 17) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        
+        ElseIf LateralNo = 2 Then
+
+            If ((CustomerNo - 17) / 53) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        ElseIf LateralNo = 3 Or LateralNo = 4 Then
+
+            If ((CustomerNo - 17 - 53) / 44) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        ElseIf LateralNo = 4 Then
+
+            If ((CustomerNo - 17 - 53 - 44) / 44) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        End If
+        
+    ElseIf PresetNetwork.Network = "SemiUrban" Then
+        
+        If LateralNo = 1 Then
+
+            If (CustomerNo / 12) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        ElseIf LateralNo = 2 Then
+
+            If ((CustomerNo - 12) / 39) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        ElseIf LateralNo = 3 Or LateralNo = 4 Then
+
+            If ((CustomerNo - 12 - 39) / 33) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        ElseIf LateralNo = 4 Then
+
+            If ((CustomerNo - 12 - 39 - 33) / 44) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        End If
+    
+    ElseIf PresetNetwork.Network = "Rural" Then
+        
+        If LateralNo = 1 Then
+
+            If (CustomerNo / 4) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        ElseIf LateralNo = 2 Then
+
+            If ((CustomerNo - 4) / 11) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        ElseIf LateralNo = 3 Or LateralNo = 4 Then
+
+            If ((CustomerNo - 4 - 11) / 9) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        ElseIf LateralNo = 4 Then
+
+            If ((CustomerNo - 4 - 11 - 9) / 9) > 0.5 Then
+                LateralLocation = 2
+            Else
+                LateralLocation = 1
+            End If
+        End If
+
+    End If
+
+End Function

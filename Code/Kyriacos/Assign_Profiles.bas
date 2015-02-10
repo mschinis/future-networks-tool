@@ -19,7 +19,7 @@ Dim LoadshapeNumber As Integer
 Dim PVsize As Integer
 Dim CustomersArray() As Variant
 ReDim CustomersArray(1 To NoCustomers)
-ReDim PVLocation(1 To 4, 1 To NoCustomers * penetration)
+ReDim PVLocation(1 To 6, 1 To NoCustomers * penetration)
 NoPV = NoCustomers * penetration
 ReDim ANMpv.PVFlags(1 To NoCustomers)
 ReDim ANMpv.requiredsaved(1 To 4, 1 To 3)
@@ -52,8 +52,8 @@ For i = 1 To (penetration * NoCustomers)
     
     PVLocation(4, i) = PVsize
     
-'    PVLocation(4, i) = FeederLength(PVLocation(2, i))
-'    PVLocation(5, i) = LateralLength(PVLocation(2, i), Int(Mid(customersarrayshuffled(i), 3)))
+    PVLocation(5, i) = FeederLength(PVLocation(2, i))
+    PVLocation(6, i) = LateralLocation(PVLocation(2, i), Int(Mid(customersarrayshuffled(i), 3)))
     
     ANMpv.PVFlags(i) = 1
     

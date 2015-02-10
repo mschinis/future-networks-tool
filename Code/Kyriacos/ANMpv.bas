@@ -19,12 +19,10 @@ Public requiredsaved() As Integer
 
 Public Sub PVManagement(ByVal i As Integer)
 
-    If ChooseNetwork.PVANM.Value = True Then
     
         Call Reconnect
         Call LateralManagementPV(i, Start.Laterals)
         
-    End If
 
 End Sub
 
@@ -33,19 +31,25 @@ Public Sub LateralManagementPV(ByVal iter As Integer, ByRef CurrentUse() As Doub
 Dim i, y, z, h As Integer
 Dim lateralrequired As Integer
 Dim limit As Double
+Dim gain As Integer
 
 'If ChooseNetwork.TransformerTap = 0 Then limit = 1.085
 'If ChooseNetwork.TransformerTap = -2.5 Then limit = 1.075
 'If ChooseNetwork.TransformerTap = -5 Then limit = 1.065
 
+gain = 3000
+
 If (Start.TransformerArray(iter, 2) + Start.TransformerArray(iter, 3) + Start.TransformerArray(iter, 4) / 3) > 1.07 Then
     limit = 1.085
+
     If (Assign_Profiles.NoPV / PresetNetwork.customers) < 0.5 Then limit = 1.09
 ElseIf (Start.TransformerArray(iter, 2) + Start.TransformerArray(iter, 3) + Start.TransformerArray(iter, 4) / 3) > 1.05 Then
-     limit = 1.075
+     limit = 1.07
+
      If (Assign_Profiles.NoPV / PresetNetwork.customers) < 0.5 Then limit = 1.08
 ElseIf (Start.TransformerArray(iter, 2) + Start.TransformerArray(iter, 3) + Start.TransformerArray(iter, 4) / 3) > 1.03 Then
-     limit = 1.065
+     limit = 1.06
+
      If (Assign_Profiles.NoPV / PresetNetwork.customers) < 0.5 Then limit = 1.07
 End If
 
@@ -64,7 +68,9 @@ For i = 1 To 4
     For y = 1 To 4
         For z = 1 To 3
         
-            lateralrequired = ((CurrentUse(iter, i, y, z + 6) - limit) * 1500) + requiredsaved(i, z)
+            lateralrequired = ((CurrentUse(iter, i, y, z + 6) - limit) * gain)
+            If lateralrequired < 0 Then lateralrequired = Int(lateralrequired / 2)
+            lateralrequired = lateralrequired + requiredsaved(i, z)
             
             If lateralrequired > 0 Then
                 'lateralrequired = ((CurrentUse(iter, i, y, z + 6) - 1.085) * 2000)
@@ -73,8 +79,12 @@ For i = 1 To 4
                     
                     If PVFlags(spointPV) = 1 And Assign_Profiles.PVLocation(1, spointPV) = i And Assign_Profiles.PVLocation(3, spointPV) = z Then
                         Call DisconnectPV(spointPV)
-                        achievedfeedersPV(i, z) = achievedfeedersPV(i, z) + Assign_Profiles.PVLocation(4, spointPV)
-                        achievedPV = achievedPV + Assign_Profiles.PVLocation(4, spointPV)
+                        
+                        distancevariable = Assign_Profiles.PVLocation(2, spointPV)
+                        If Assign_Profiles.PVLocation(2, spointPV) = 4 Then distancevariable = 3
+                        distancevariable = distancevariable + Assign_Profiles.PVLocation(6, spointPV)
+                        achievedfeedersPV(i, z) = achievedfeedersPV(i, z) + Assign_Profiles.PVLocation(4, spointPV) + distancevariable
+                        achievedPV = achievedPV + Assign_Profiles.PVLocation(4, spointPV) + distancevariable
                         PVFlags(spointPV) = 2
                     End If
                     
@@ -90,30 +100,30 @@ For i = 1 To 4
             requiredsaved(i, z) = achievedfeedersPV(i, z)
             End If
             
-            If lateralrequired < 0 Then
-                'lateralrequired = ((1.08 - CurrentUse(iter, i, y, z + 6)) * 800)
-                lateralrequired = Abs(lateralrequired) / 4
-                InternalIter = 0
-                Do While reachievedfeedersPV(i, z) < lateralrequired
-                
-                    If PVFlags(spointPV) = 2 And Assign_Profiles.PVLocation(1, spointPV) = i And Assign_Profiles.PVLocation(3, spointPV) = z Then
-                        Call ConnectPV(spointPV)
-                        reachievedfeedersPV(i, z) = reachievedfeedersPV(i, z) + Assign_Profiles.PVLocation(4, spointPV)
-                        reachievedPV = reachievedPV + Assign_Profiles.PVLocation(4, spointPV)
-                        PVFlags(spointPV) = 1
-                    End If
-                    
-                    spointPV = 1 + spointPV
-                    If spointPV Mod Assign_Profiles.NoPV = 1 Then spointPV = 1
-                    
-                    InternalIter = InternalIter + 1
-                    If InternalIter = Assign_Profiles.NoPV Then
-                        Exit Do
-                    End If
-                    
-                Loop
-            requiredsaved(i, z) = reachievedfeedersPV(i, z)
-            End If
+'            If lateralrequired < 0 Then
+'                'lateralrequired = ((1.08 - CurrentUse(iter, i, y, z + 6)) * 800)
+'                lateralrequired = Abs(lateralrequired) / 4
+'                InternalIter = 0
+'                Do While reachievedfeedersPV(i, z) < lateralrequired
+'
+'                    If PVFlags(spointPV) = 2 And Assign_Profiles.PVLocation(1, spointPV) = i And Assign_Profiles.PVLocation(3, spointPV) = z Then
+'                        Call ConnectPV(spointPV)
+'                        reachievedfeedersPV(i, z) = reachievedfeedersPV(i, z) + Assign_Profiles.PVLocation(4, spointPV)
+'                        reachievedPV = reachievedPV + Assign_Profiles.PVLocation(4, spointPV)
+'                        PVFlags(spointPV) = 1
+'                    End If
+'
+'                    spointPV = 1 + spointPV
+'                    If spointPV Mod Assign_Profiles.NoPV = 1 Then spointPV = 1
+'
+'                    InternalIter = InternalIter + 1
+'                    If InternalIter = Assign_Profiles.NoPV Then
+'                        Exit Do
+'                    End If
+'
+'                Loop
+'            requiredsaved(i, z) = reachievedfeedersPV(i, z)
+'            End If
         Next
     Next
 Next
