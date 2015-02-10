@@ -10,6 +10,7 @@ Public TransformerArray() As Double
 Public Feeders() As Double
 Public Laterals() As Double
 
+Public finished As Boolean
 
 Public Sub Start()
 
@@ -73,10 +74,10 @@ OverrideDefault = False
 
         Set DSSText = DSSobj.Text
     End If
-
-    ChooseNetwork.finished = False
+    
+    finished = False
     WelcomeScreen.Show ' Goes into either Preset or Custom Network after this
-    If ChooseNetwork.finished <> True Then GoTo ENDLINE
+    If finished <> True Then GoTo ENDLINE
     
     DSSText.Command = "Set Datapath =" & ActiveWorkbook.Path & "\output"
     DSSText.Command = "new monitor.Transformer element=transformer.LV_Transformer terminal=1 mode=1 ppolar=yes"
@@ -128,6 +129,10 @@ OverrideDefault = False
                 Call EVManagement(i - 420)
             End If
             
+            If ChooseNetwork.PVANM.Value = True Then
+                Call PVManagement(i - 420)
+            End If
+            
         End If
     Next
 
@@ -146,7 +151,6 @@ OverrideDefault = False
    Application.StatusBar = "Simulation running - 100%"
     
     MsgBox ("Total time " + Trim(Str(Timer - stime)))
-    
     
 ENDLINE:
     ActiveWorkbook.RefreshAll

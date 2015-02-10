@@ -1,1 +1,8 @@
 Customers,632
+Feeders,4
+Laterals,4
+TransformerSize,800
+FeederWinterCurrentLimit,309
+FeederSummerCurrentLimit,297
+LateralWinterCurrentLimit,209
+LateralSummerCurrentLimit,202

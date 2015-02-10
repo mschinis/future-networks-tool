@@ -1,6 +1,7 @@
 Attribute VB_Name = "PresetNetwork"
 Public Network As String
 Public customers As Integer
+
 Public Parser As ParserXControl.ParserX
 
 Public Sub Preset_Network()
