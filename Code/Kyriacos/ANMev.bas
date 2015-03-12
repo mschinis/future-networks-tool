@@ -31,8 +31,8 @@ ReDim achievedlaterals(1 To 4, 1 To 4, 1 To 3)
 ReDim achievedfeeders(1 To 4, 1 To 3)
 achieved = 0
 
-For i = 1 To 4
-    For y = 1 To 4
+For i = 1 To Assign_Profiles.NoFeeders
+    For y = 1 To Assign_Profiles.NoLaterals
         For z = 1 To 3
             If CurrentUse(iter, i, y, z) / CheckValues.lateralcurrentmax > 1 Then
                 For h = 1 To Assign_Profiles.NoEV
@@ -80,7 +80,7 @@ Dim feederrequired As Integer
 'ReDim achievedfeeder(1 To 4, 1 To 3)
 'achieved = 0
 
-For i = 1 To 4
+For i = 1 To Assign_Profiles.NoFeeders
         For z = 1 To 3
             If CurrentUse(iter, i, z) / CheckValues.feedercurrentmax > 0.95 Then
                 For h = 1 To Assign_Profiles.NoEV

@@ -25,8 +25,12 @@ End Sub
 Private Sub CHPPeneScroll2_Change()
     
     CHPPeneText2.Value = CHPPeneScroll2.Value
-    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" And LateralsBox.Value <> "All Laterals" Then
         Assign_Profiles.CHPPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) = Int(CHPPeneText2.Value) / 100
+    ElseIf FeedersBox.Value <> "" And LateralsBox.Value = "All Laterals" Then
+        For i = 1 To Assign_Profiles.NoLaterals
+            Assign_Profiles.CHPPenetrationArray(Int(FeedersBox.Value), i) = Int(CHPPeneText2.Value) / 100
+        Next
     Else
         CHPPeneText2.Value = 0
     End If
@@ -129,8 +133,12 @@ End Sub
 Private Sub EVPeneScroll2_Change()
     EVPeneText2.Value = EVPeneScroll2.Value
     
-    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" And LateralsBox.Value <> "All Laterals" Then
         Assign_Profiles.EVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) = Int(EVPeneText2.Value) / 100
+    ElseIf FeedersBox.Value <> "" And LateralsBox.Value = "All Laterals" Then
+        For i = 1 To Assign_Profiles.NoLaterals
+            Assign_Profiles.EVPenetrationArray(Int(FeedersBox.Value), i) = Int(EVPeneText2.Value) / 100
+        Next
     Else
         EVPeneText2.Value = 0
     End If
@@ -148,9 +156,17 @@ End Sub
 
 Private Sub FeedersBox_Change()
 
-    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" And LateralsBox.Value <> "All Laterals" Then
         PVPeneText2.Value = Assign_Profiles.PVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
         EVPeneText2.Value = Assign_Profiles.EVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
+        HPPeneText2.Value = Assign_Profiles.HPPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
+        CHPPeneText2.Value = Assign_Profiles.CHPPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
+    ElseIf FeedersBox.Value <> "" And LateralsBox.Value = "All Laterals" Then
+
+        PVPeneText2.Value = Assign_Profiles.PVPenetrationArray(Int(FeedersBox.Value), 1) * 100
+        EVPeneText2.Value = Assign_Profiles.EVPenetrationArray(Int(FeedersBox.Value), 1) * 100
+        HPPeneText2.Value = Assign_Profiles.HPPenetrationArray(Int(FeedersBox.Value), 1) * 100
+        CHPPeneText2.Value = Assign_Profiles.CHPPenetrationArray(Int(FeedersBox.Value), 1) * 100
     End If
     
 End Sub
@@ -174,8 +190,12 @@ End Sub
 Private Sub HPPeneScroll2_Change()
     HPPeneText2.Value = HPPeneScroll2.Value
     
-    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" And LateralsBox.Value <> "All Laterals" Then
         Assign_Profiles.HPPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) = Int(HPPeneText2.Value) / 100
+    ElseIf FeedersBox.Value <> "" And LateralsBox.Value = "All Laterals" Then
+        For i = 1 To Assign_Profiles.NoLaterals
+            Assign_Profiles.HPPenetrationArray(Int(FeedersBox.Value), i) = Int(HPPeneText2.Value) / 100
+        Next
     Else
         HPPeneText2.Value = 0
     End If
@@ -213,13 +233,21 @@ End Sub
 
 Private Sub LateralsBox_Change()
     
-    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" And LateralsBox.Value <> "All Laterals" Then
         PVPeneText2.Value = Assign_Profiles.PVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
         EVPeneText2.Value = Assign_Profiles.EVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
         HPPeneText2.Value = Assign_Profiles.HPPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
         CHPPeneText2.Value = Assign_Profiles.CHPPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
+    ElseIf FeedersBox.Value <> "" And LateralsBox.Value = "All Laterals" Then
+
+        PVPeneText2.Value = Assign_Profiles.PVPenetrationArray(Int(FeedersBox.Value), 1) * 100
+        EVPeneText2.Value = Assign_Profiles.EVPenetrationArray(Int(FeedersBox.Value), 1) * 100
+        HPPeneText2.Value = Assign_Profiles.HPPenetrationArray(Int(FeedersBox.Value), 1) * 100
+        CHPPeneText2.Value = Assign_Profiles.CHPPenetrationArray(Int(FeedersBox.Value), 1) * 100
     End If
 End Sub
+
+
 
 Private Sub PV_info_Click()
 
@@ -236,9 +264,12 @@ End Sub
 Private Sub PVPeneScroll2_Change()
     PVPeneText2.Value = PVPeneScroll2.Value
     
-    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
-
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" And LateralsBox.Value <> "All Laterals" Then
         Assign_Profiles.PVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) = Int(PVPeneText2.Value) / 100
+    ElseIf FeedersBox.Value <> "" And LateralsBox.Value = "All Laterals" Then
+        For i = 1 To Assign_Profiles.NoLaterals
+            Assign_Profiles.PVPenetrationArray(Int(FeedersBox.Value), i) = Int(PVPeneText2.Value) / 100
+        Next
     Else
         PVPeneText2.Value = 0
     End If
@@ -278,6 +309,7 @@ Private Sub SelectNetwork_Change()
             For i = 1 To Assign_Profiles.NoFeeders
                 .AddItem i
             Next
+            .AddItem "All Laterals"
         End With
         
     End If

@@ -69,8 +69,8 @@ ReDim reachievedlateralsPV(1 To 4, 1 To 4, 1 To 3)
 ReDim reachievedfeedersPV(1 To 4, 1 To 3)
 reachievedPV = 0
 
-For i = 1 To 4
-    For y = 1 To 4
+For i = 1 To Assign_Profiles.NoFeeders
+    For y = 1 To Assign_Profiles.NoLaterals
         For z = 1 To 3
         
             lateralrequired = ((CurrentUse(iter, i, y, z + 6) - limit) * gain)
