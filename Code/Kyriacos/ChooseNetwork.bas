@@ -296,6 +296,8 @@ Private Sub SelectNetwork_Change()
         ReDim Assign_Profiles.HPPenetrationArray(1 To 4, 1 To 4)
         ReDim Assign_Profiles.CHPPenetrationArray(1 To 4, 1 To 4)
         
+        Assign_Profiles.LateralSizes = PresetLateralSizes(SelectNetwork.Value)
+
         FeedersBox.Clear
         LateralsBox.Clear
         

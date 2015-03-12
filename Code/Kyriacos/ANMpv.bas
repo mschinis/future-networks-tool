@@ -61,12 +61,12 @@ End If
 
 
 
-ReDim achievedlateralsPV(1 To 4, 1 To 4, 1 To 3)
-ReDim achievedfeedersPV(1 To 4, 1 To 3)
+ReDim achievedlateralsPV(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals, 1 To 3)
+ReDim achievedfeedersPV(1 To Assign_Profiles.NoLaterals, 1 To 3)
 achievedPV = 0
 
-ReDim reachievedlateralsPV(1 To 4, 1 To 4, 1 To 3)
-ReDim reachievedfeedersPV(1 To 4, 1 To 3)
+ReDim reachievedlateralsPV(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals, 1 To 3)
+ReDim reachievedfeedersPV(1 To Assign_Profiles.NoLaterals, 1 To 3)
 reachievedPV = 0
 
 For i = 1 To Assign_Profiles.NoFeeders

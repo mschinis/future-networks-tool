@@ -1,79 +1,79 @@
 Attribute VB_Name = "CalculateLateral"
-Public Function PresetLateralSizes() As Variant
+Public Function PresetLateralSizes(ByVal Network As String) As Variant
     
-    Dim lateralsizes(1 To 4, 1 To 4) As Integer
+    Dim LateralSizes(1 To 4, 1 To 4) As Integer
     
-    If PresetNetwork.Network = "Urban" Then
+    If Network = "Urban" Then
     
-        lateralsizes(1, 1) = 17
-        lateralsizes(2, 1) = 17
-        lateralsizes(3, 1) = 17
-        lateralsizes(4, 1) = 17
+        LateralSizes(1, 1) = 17
+        LateralSizes(2, 1) = 17
+        LateralSizes(3, 1) = 17
+        LateralSizes(4, 1) = 17
         
-        lateralsizes(1, 2) = 53
-        lateralsizes(2, 2) = 53
-        lateralsizes(3, 2) = 53
-        lateralsizes(4, 2) = 53
+        LateralSizes(1, 2) = 53
+        LateralSizes(2, 2) = 53
+        LateralSizes(3, 2) = 53
+        LateralSizes(4, 2) = 53
         
-        lateralsizes(1, 3) = 44
-        lateralsizes(2, 3) = 44
-        lateralsizes(3, 3) = 44
-        lateralsizes(4, 3) = 44
+        LateralSizes(1, 3) = 44
+        LateralSizes(2, 3) = 44
+        LateralSizes(3, 3) = 44
+        LateralSizes(4, 3) = 44
         
-        lateralsizes(1, 4) = 44
-        lateralsizes(2, 4) = 44
-        lateralsizes(3, 4) = 44
-        lateralsizes(4, 4) = 44
-        
-    
-    ElseIf PresetNetwork.Network = "SemiUrban" Then
-    
-        lateralsizes(1, 1) = 12
-        lateralsizes(2, 1) = 12
-        lateralsizes(3, 1) = 12
-        lateralsizes(4, 1) = 12
-        
-        lateralsizes(1, 2) = 39
-        lateralsizes(2, 2) = 39
-        lateralsizes(3, 2) = 39
-        lateralsizes(4, 2) = 39
-        
-        lateralsizes(1, 3) = 33
-        lateralsizes(2, 3) = 33
-        lateralsizes(3, 3) = 33
-        lateralsizes(4, 3) = 33
-        
-        lateralsizes(1, 4) = 33
-        lateralsizes(2, 4) = 33
-        lateralsizes(3, 4) = 33
-        lateralsizes(4, 4) = 33
+        LateralSizes(1, 4) = 44
+        LateralSizes(2, 4) = 44
+        LateralSizes(3, 4) = 44
+        LateralSizes(4, 4) = 44
         
     
-    ElseIf PresetNetwork.Network = "Rural" Then
+    ElseIf Network = "SemiUrban" Then
+    
+        LateralSizes(1, 1) = 12
+        LateralSizes(2, 1) = 12
+        LateralSizes(3, 1) = 12
+        LateralSizes(4, 1) = 12
         
-        lateralsizes(1, 1) = 4
-        lateralsizes(2, 1) = 4
-        lateralsizes(3, 1) = 4
-        lateralsizes(4, 1) = 4
+        LateralSizes(1, 2) = 39
+        LateralSizes(2, 2) = 39
+        LateralSizes(3, 2) = 39
+        LateralSizes(4, 2) = 39
         
-        lateralsizes(1, 2) = 11
-        lateralsizes(2, 2) = 11
-        lateralsizes(3, 2) = 11
-        lateralsizes(4, 2) = 11
+        LateralSizes(1, 3) = 33
+        LateralSizes(2, 3) = 33
+        LateralSizes(3, 3) = 33
+        LateralSizes(4, 3) = 33
         
-        lateralsizes(1, 3) = 9
-        lateralsizes(2, 3) = 9
-        lateralsizes(3, 3) = 9
-        lateralsizes(4, 3) = 9
+        LateralSizes(1, 4) = 33
+        LateralSizes(2, 4) = 33
+        LateralSizes(3, 4) = 33
+        LateralSizes(4, 4) = 33
         
-        lateralsizes(1, 4) = 9
-        lateralsizes(2, 4) = 9
-        lateralsizes(3, 4) = 9
-        lateralsizes(4, 4) = 9
+    
+    ElseIf Network = "Rural" Then
+        
+        LateralSizes(1, 1) = 4
+        LateralSizes(2, 1) = 4
+        LateralSizes(3, 1) = 4
+        LateralSizes(4, 1) = 4
+        
+        LateralSizes(1, 2) = 11
+        LateralSizes(2, 2) = 11
+        LateralSizes(3, 2) = 11
+        LateralSizes(4, 2) = 11
+        
+        LateralSizes(1, 3) = 9
+        LateralSizes(2, 3) = 9
+        LateralSizes(3, 3) = 9
+        LateralSizes(4, 3) = 9
+        
+        LateralSizes(1, 4) = 9
+        LateralSizes(2, 4) = 9
+        LateralSizes(3, 4) = 9
+        LateralSizes(4, 4) = 9
         
     End If
     
-        PresetLateralSizes = lateralsizes
+        PresetLateralSizes = LateralSizes
     
     
 End Function

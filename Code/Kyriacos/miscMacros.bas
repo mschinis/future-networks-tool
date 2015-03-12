@@ -85,10 +85,10 @@ Public Sub Monitors()
     ' Export dem monitors
     DSSText.Command = "Export monitors SSTransformer"
     
-    For i = 1 To 4
+    For i = 1 To Assign_Profiles.NoFeeders
         DSSText.Command = "Export monitors VIFeeder" & i
         
-        For j = 1 To 4
+        For j = 1 To Assign_Profiles.NoLaterals
             DSSText.Command = "Export monitors VILateral" & i & "_" & j & "_Start"
             DSSText.Command = "Export monitors VILateral" & i & "_" & j & "_End"
         Next
@@ -176,7 +176,7 @@ Public Sub Monitors()
     workingsheet.Range("B3:B" & (RunHours + 2)).Value = Values
     
     ' Feeders
-    For i = 1 To 4
+    For i = 1 To Assign_Profiles.NoFeeders
     counter = 0
     Set workingsheet = Worksheets("Feeder" & i & "Start")
         Open Direc & "vifeeder" & i & ".csv" For Input As #FileNum
@@ -225,7 +225,7 @@ Public Sub Monitors()
         counter = 0
         character = Chr(65) ' Letter A
         ' Laterals
-        For j = 1 To 4
+        For j = 1 To Assign_Profiles.NoLaterals
             character = Chr(Asc(character) + 1)
             Open Direc & "vilateral" & i & "_" & j & "_start.csv" For Input As #FileNum
             counter = 0
@@ -276,7 +276,7 @@ Public Sub Monitors()
             ' Display Feeder Currents
             workingsheet.Range(workingsheet.Cells(4, 26), workingsheet.Cells(RunHours + 3, 28)).Value = IFValues
        Next
-       For j = 1 To 4
+       For j = 1 To Assign_Profiles.NoLaterals
             Open Direc & "vilateral" & i & "_" & j & "_end.csv" For Input As #FileNum
             Set workingsheet = Worksheets("Feeder" & i & "End")
             counter = 0
@@ -343,10 +343,15 @@ Public Sub Customers_Voltage()
     Worksheets("test").Range("A1:CCC632").Clear
     Dim i, y, iter, place As Integer
     
-    For i = 1 To 4
-        For y = 1 To PresetNetwork.customers / 4
+    For i = 1 To Assign_Profiles.NoFeeders
+        feedercustomers = 0
+        For m = 1 To Assign_Profiles.NoLaterals
+            feedercustomers = feedercustomers + Assign_Profiles.LateralSizes(i, m)
+        Next
+        
+        For y = 1 To feedercustomers
             For iter = 1 To Start.RunHours
-                place = (i * (PresetNetwork.customers / 4) - (PresetNetwork.customers / 4)) + y
+                place = (i * (feedercustomers) - (feedercustomers)) + y
                 Worksheets("Test").Cells(place, iter).Value = Start.CustomersLimits(i, y, iter)
             Next
         Next

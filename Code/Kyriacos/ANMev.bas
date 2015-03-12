@@ -27,8 +27,8 @@ Public Sub LateralManagementEV(ByVal iter As Integer, ByRef CurrentUse() As Doub
 Dim i, y, z, h As Integer
 Dim lateralrequired As Integer
 
-ReDim achievedlaterals(1 To 4, 1 To 4, 1 To 3)
-ReDim achievedfeeders(1 To 4, 1 To 3)
+ReDim achievedlaterals(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals, 1 To 3)
+ReDim achievedfeeders(1 To Assign_Profiles.NoLaterals, 1 To 3)
 achieved = 0
 
 For i = 1 To Assign_Profiles.NoFeeders

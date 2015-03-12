@@ -18,6 +18,8 @@ Public NoHP As Integer
 Public NoFeeders As Integer
 Public NoLaterals As Integer
 
+Public LateralSizes() As Integer
+
 Public PVPenetrationArray() As Double
 Public EVPenetrationArray() As Double
 Public HPPenetrationArray() As Double
@@ -33,8 +35,8 @@ Dim CustomersArray() As Variant
 
 
 ReDim ANMpv.PVFlags(1 To NoCustomers)
-ReDim ANMpv.requiredsaved(1 To 4, 1 To 3)
-Dim lateralsizes() As Integer
+ReDim ANMpv.requiredsaved(1 To NoFeeders, 1 To 3)
+'Dim LateralSizes() As Integer
 Dim TempArray() As Variant
 Dim PenetrationNumberDouble As Double
 Dim PenetrationNumberInteger As Integer
@@ -44,19 +46,19 @@ Dim PenetrationMatrix(1 To 100) As Integer
 Dim DevicesNumber As Integer
 
 
-If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
-    lateralsizes = PresetLateralSizes
-End If
+'If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
+'    LateralSizes = PresetLateralSizes
+'End If
 DevicesNumber = 0
 max = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
         
         If PVPenetrationArray(i, y) = Empty Then PVPenetrationArray(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
-        If max < lateralsizes(i, y) Then
-            max = lateralsizes(i, y)
+        If max < LateralSizes(i, y) Then
+            max = LateralSizes(i, y)
         End If
-        DevicesNumber = DevicesNumber + (lateralsizes(i, y) * PVPenetrationArray(i, y) + 1)
+        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * PVPenetrationArray(i, y) + 1)
     Next
 Next
 
@@ -66,16 +68,16 @@ ReDim PVLocation(1 To 6, 1 To DevicesNumber)
 For i = 1 To NoFeeders
     h = 0
     For y = 1 To NoLaterals
-        ReDim TempArray(1 To lateralsizes(i, y))
-        For z = 1 To lateralsizes(i, y)
+        ReDim TempArray(1 To LateralSizes(i, y))
+        For z = 1 To LateralSizes(i, y)
             h = h + 1
-            If lateralsizes(i, y) <> 0 Then
+            If LateralSizes(i, y) <> 0 Then
                 TempArray(z) = i & "_" & h
             End If
         Next
         
         TempArray = ShuffleArray(TempArray)
-        For z = 1 To lateralsizes(i, y)
+        For z = 1 To LateralSizes(i, y)
             CustomersArray(i, y, z) = TempArray(z)
         Next
     Next
@@ -87,8 +89,8 @@ m = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
         
-        PenetrationNumberDouble = lateralsizes(i, y) * PVPenetrationArray(i, y)
-        PenetrationNumberInteger = lateralsizes(i, y) * PVPenetrationArray(i, y)
+        PenetrationNumberDouble = LateralSizes(i, y) * PVPenetrationArray(i, y)
+        PenetrationNumberInteger = LateralSizes(i, y) * PVPenetrationArray(i, y)
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100
@@ -143,18 +145,18 @@ Dim LoadshapeNumber As Integer
 Dim OccupantsArray() As Integer
 ReDim OccupantsArray(1 To NoCustomers)
 Dim occupants As Integer
-Dim lateralsizes() As Integer
+'Dim LateralSizes() As Integer
 
-If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
-    lateralsizes = PresetLateralSizes
-End If
+'If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
+'    LateralSizes = PresetLateralSizes
+'End If
 
 If HPEnabled = False And CHPEnabled = False Then
     max = 0
     For i = 1 To NoFeeders
         For y = 1 To NoLaterals
-            If max < lateralsizes(i, y) Then
-                max = lateralsizes(i, y)
+            If max < LateralSizes(i, y) Then
+                max = LateralSizes(i, y)
             End If
         Next
     Next
@@ -165,16 +167,16 @@ If HPEnabled = False And CHPEnabled = False Then
     For i = 1 To NoFeeders
         h = 0
         For y = 1 To NoLaterals
-            ReDim TempArray(1 To lateralsizes(i, y))
-            For z = 1 To lateralsizes(i, y)
+            ReDim TempArray(1 To LateralSizes(i, y))
+            For z = 1 To LateralSizes(i, y)
                 h = h + 1
-                If lateralsizes(i, y) <> 0 Then
+                If LateralSizes(i, y) <> 0 Then
                     TempArray(z) = i & "_" & h
                 End If
             Next
             
             TempArray = ShuffleArray(TempArray)
-            For z = 1 To lateralsizes(i, y)
+            For z = 1 To LateralSizes(i, y)
                 CustomersArrayHP(i, y, z) = TempArray(z)
             Next
         Next
@@ -202,7 +204,7 @@ DSSText.Command = "set Datapath=" & ActiveWorkbook.Path & "\Loadshapes\House"
 
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
-        For z = HouseStopPoint(i, y) + 1 To lateralsizes(i, y)
+        For z = HouseStopPoint(i, y) + 1 To LateralSizes(i, y)
             
             house = house + 1
             LoadshapeNumber = Int((200 - 1 + 1) * Rnd + 1)
@@ -226,7 +228,7 @@ Dim InsulationTypeArray(1 To 100) As Integer
 Dim occupants As Integer
 Dim OccupantsArray() As Integer
 ReDim OccupantsArray(1 To NoCustomers)
-Dim lateralsizes() As Integer
+'Dim LateralSizes() As Integer
 Dim TempArray() As Variant
 Dim PenetrationNumberDouble As Double
 Dim PenetrationNumberInteger As Integer
@@ -294,18 +296,18 @@ End If
 
 
 
-If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
-    lateralsizes = PresetLateralSizes
-End If
+'If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
+'    LateralSizes = PresetLateralSizes
+'End If
 
 max = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
        If HPPenetrationArray(i, y) = Empty Then HPPenetrationArray(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
-        If max < lateralsizes(i, y) Then
-            max = lateralsizes(i, y)
+        If max < LateralSizes(i, y) Then
+            max = LateralSizes(i, y)
         End If
-        DevicesNumber = DevicesNumber + (lateralsizes(i, y) * HPPenetrationArray(i, y) + 1)
+        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * HPPenetrationArray(i, y) + 1)
     Next
 Next
 
@@ -315,16 +317,16 @@ ReDim CustomersArrayHP(1 To NoFeeders, 1 To NoLaterals, 1 To max)
 For i = 1 To NoFeeders
     h = 0
     For y = 1 To NoLaterals
-        ReDim TempArray(1 To lateralsizes(i, y))
-        For z = 1 To lateralsizes(i, y)
+        ReDim TempArray(1 To LateralSizes(i, y))
+        For z = 1 To LateralSizes(i, y)
             h = h + 1
-            If lateralsizes(i, y) <> 0 Then
+            If LateralSizes(i, y) <> 0 Then
                 TempArray(z) = i & "_" & h
             End If
         Next
         
         TempArray = ShuffleArray(TempArray)
-        For z = 1 To lateralsizes(i, y)
+        For z = 1 To LateralSizes(i, y)
             CustomersArrayHP(i, y, z) = TempArray(z)
         Next
     Next
@@ -337,8 +339,8 @@ m = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
         
-        PenetrationNumberDouble = lateralsizes(i, y) * HPPenetrationArray(i, y)
-        PenetrationNumberInteger = lateralsizes(i, y) * HPPenetrationArray(i, y)
+        PenetrationNumberDouble = LateralSizes(i, y) * HPPenetrationArray(i, y)
+        PenetrationNumberInteger = LateralSizes(i, y) * HPPenetrationArray(i, y)
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100
@@ -443,7 +445,7 @@ Dim InsulationTypeArray(1 To 100) As Integer
 Dim occupants As Integer
 Dim OccupantsArray() As Integer
 ReDim OccupantsArray(1 To NoCustomers)
-Dim lateralsizes() As Integer
+'Dim LateralSizes() As Integer
 Dim TempArray() As Variant
 Dim PenetrationNumberDouble As Double
 Dim PenetrationNumberInteger As Integer
@@ -511,18 +513,18 @@ End If
 
 
 
-If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
-    lateralsizes = PresetLateralSizes
-End If
+'If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
+'    LateralSizes = PresetLateralSizes
+'End If
 
 max = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
        If CHPPenetrationArray(i, y) = Empty Then CHPPenetrationArray(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
-        If max < lateralsizes(i, y) Then
-            max = lateralsizes(i, y)
+        If max < LateralSizes(i, y) Then
+            max = LateralSizes(i, y)
         End If
-        DevicesNumber = DevicesNumber + (lateralsizes(i, y) * CHPPenetrationArray(i, y) + 1)
+        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * CHPPenetrationArray(i, y) + 1)
     Next
 Next
 
@@ -534,16 +536,16 @@ If HPEnabled = False Then
     For i = 1 To NoFeeders
         h = 0
         For y = 1 To NoLaterals
-            ReDim TempArray(1 To lateralsizes(i, y))
-            For z = 1 To lateralsizes(i, y)
+            ReDim TempArray(1 To LateralSizes(i, y))
+            For z = 1 To LateralSizes(i, y)
                 h = h + 1
-                If lateralsizes(i, y) <> 0 Then
+                If LateralSizes(i, y) <> 0 Then
                     TempArray(z) = i & "_" & h
                 End If
             Next
             
             TempArray = ShuffleArray(TempArray)
-            For z = 1 To lateralsizes(i, y)
+            For z = 1 To LateralSizes(i, y)
                 CustomersArrayHP(i, y, z) = TempArray(z)
             Next
         Next
@@ -557,8 +559,8 @@ m = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
         
-        PenetrationNumberDouble = lateralsizes(i, y) * CHPPenetrationArray(i, y)
-        PenetrationNumberInteger = lateralsizes(i, y) * CHPPenetrationArray(i, y)
+        PenetrationNumberDouble = LateralSizes(i, y) * CHPPenetrationArray(i, y)
+        PenetrationNumberInteger = LateralSizes(i, y) * CHPPenetrationArray(i, y)
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100
@@ -580,9 +582,9 @@ For i = 1 To NoFeeders
             
         Next
         
-        For z = HPStopPoint(i, y) + 1 To PenetrationMatrix(Int((100 - 1 + 1) * Rnd + 1))
+        For z = HPStopPoint(i, y) + 1 To PenetrationMatrix(Int((100 - 1 + 1) * Rnd + 1)) + HPStopPoint(i, y)
             
-                If z <= lateralsizes(i, y) Then
+                If z <= LateralSizes(i, y) Then
                     m = m + 1
                     house = house + 1
                     HouseStopPoint(i, y) = HouseStopPoint(i, y) + 1
@@ -715,17 +717,10 @@ End Function
 
 Function Assign_EV_Profiles(ByVal NoCustomers As Integer, ByVal penetration As Double)
 
-
-
 Dim LoadshapeNumber, dis As Integer
 Dim CustomersArray() As Variant
 
-
-
-
-
-
-Dim lateralsizes() As Integer
+'Dim LateralSizes() As Integer
 Dim TempArray() As Variant
 Dim PenetrationNumberDouble As Double
 Dim PenetrationNumberInteger As Integer
@@ -734,21 +729,18 @@ Dim PenetrationPercentage As Integer
 Dim PenetrationMatrix(1 To 100) As Integer
 
 
-
-
-
-If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
-    lateralsizes = PresetLateralSizes
-End If
+'If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
+'    LateralSizes = PresetLateralSizes
+'End If
 
 max = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
        If EVPenetrationArray(i, y) = Empty Then EVPenetrationArray(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
-        If max < lateralsizes(i, y) Then
-            max = lateralsizes(i, y)
+        If max < LateralSizes(i, y) Then
+            max = LateralSizes(i, y)
         End If
-        DevicesNumber = DevicesNumber + (lateralsizes(i, y) * EVPenetrationArray(i, y) + 1)
+        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * EVPenetrationArray(i, y) + 1)
     Next
 Next
 
@@ -757,16 +749,16 @@ ReDim CustomersArray(1 To NoFeeders, 1 To NoLaterals, 1 To max)
 For i = 1 To NoFeeders
     h = 0
     For y = 1 To NoLaterals
-        ReDim TempArray(1 To lateralsizes(i, y))
-        For z = 1 To lateralsizes(i, y)
+        ReDim TempArray(1 To LateralSizes(i, y))
+        For z = 1 To LateralSizes(i, y)
             h = h + 1
-            If lateralsizes(i, y) <> 0 Then
+            If LateralSizes(i, y) <> 0 Then
                 TempArray(z) = i & "_" & h
             End If
         Next
         
         TempArray = ShuffleArray(TempArray)
-        For z = 1 To lateralsizes(i, y)
+        For z = 1 To LateralSizes(i, y)
             CustomersArray(i, y, z) = TempArray(z)
         Next
     Next
@@ -779,8 +771,8 @@ m = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
         
-        PenetrationNumberDouble = lateralsizes(i, y) * EVPenetrationArray(i, y)
-        PenetrationNumberInteger = lateralsizes(i, y) * EVPenetrationArray(i, y)
+        PenetrationNumberDouble = LateralSizes(i, y) * EVPenetrationArray(i, y)
+        PenetrationNumberInteger = LateralSizes(i, y) * EVPenetrationArray(i, y)
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100

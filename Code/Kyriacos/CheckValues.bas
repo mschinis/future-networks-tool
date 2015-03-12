@@ -243,7 +243,12 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
           
             Next
             
-            For z = 1 To (NoCustomers / 4)
+            feedercustomers = 0
+            For m = 1 To Assign_Profiles.NoLaterals
+                feedercustomers = feedercustomers + Assign_Profiles.LateralSizes(i, m)
+            Next
+            
+            For z = 1 To feedercustomers
                 DSSCircuit.SetActiveElement ("Line.Consumer" & i & "_" & z)
                 TempArray = DSSCircuit.ActiveCktElement.Voltages
                 A = (TempArray(LBound(TempArray)) ^ 2 + TempArray(LBound(TempArray) + 1) ^ 2) ^ 0.5 / 230
@@ -253,8 +258,8 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 dValue = 0
                 If A > VoltageMax Or A < VoltageMin Then
                     CustomersLimits(i, z, iter) = 1
-                    Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) + 1
-                    Start.CustomerVoltageLimit(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
+                    Start.NotCompliant(z + ((i * feedercustomers) - feedercustomers)) = Start.NotCompliant(z + ((i * feedercustomers) - feedercustomers)) + 1
+                    Start.CustomerVoltageLimit(z + ((i * feedercustomers) - feedercustomers)) = 1
                 ElseIf iter > 10 Then
                     For j = 1 To 10
                         dValue = CustomersVoltages(i, z, iter - j) + dValue
@@ -262,8 +267,8 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                     dValue = dValue / 10
                     If dValue < VoltageAverageMin Then
                         CustomersLimits(i, z, iter) = 1
-                        Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) + 1
-                        Start.CustomerVoltageLimit(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
+                        Start.NotCompliant(z + ((i * feedercustomers) - feedercustomers)) = Start.NotCompliant(z + ((i * feedercustomers) - feedercustomers)) + 1
+                        Start.CustomerVoltageLimit(z + ((i * feedercustomers) - feedercustomers)) = 1
                     End If
                 End If
 
