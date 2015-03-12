@@ -21,5 +21,5 @@ Private Sub CommandButton2_Click()
     CustomNetworkOptionsForm.Show
 End Sub
 Private Sub UserForm_Initialize()
-    ChooseNetwork.finished = False
+    Start.finished = False
 End Sub

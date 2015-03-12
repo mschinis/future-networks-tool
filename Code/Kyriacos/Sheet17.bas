@@ -28,6 +28,7 @@ Private Sub ShowExtra_Click()
         ShowExtra.Caption = "Show output tabs"
     End If
     
+    Sheet22.Visible = Not Sheet22.Visible
     Sheet16.Visible = Not Sheet16.Visible
     Sheet10.Visible = Not Sheet11.Visible
     Sheet11.Visible = Not Sheet11.Visible

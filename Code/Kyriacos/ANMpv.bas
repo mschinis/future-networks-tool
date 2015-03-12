@@ -39,16 +39,21 @@ Dim gain As Integer
 
 gain = 3000
 
-If (Start.TransformerArray(iter, 2) + Start.TransformerArray(iter, 3) + Start.TransformerArray(iter, 4) / 3) > 1.07 Then
+If ((Start.TransformerArray(iter, 2) + Start.TransformerArray(iter, 3) + Start.TransformerArray(iter, 4)) / 3) > 1.07 Then
+    
     limit = 1.085
 
     If (Assign_Profiles.NoPV / PresetNetwork.customers) < 0.5 Then limit = 1.09
-ElseIf (Start.TransformerArray(iter, 2) + Start.TransformerArray(iter, 3) + Start.TransformerArray(iter, 4) / 3) > 1.05 Then
-     limit = 1.07
+    
+ElseIf ((Start.TransformerArray(iter, 2) + Start.TransformerArray(iter, 3) + Start.TransformerArray(iter, 4)) / 3) > 1.05 Then
+     
+     limit = 1.078
 
      If (Assign_Profiles.NoPV / PresetNetwork.customers) < 0.5 Then limit = 1.08
-ElseIf (Start.TransformerArray(iter, 2) + Start.TransformerArray(iter, 3) + Start.TransformerArray(iter, 4) / 3) > 1.03 Then
-     limit = 1.06
+     
+ElseIf ((Start.TransformerArray(iter, 2) + Start.TransformerArray(iter, 3) + Start.TransformerArray(iter, 4)) / 3) > 1.03 Then
+     
+     limit = 1.065
 
      If (Assign_Profiles.NoPV / PresetNetwork.customers) < 0.5 Then limit = 1.07
 End If
@@ -69,7 +74,7 @@ For i = 1 To 4
         For z = 1 To 3
         
             lateralrequired = ((CurrentUse(iter, i, y, z + 6) - limit) * gain)
-            If lateralrequired < 0 Then lateralrequired = Int(lateralrequired / 2)
+            If lateralrequired < 0 Then lateralrequired = Int(lateralrequired / 3)
             lateralrequired = lateralrequired + requiredsaved(i, z)
             
             If lateralrequired > 0 Then

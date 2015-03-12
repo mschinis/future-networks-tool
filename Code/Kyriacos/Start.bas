@@ -10,6 +10,7 @@ Public TransformerArray() As Double
 Public Feeders() As Double
 Public Laterals() As Double
 
+Public finished As Boolean
 
 Public Sub Start()
 
@@ -23,8 +24,14 @@ CheckValues.MaxVoltage = 0
 CheckValues.MinVoltage = 2
 CheckValues.MaxCurrentUseFeeder = 0
 CheckValues.MinCurrentUseFeeder = 10
+Assign_Profiles.HPEnabled = False
+Assign_Profiles.CHPEnabled = False
 
 OverrideDefault = False
+
+
+
+
 
 
 '''''''''''''''''''''''''''''''''''''
@@ -73,10 +80,10 @@ OverrideDefault = False
 
         Set DSSText = DSSobj.Text
     End If
-
-    ChooseNetwork.finished = False
+    
+    finished = False
     WelcomeScreen.Show ' Goes into either Preset or Custom Network after this
-    If ChooseNetwork.finished <> True Then GoTo ENDLINE
+    If finished <> True Then GoTo ENDLINE
     
     DSSText.Command = "Set Datapath =" & ActiveWorkbook.Path & "\output"
     DSSText.Command = "new monitor.Transformer element=transformer.LV_Transformer terminal=1 mode=1 ppolar=yes"
@@ -104,12 +111,12 @@ OverrideDefault = False
     Dim i As Integer
     Dim CustomersVoltages() As Double
     ReDim TransformerArray(1 To RunHours, 1 To 4) ' (iteration, 1 = transformerpwoer, 2-4 voltages)
-    ReDim Feeders(1 To RunHours, 1 To 4, 1 To 3) ' (iteration, feeder, currentstarts)
-    ReDim Laterals(1 To RunHours, 1 To 4, 1 To 4, 1 To 9) ' (iteration, feeder, lateral, 1-9 currents / voltagesstart / voltagesend)
-    ReDim CustomersVoltages(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
-    ReDim CustomersLimits(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
+    ReDim Feeders(1 To RunHours, 1 To Assign_Profiles.NoFeeders, 1 To 3) ' (iteration, feeder, currentstarts)
+    ReDim Laterals(1 To RunHours, 1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals, 1 To 9) ' (iteration, feeder, lateral, 1-9 currents / voltagesstart / voltagesend)
+    ReDim CustomersVoltages(1 To Assign_Profiles.NoFeeders, 1 To (PresetNetwork.customers / Assign_Profiles.NoFeeders), 1 To RunHours)
+    ReDim CustomersLimits(1 To Assign_Profiles.NoFeeders, 1 To (PresetNetwork.customers / Assign_Profiles.NoFeeders), 1 To RunHours)
     ReDim CustomerVoltageLimit(1 To PresetNetwork.customers)
-    ReDim CurrentFlags(1 To 4, 1 To 5)
+    ReDim CurrentFlags(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals + 1)
     ReDim NotCompliant(1 To PresetNetwork.customers)
     
     progresscounter = 0
@@ -147,10 +154,9 @@ OverrideDefault = False
    
    Call Monitors
    
-   Application.StatusBar = "Simulation running - 100%"
-    
+    Application.StatusBar = "Simulation running - 100%"
+    CostCalculations.CalculateCosts
     MsgBox ("Total time " + Trim(Str(Timer - stime)))
-    
     
 ENDLINE:
     ActiveWorkbook.RefreshAll

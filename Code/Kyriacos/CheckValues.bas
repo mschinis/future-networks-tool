@@ -39,7 +39,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         If Network = "Urban" Then
             TransformerMax = 800 * AdvancedProperties.TransformerMax / 100
 
-            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+            If ChooseNetwork.MonthVal.Value <= 4 Or ChooseNetwork.MonthVal.Value >= 11 Then
                 feedercurrentmax = 309 * AdvancedProperties.FeederMax / 100
                 lateralcurrentmax = 209 * AdvancedProperties.LateralMax / 100
             Else
@@ -49,7 +49,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         
         ElseIf Network = "SemiUrban" Then
             TransformerMax = 500 * AdvancedProperties.TransformerMax / 100
-            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+            If ChooseNetwork.MonthVal.Value <= 4 Or ChooseNetwork.MonthVal.Value >= 11 Then
                 feedercurrentmax = 309 * AdvancedProperties.FeederMax / 100
                 lateralcurrentmax = 209 * AdvancedProperties.LateralMax / 100
             Else
@@ -59,7 +59,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         
         ElseIf Network = "Rural" Then
             TransformerMax = 200 * AdvancedProperties.TransformerMax / 100
-            If ChooseNetwork.TdayVal.Value <= 4 Or ChooseNetwork.TdayVal.Value >= 11 Then
+            If ChooseNetwork.MonthVal.Value <= 4 Or ChooseNetwork.MonthVal.Value >= 11 Then
                 feedercurrentmax = 404 * AdvancedProperties.FeederMax / 100
                 lateralcurrentmax = 263 * AdvancedProperties.LateralMax / 100
             Else
@@ -122,7 +122,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         If C > 1.1 Or C < 0.94 Then
         End If
 
-        For i = 1 To 4 'Feeder Number
+        For i = 1 To Assign_Profiles.NoFeeders 'Feeder Number
             
             'Check Currents at Start of the Feeder
             DSSCircuit.SetActiveElement ("Line.Feeder" & i & ".1")
@@ -156,7 +156,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 CurrentFlags(i, 1) = 1
             End If
             
-            For y = 1 To 4 'Lateral Number
+            For y = 1 To Assign_Profiles.NoLaterals 'Lateral Number
                 
                 'Check Currents at Start of Lateral
                 DSSCircuit.SetActiveElement ("Line.Lateral" & i & "_start_" & y)

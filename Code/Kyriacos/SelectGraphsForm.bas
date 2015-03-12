@@ -13,7 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Dim WorkingSheet As Worksheet
+Dim workingsheet As Worksheet
 
 Private Sub SelectGraphsButtonPressed_Click()
     Dim optionName As String
@@ -27,14 +27,14 @@ Private Sub SelectGraphsButtonPressed_Click()
     j = 0
     
     ' Clear graphs if any exist inside "Select Graphs" Worksheet
-    Set WorkingSheet = Worksheets("Select Graphs")
-    If WorkingSheet.ChartObjects.Count > 0 Then
-        WorkingSheet.ChartObjects.Delete
+    Set workingsheet = Worksheets("Select Graphs")
+    If workingsheet.ChartObjects.Count > 0 Then
+        workingsheet.ChartObjects.Delete
     End If
     
     ' Dat logic tho
     For i = 0 To SelectGraphsList.ListCount - 1
-        Set WorkingSheet = Sheets("Transformer Output")
+        Set workingsheet = Sheets("Transformer Output")
         If SelectGraphsList.Selected(i) Then
             Select Case SelectGraphsList.List(i)
                 Case "Transformer Power Output"
@@ -46,18 +46,18 @@ Private Sub SelectGraphsButtonPressed_Click()
             End Select
             
             ' Select the graph, copy it, change workingsheet
-            Set graph = WorkingSheet.ChartObjects(currentGraphName)
+            Set graph = workingsheet.ChartObjects(currentGraphName)
             graph.Chart.ChartArea.Copy
-            Set WorkingSheet = Sheets("Select Graphs")
+            Set workingsheet = Sheets("Select Graphs")
             ' Determine the position of the new graph
             tempInt = j * 20
             yLocation = j * 20 + 19
             If tempInt = 0 Then tempInt = 1
             ' Paste it, and change the title
-            WorkingSheet.Paste WorkingSheet.Range("D" & tempInt)
-            Set graph = WorkingSheet.ChartObjects(currentGraphName)
+            workingsheet.Paste workingsheet.Range("D" & tempInt)
+            Set graph = workingsheet.ChartObjects(currentGraphName)
             
-            Set RngToCover = WorkingSheet.Range("D" & tempInt & ":O" & yLocation)
+            Set RngToCover = workingsheet.Range("D" & tempInt & ":O" & yLocation)
             With graph
                 .Height = RngToCover.Height
                 .Width = RngToCover.Width
@@ -70,7 +70,7 @@ Private Sub SelectGraphsButtonPressed_Click()
     
     ' Feeder 1
     For i = 0 To SelectGraphsFeederOneList.ListCount - 1
-        Set WorkingSheet = Sheets("Feeder 1 Output")
+        Set workingsheet = Sheets("Feeder 1 Output")
         If SelectGraphsFeederOneList.Selected(i) Then
             Select Case SelectGraphsFeederOneList.List(i)
                 Case "Lateral 1 Start Voltage"
@@ -105,19 +105,19 @@ Private Sub SelectGraphsButtonPressed_Click()
             End Select
             
             ' Select the graph, copy it, change workingsheet
-            Set graph = WorkingSheet.ChartObjects(currentGraphName)
+            Set graph = workingsheet.ChartObjects(currentGraphName)
             graph.Chart.ChartArea.Copy
-            Set WorkingSheet = Sheets("Select Graphs")
+            Set workingsheet = Sheets("Select Graphs")
             ' Determine the position of the new graph
             tempInt = j * 20
             yLocation = j * 20 + 19
             If tempInt = 0 Then tempInt = 1
             ' Paste it, and change the title
-            WorkingSheet.Paste WorkingSheet.Range("D" & tempInt)
-            Set graph = WorkingSheet.ChartObjects(currentGraphName)
+            workingsheet.Paste workingsheet.Range("D" & tempInt)
+            Set graph = workingsheet.ChartObjects(currentGraphName)
             graph.Chart.ChartTitle.Text = "Feeder 1 " & graph.Chart.ChartTitle.Text
             
-            Set RngToCover = WorkingSheet.Range("D" & tempInt & ":O" & yLocation)
+            Set RngToCover = workingsheet.Range("D" & tempInt & ":O" & yLocation)
             With graph
                 .Height = RngToCover.Height
                 .Width = RngToCover.Width
@@ -130,7 +130,7 @@ Private Sub SelectGraphsButtonPressed_Click()
     
     ' Feeder 2
     For i = 0 To SelectGraphsFeederTwoList.ListCount - 1
-        Set WorkingSheet = Sheets("Feeder 2 Output")
+        Set workingsheet = Sheets("Feeder 2 Output")
         If SelectGraphsFeederTwoList.Selected(i) Then
             Select Case SelectGraphsFeederTwoList.List(i)
                 Case "Lateral 1 Start Voltage"
@@ -165,19 +165,19 @@ Private Sub SelectGraphsButtonPressed_Click()
             End Select
             
             ' Select the graph, copy it, change workingsheet
-            Set graph = WorkingSheet.ChartObjects(currentGraphName)
+            Set graph = workingsheet.ChartObjects(currentGraphName)
             graph.Chart.ChartArea.Copy
-            Set WorkingSheet = Sheets("Select Graphs")
+            Set workingsheet = Sheets("Select Graphs")
             ' Determine the position of the new graph
             tempInt = j * 20
             yLocation = j * 20 + 19
             If tempInt = 0 Then tempInt = 1
             ' Paste it, and change the title
-            WorkingSheet.Paste WorkingSheet.Range("D" & tempInt)
-            Set graph = WorkingSheet.ChartObjects(currentGraphName)
+            workingsheet.Paste workingsheet.Range("D" & tempInt)
+            Set graph = workingsheet.ChartObjects(currentGraphName)
             graph.Chart.ChartTitle.Text = "Feeder 2 " & graph.Chart.ChartTitle.Text
             
-            Set RngToCover = WorkingSheet.Range("D" & tempInt & ":O" & yLocation)
+            Set RngToCover = workingsheet.Range("D" & tempInt & ":O" & yLocation)
             With graph
                 .Height = RngToCover.Height
                 .Width = RngToCover.Width
@@ -191,7 +191,7 @@ Private Sub SelectGraphsButtonPressed_Click()
     
     ' Feeder 3
     For i = 0 To SelectGraphsFeederThreeList.ListCount - 1
-        Set WorkingSheet = Sheets("Feeder 3 Output")
+        Set workingsheet = Sheets("Feeder 3 Output")
         If SelectGraphsFeederThreeList.Selected(i) Then
             Select Case SelectGraphsFeederThreeList.List(i)
                 Case "Lateral 1 Start Voltage"
@@ -226,19 +226,19 @@ Private Sub SelectGraphsButtonPressed_Click()
             End Select
             
             ' Select the graph, copy it, change workingsheet
-            Set graph = WorkingSheet.ChartObjects(currentGraphName)
+            Set graph = workingsheet.ChartObjects(currentGraphName)
             graph.Chart.ChartArea.Copy
-            Set WorkingSheet = Sheets("Select Graphs")
+            Set workingsheet = Sheets("Select Graphs")
             ' Determine the position of the new graph
             tempInt = j * 20
             yLocation = j * 20 + 19
             If tempInt = 0 Then tempInt = 1
             ' Paste it, and change the title
-            WorkingSheet.Paste WorkingSheet.Range("D" & tempInt)
-            Set graph = WorkingSheet.ChartObjects(currentGraphName)
+            workingsheet.Paste workingsheet.Range("D" & tempInt)
+            Set graph = workingsheet.ChartObjects(currentGraphName)
             graph.Chart.ChartTitle.Text = "Feeder 3 " & graph.Chart.ChartTitle.Text
             
-            Set RngToCover = WorkingSheet.Range("D" & tempInt & ":O" & yLocation)
+            Set RngToCover = workingsheet.Range("D" & tempInt & ":O" & yLocation)
             With graph
                 .Height = RngToCover.Height
                 .Width = RngToCover.Width
@@ -252,7 +252,7 @@ Private Sub SelectGraphsButtonPressed_Click()
     
     ' Feeder 4
     For i = 0 To SelectGraphsFeederFourList.ListCount - 1
-        Set WorkingSheet = Sheets("Feeder 4 Output")
+        Set workingsheet = Sheets("Feeder 4 Output")
         If SelectGraphsFeederFourList.Selected(i) Then
             Select Case SelectGraphsFeederFourList.List(i)
                 Case "Lateral 1 Start Voltage"
@@ -287,19 +287,19 @@ Private Sub SelectGraphsButtonPressed_Click()
             End Select
             
             ' Select the graph, copy it, change workingsheet
-            Set graph = WorkingSheet.ChartObjects(currentGraphName)
+            Set graph = workingsheet.ChartObjects(currentGraphName)
             graph.Chart.ChartArea.Copy
-            Set WorkingSheet = Sheets("Select Graphs")
+            Set workingsheet = Sheets("Select Graphs")
             ' Determine the position of the new graph
             tempInt = j * 20
             yLocation = j * 20 + 19
             If tempInt = 0 Then tempInt = 1
             ' Paste it, and change the title
-            WorkingSheet.Paste WorkingSheet.Range("D" & tempInt)
-            Set graph = WorkingSheet.ChartObjects(currentGraphName)
+            workingsheet.Paste workingsheet.Range("D" & tempInt)
+            Set graph = workingsheet.ChartObjects(currentGraphName)
             graph.Chart.ChartTitle.Text = "Feeder 4 " & graph.Chart.ChartTitle.Text
             
-            Set RngToCover = WorkingSheet.Range("D" & tempInt & ":O" & yLocation)
+            Set RngToCover = workingsheet.Range("D" & tempInt & ":O" & yLocation)
             With graph
                 .Height = RngToCover.Height
                 .Width = RngToCover.Width
@@ -311,8 +311,8 @@ Private Sub SelectGraphsButtonPressed_Click()
     Next i
     
     ' Change the active sheet to "Select Graphs", and hide the graphs form view
-    Set WorkingSheet = Sheets("Select Graphs")
-    WorkingSheet.Activate
+    Set workingsheet = Sheets("Select Graphs")
+    workingsheet.Activate
     SelectGraphsForm.Hide
     
 End Sub

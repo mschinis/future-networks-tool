@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ChooseNetwork 
-   ClientHeight    =   10650
+   ClientHeight    =   12810
    ClientLeft      =   45
    ClientTop       =   390
-   ClientWidth     =   5775
+   ClientWidth     =   5910
    OleObjectBlob   =   "ChooseNetwork.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -13,7 +13,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Public Tday As Integer
-Public finished As Boolean
 
 Private Sub CHP_info_Click()
     HPinfo.Show
@@ -23,6 +22,16 @@ Private Sub CHPPeneScroll_Change()
     CHPPeneText.Value = CHPPeneScroll.Value
 End Sub
 
+Private Sub CHPPeneScroll2_Change()
+    
+    CHPPeneText2.Value = CHPPeneScroll2.Value
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+        Assign_Profiles.CHPPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) = Int(CHPPeneText2.Value) / 100
+    Else
+        CHPPeneText2.Value = 0
+    End If
+End Sub
+
 Private Sub CHPPeneText_Change()
     If CHPPeneText.Value <> "" Then CHPPeneScroll.Value = CHPPeneText.Value
     If Int(HPPeneText.Value) + Int(CHPPeneText.Value) > 100 Then
@@ -30,8 +39,36 @@ Private Sub CHPPeneText_Change()
     End If
 End Sub
 
+Private Sub CHPPeneText2_Change()
+    
+    If CHPPeneText2.Value <> "" Then CHPPeneScroll2.Value = CHPPeneText2.Value
+    If CHPPeneText2.Value <> "" Then CHPPeneScroll2.Value = CHPPeneText2.Value
+    If Int(HPPeneText2.Value) + Int(CHPPeneText2.Value) > 100 Then
+        HPPeneText2.Value = 100 - CHPPeneText2.Value
+    End If
+End Sub
+
 Private Sub ClearnessScroll_Change()
     ClearnessText.Value = ClearnessScroll.Value
+End Sub
+
+Private Sub CommandButton3_Click()
+    
+    MSG1 = MsgBox("Are you sure you want to reset all Lateral Specific penetration values?", vbYesNo, "Warning!")
+
+    If MSG1 = vbYes Then
+            SelectNetwork_Change
+            PVPeneText2.Value = 0
+            EVPeneText2.Value = 0
+            HPPeneText2.Value = 0
+            CHPPeneText2.Value = 0
+        
+    Else
+        
+    End If
+
+    
+
 End Sub
 
 Private Sub ContinueBtn_Click()
@@ -45,18 +82,8 @@ Private Sub ContinueBtn_Click()
             Exit Sub
     End If
     
-    If TdayVal.Value = "" Then
-            MsgBox "Please select a type of day "
-            Exit Sub
-    End If
-    
     If MonthVal.Value > 12 Or MonthVal.Value < 1 Then
         MsgBox "Please input a correct month"
-        Exit Sub
-    End If
-    
-    If TdayVal.Value <> "wd" And TdayVal.Value <> "we" Then
-        MsgBox "Please input a correct type of day"
         Exit Sub
     End If
     
@@ -66,10 +93,10 @@ Private Sub ContinueBtn_Click()
             Exit Sub
         End If
     End If
+    If TdayOptionWD.Value = True Then Tday = 1 Else Tday = 2
     
-    If TdayVal.Value = "wd" Then Tday = 1 Else Tday = 2
     ChooseNetwork.Hide
-    finished = True
+    Start.finished = True
     Preset_Network
 
 End Sub
@@ -88,26 +115,47 @@ Private Sub CommandButton2_Click()
 End Sub
 
 Private Sub EV_Info_Click()
-
     EVinfo.Show
-
 End Sub
 
+Private Sub EVFeeder_Change()
+
+End Sub
 
 Private Sub EVPeneScroll_Change()
-
     EVPeneText.Value = EVPeneScroll.Value
-
 End Sub
 
-
-Private Sub EVPeneText_Change()
-
-   If EVPeneText.Value <> "" Then EVPeneScroll.Value = EVPeneText.Value
+Private Sub EVPeneScroll2_Change()
+    EVPeneText2.Value = EVPeneScroll2.Value
+    
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+        Assign_Profiles.EVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) = Int(EVPeneText2.Value) / 100
+    Else
+        EVPeneText2.Value = 0
+    End If
     
 End Sub
 
-Private Sub Frame1_Click()
+Private Sub EVPeneText_Change()
+   If EVPeneText.Value <> "" Then EVPeneScroll.Value = EVPeneText.Value
+End Sub
+
+
+Private Sub EVPeneText2_Change()
+   If EVPeneText2.Value <> "" Then EVPeneScroll2.Value = EVPeneText2.Value
+End Sub
+
+Private Sub FeedersBox_Change()
+
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+        PVPeneText2.Value = Assign_Profiles.PVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
+        EVPeneText2.Value = Assign_Profiles.EVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
+    End If
+    
+End Sub
+
+Private Sub Frame6_Click()
 
 End Sub
 
@@ -123,6 +171,16 @@ Private Sub HPPeneScroll_Change()
 End Sub
 
 
+Private Sub HPPeneScroll2_Change()
+    HPPeneText2.Value = HPPeneScroll2.Value
+    
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+        Assign_Profiles.HPPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) = Int(HPPeneText2.Value) / 100
+    Else
+        HPPeneText2.Value = 0
+    End If
+End Sub
+
 Private Sub HPPeneText_Change()
 
     If HPPeneText.Value <> "" Then HPPeneScroll.Value = HPPeneText.Value
@@ -131,6 +189,16 @@ Private Sub HPPeneText_Change()
     End If
     
 End Sub
+
+Private Sub HPPeneText2_Change()
+    
+    If HPPeneText2.Value <> "" Then HPPeneScroll2.Value = HPPeneText2.Value
+    If HPPeneText2.Value <> "" Then HPPeneScroll2.Value = HPPeneText2.Value
+    If Int(HPPeneText2.Value) + Int(CHPPeneText2.Value) > 100 Then
+        CHPPeneText2.Value = 100 - HPPeneText2.Value
+    End If
+End Sub
+
 Private Sub Label21_Click()
 
     SelectLocationForm.Show
@@ -141,6 +209,16 @@ Private Sub Label22_Click()
 
     NetworkSpecifications.Show
     
+End Sub
+
+Private Sub LateralsBox_Change()
+    
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+        PVPeneText2.Value = Assign_Profiles.PVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
+        EVPeneText2.Value = Assign_Profiles.EVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
+        HPPeneText2.Value = Assign_Profiles.HPPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
+        CHPPeneText2.Value = Assign_Profiles.CHPPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) * 100
+    End If
 End Sub
 
 Private Sub PV_info_Click()
@@ -155,15 +233,62 @@ Private Sub PVPeneScroll_Change()
     
 End Sub
 
+Private Sub PVPeneScroll2_Change()
+    PVPeneText2.Value = PVPeneScroll2.Value
+    
+    If FeedersBox.Value <> "" And LateralsBox.Value <> "" Then
+
+        Assign_Profiles.PVPenetrationArray(Int(FeedersBox.Value), Int(LateralsBox.Value)) = Int(PVPeneText2.Value) / 100
+    Else
+        PVPeneText2.Value = 0
+    End If
+End Sub
+
 Private Sub PVPeneText_Change()
 
     If PVPeneText.Value <> "" Then PVPeneScroll.Value = PVPeneText.Value
         
 End Sub
 
+Private Sub PVPeneText2_Change()
+    If PVPeneText2.Value <> "" Then PVPeneScroll2.Value = PVPeneText2.Value
+End Sub
+
+Private Sub SelectNetwork_Change()
+
+    If SelectNetwork.Value = "Urban" Or SelectNetwork.Value = "SemiUrban" Or SelectNetwork.Value = "Rural" Then
+        Assign_Profiles.NoLaterals = 4
+        Assign_Profiles.NoFeeders = 4
+        
+        ReDim Assign_Profiles.PVPenetrationArray(1 To 4, 1 To 4)
+        ReDim Assign_Profiles.EVPenetrationArray(1 To 4, 1 To 4)
+        ReDim Assign_Profiles.HPPenetrationArray(1 To 4, 1 To 4)
+        ReDim Assign_Profiles.CHPPenetrationArray(1 To 4, 1 To 4)
+        
+        FeedersBox.Clear
+        LateralsBox.Clear
+        
+        With FeedersBox
+            For i = 1 To Assign_Profiles.NoFeeders
+                .AddItem i
+            Next
+        End With
+        
+        With LateralsBox
+            For i = 1 To Assign_Profiles.NoFeeders
+                .AddItem i
+            Next
+        End With
+        
+    End If
+    
+
+
+End Sub
+
 Public Sub UserForm_Initialize()
     Dim filename As String
-    
+        
     filename = Dir(ThisWorkbook.Path & "/Networks/", 16)
     filename = Dir()
     filename = Dir()
