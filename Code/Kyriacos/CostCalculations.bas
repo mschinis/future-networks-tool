@@ -2,6 +2,12 @@ Attribute VB_Name = "CostCalculations"
 Dim voltageCellsMax() As String
 Dim voltageCellsMin() As String
 Dim voltageCostSummary() As String
+Dim FeederCells() As String
+Dim FeederCostSummary() As String
+Dim LateralCells() As String
+Dim LateralCostSummary() As String
+
+
 
 Public Sub VoltageCellAllocation()
     ReDim voltageCostSummary(1 To 33)
@@ -137,354 +143,227 @@ End Sub
 Public Sub CalculateCosts()
     CostCalculations.VoltageCellAllocation
     CostCalculations.TransformerCheck
+    CostCalculations.FeederCellAllocation
     CostCalculations.FeederCheck
+    CostCalculations.LateralCellAllocation
     CostCalculations.LateralCheck
     CostCalculations.VoltageCheck
     
+       
     
     End Sub
 
 Public Sub TransformerCheck()
     Dim workingsheet As Worksheet
-    Set workingsheet = Worksheets("Results Summary")
-    TransformerUsage = workingsheet.Range("C13")
-    
     Set workingsheet = Worksheets("Limits")
-    TransformerLimit = workingsheet.Range("G4")
+    Dim month As Integer
+    Dim limit1, limit2, limit3 As Double
+    Dim limitreached As Integer
     
-    If TransformerUsage * TransformerLimit < TransformerLimit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C5").Value = "No"
+    
+    month = ChooseNetwork.MonthVal
+    
+    If month = 1 Or month = 2 Or month = 11 Or month = 12 Then
+        limit1 = 1.52
+        limit2 = 1.36
+        limit3 = 1.3
+    ElseIf month = 5 Or month = 9 Or month = 10 Or month = 4 Or month = 3 Then
+        limit1 = 1.37
+        limit2 = 1.24
+        limit3 = 1.19
+    Else
+        limit1 = 1.18
+        limit2 = 1.12
+        limit3 = 1.1
+    End If
+    
+    
+    
+    transformerlimit = workingsheet.Range("G4")
+    
+    Set workingsheet = Worksheets("PowerRollingAverages")
+    transformerusage = workingsheet.Range("C1385")
+    
+    overloadHours = 0
+    
+    
+    
+  If transformerusage > transformerlimit Then
+  
+     If transformerusage < (limit3 * transformerlimit) Then
+     
+        For i = 2 To 1382
+            If workingsheet.Range("C" & i).Value > transformerlimit Then
+                overloadHours = overloadHours + 1
+
+
+            End If
+        Next i
+            If overloadHours < 360 Then
+                Set workingsheet = Worksheets("Cost Summary")
+                workingsheet.Range("C5").Value = "No"
+            Else
+                Set workingsheet = Worksheets("Cost Summary")
+                workingsheet.Range("C5").Value = "Yes"
+
+            End If
+     'count overload hours, if less than 6 hours, then ok, if not, then replace asset
+        
+        limitreached = 1
+    ElseIf transformerusage < limit2 * transformerlimit Then
+        For i = 2 To 1382
+            If workingsheet.Range("C" & i).Value > transformerlimit Then
+                overloadHours = overloadHours + 1
+
+
+            End If
+        Next i
+            If overloadHours < 240 Then
+                Set workingsheet = Worksheets("Cost Summary")
+                workingsheet.Range("C5").Value = "No"
+            Else
+                Set workingsheet = Worksheets("Cost Summary")
+                workingsheet.Range("C5").Value = "Yes"
+
+            End If
+    'countoverload hours, if less than 4 hours then ok, if not then replace asset.
+    
+    
+        
+        limitreached = 2
+    ElseIf transformerusage < limit1 * transformerlimit Then
+        For i = 2 To 1382
+            If workingsheet.Range("C" & i).Value > transformerlimit Then
+                overloadHours = overloadHours + 1
+
+
+            End If
+        Next i
+            If overloadHours < 120 Then
+                Set workingsheet = Worksheets("Cost Summary")
+                workingsheet.Range("C5").Value = "No"
+            Else
+                Set workingsheet = Worksheets("Cost Summary")
+                workingsheet.Range("C5").Value = "Yes"
+
+            End If
+  'count overload hours, if less than 2 hours then ok, if not then replace asset.
+       
+        
+        limitreached = 3
     Else
         Set workingsheet = Worksheets("Cost Summary")
         workingsheet.Range("C5").Value = "Yes"
+        'overloaded.
     End If
+        
+  Else
+  
+        limitreached = 0
+    
+  End If
+ 
 
 End Sub
+Public Sub FeederCellAllocation()
+    ReDim FeederCells(1 To 4)
+    ReDim FeederCostSummary(1 To 4)
+    
+    FeederCells(1) = "C1390"
+    FeederCells(2) = "F1390"
+    FeederCells(3) = "I1390"
+    FeederCells(4) = "L1390"
+    
+    FeederCostSummary(1) = "C9"
+    FeederCostSummary(2) = "C15"
+    FeederCostSummary(3) = "C21"
+    FeederCostSummary(4) = "C27"
+     
+End Sub
+
 
 Public Sub FeederCheck()
-    Dim workingsheet As Worksheet
+
+For i = 1 To 4
     Set workingsheet = Worksheets("FeederCurrentRollingAverages")
-    Feeder1current = workingsheet.Range("C1390")
+    FeederValue = workingsheet.Range(FeederCells(i))
     
     Set workingsheet = Worksheets("Limits")
-    Feeder1Limit = workingsheet.Range("E4")
+    FeederLimit = workingsheet.Range("E4")
     
-    If Feeder1current * Feeder1Limit < Feeder1Limit Then
+    If FeederValue * FeederLimit > FeederLimit * 1.15 Then
         Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C9").Value = "No"
+        workingsheet.Range(FeederCostSummary(i)).Value = "Yes"
     Else
         Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C9").Value = "Yes"
+        workingsheet.Range(FeederCostSummary(i)).Value = "No"
     End If
+Next i
+     
+End Sub
+
+
+Public Sub LateralCellAllocation()
+
+    ReDim LateralCells(1 To 16)
+    ReDim LateralCostSummary(1 To 16)
     
+    LateralCells(1) = "C1392"
+    LateralCells(2) = "F1392"
+    LateralCells(3) = "I1392"
+    LateralCells(4) = "L1392"
+    LateralCells(5) = "O1392"
+    LateralCells(6) = "R1392"
+    LateralCells(7) = "U1392"
+    LateralCells(8) = "X1392"
+    LateralCells(9) = "AA1392"
+    LateralCells(10) = "AD1392"
+    LateralCells(11) = "AG1392"
+    LateralCells(12) = "AJ1392"
+    LateralCells(13) = "AM1392"
+    LateralCells(14) = "AP1392"
+    LateralCells(15) = "AS1392"
+    LateralCells(16) = "AV1392"
     
-    Set workingsheet = Worksheets("FeederCurrentRollingAverages")
-    Feeder2current = workingsheet.Range("F1390")
+    LateralCostSummary(1) = "C10"
+    LateralCostSummary(2) = "C11"
+    LateralCostSummary(3) = "C12"
+    LateralCostSummary(4) = "C13"
+    LateralCostSummary(5) = "C16"
+    LateralCostSummary(6) = "C17"
+    LateralCostSummary(7) = "C18"
+    LateralCostSummary(8) = "C19"
+    LateralCostSummary(9) = "C22"
+    LateralCostSummary(10) = "C23"
+    LateralCostSummary(11) = "C24"
+    LateralCostSummary(12) = "C25"
+    LateralCostSummary(13) = "C28"
+    LateralCostSummary(14) = "C29"
+    LateralCostSummary(15) = "C30"
+    LateralCostSummary(16) = "C31"
     
-    Set workingsheet = Worksheets("Limits")
-    Feeder2Limit = workingsheet.Range("E4")
-    
-    If Feeder2current * Feeder2Limit < Feeder2Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C15").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C15").Value = "Yes"
-    End If
-    
-    
-    Set workingsheet = Worksheets("FeederCurrentRollingAverages")
-    Feeder3current = workingsheet.Range("I1390")
-    
-    Set workingsheet = Worksheets("Limits")
-    Feeder3Limit = workingsheet.Range("E4")
-    
-    If Feeder3current * Feeder3Limit < Feeder3Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C21").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C21").Value = "Yes"
-    End If
-    
-    
-    Set workingsheet = Worksheets("FeederCurrentRollingAverages")
-    Feeder4current = workingsheet.Range("L1390")
-    
-    Set workingsheet = Worksheets("Limits")
-    Feeder4Limit = workingsheet.Range("E4")
-    
-    If Feeder4current * Feeder4Limit < Feeder4Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C27").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C27").Value = "Yes"
-    End If
 
 End Sub
+
+
 
 Public Sub LateralCheck()
-    Dim workingsheet As Worksheet
+
+For i = 1 To 16
     Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral1current = workingsheet.Range("C1392")
+    LateralValue = workingsheet.Range(LateralCells(i))
     
     Set workingsheet = Worksheets("Limits")
-    Lateral1Limit = workingsheet.Range("D4")
+    LateralLimit = workingsheet.Range("D4")
     
-    If Lateral1current * Lateral1Limit < Lateral1Limit Then
+    If LateralValue * LateralLimit > LateralLimit * 1.15 Then
         Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C10").Value = "No"
+        workingsheet.Range(LateralCostSummary(i)).Value = "Yes"
     Else
         Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C10").Value = "Yes"
+        workingsheet.Range(LateralCostSummary(i)).Value = "No"
     End If
+Next i
     
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral2current = workingsheet.Range("F1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral2Limit = workingsheet.Range("D4")
-    
-    If Lateral2current * Lateral2Limit < Lateral2Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C11").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C11").Value = "Yes"
-    End If
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral3current = workingsheet.Range("I1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral3Limit = workingsheet.Range("D4")
-    
-    If Lateral3current * Lateral3Limit < Lateral3Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C12").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C12").Value = "Yes"
-    End If
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral4current = workingsheet.Range("L1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral4Limit = workingsheet.Range("D4")
-    
-    If Lateral4current * Lateral4Limit < Lateral4Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C13").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C13").Value = "Yes"
-    End If
-    
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral5current = workingsheet.Range("O1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral5Limit = workingsheet.Range("D4")
-    
-    If Lateral5current * Lateral5Limit < Lateral5Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C16").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C16").Value = "Yes"
-    End If
-    
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral6current = workingsheet.Range("R1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral6Limit = workingsheet.Range("D4")
-    
-    If Lateral6current * Lateral6Limit < Lateral6Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C17").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C17").Value = "Yes"
-    End If
-    
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral7current = workingsheet.Range("U1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral7Limit = workingsheet.Range("D4")
-    
-    If Lateral7current * Lateral7Limit < Lateral7Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C18").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C18").Value = "Yes"
-    End If
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral8current = workingsheet.Range("X1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral8Limit = workingsheet.Range("D4")
-    
-    If Lateral8current * Lateral8Limit < Lateral8Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C19").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C19").Value = "Yes"
-    End If
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral9current = workingsheet.Range("AA1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral9Limit = workingsheet.Range("D4")
-    
-    If Lateral9current * Lateral9Limit < Lateral9Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C22").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C22").Value = "Yes"
-    End If
-    
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral10current = workingsheet.Range("AD1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral10Limit = workingsheet.Range("D4")
-    
-    If Lateral10current * Lateral10Limit < Lateral10Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C23").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C23").Value = "Yes"
-    End If
-    
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral11current = workingsheet.Range("AG1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral11Limit = workingsheet.Range("D4")
-    
-    If Lateral11current * Lateral11Limit < Lateral11Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C24").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C24").Value = "Yes"
-    End If
-    
-    
-    
-     Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral12current = workingsheet.Range("AJ1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral12Limit = workingsheet.Range("D4")
-    
-    If Lateral12current * Lateral12Limit < Lateral12Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C25").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C25").Value = "Yes"
-    End If
-    
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral13current = workingsheet.Range("AM1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral13Limit = workingsheet.Range("D4")
-    
-    If Lateral13current * Lateral13Limit < Lateral13Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C28").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C28").Value = "Yes"
-    End If
-    
-    
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral14current = workingsheet.Range("AP1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral14Limit = workingsheet.Range("D4")
-    
-    If Lateral14current * Lateral14Limit < Lateral14Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C29").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C29").Value = "Yes"
-    End If
-    
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral15current = workingsheet.Range("AS1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral15Limit = workingsheet.Range("D4")
-    
-    If Lateral15current * Lateral15Limit < Lateral15Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C30").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C30").Value = "Yes"
-    End If
-    
-    
-    
-    Set workingsheet = Worksheets("CurrentRollingAverages")
-    Lateral16current = workingsheet.Range("AV1392")
-    
-    Set workingsheet = Worksheets("Limits")
-    Lateral16Limit = workingsheet.Range("D4")
-    
-    If Lateral16current * Lateral16Limit < Lateral16Limit Then
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C31").Value = "No"
-    Else
-        Set workingsheet = Worksheets("Cost Summary")
-        workingsheet.Range("C31").Value = "Yes"
-    End If
 End Sub
+

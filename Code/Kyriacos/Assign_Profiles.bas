@@ -94,14 +94,14 @@ For i = 1 To NoFeeders
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100
-            If PenetrationPercentage < 1 Then
+            If PenetrationPercentage < 0 Then
                 If u <= Abs(PenetrationPercentage) Then
                     PenetrationMatrix(u) = PenetrationNumberInteger - 1
                 ElseIf u > Abs(PenetrationPercentage) Then
                     PenetrationMatrix(u) = PenetrationNumberInteger
                 End If
             End If
-            If PenetrationPercentage > 1 Then
+            If PenetrationPercentage > 0 Then
                 If u <= Abs(PenetrationPercentage) Then
                     PenetrationMatrix(u) = PenetrationNumberInteger + 1
                 ElseIf u > Abs(PenetrationPercentage) Then
@@ -129,6 +129,8 @@ For i = 1 To NoFeeders
                 PVLocation(6, m) = LateralLocation(PVLocation(2, m), Int(Mid(CustomersArray(i, y, z), 3)))
 
                 ANMpv.PVFlags(m) = 1
+                
+               
         Next
     Next
 Next
@@ -212,7 +214,8 @@ For i = 1 To NoFeeders
             
             DSSText.Command = "new loadshape.Houseload" & house & " npts=1440 minterval=1.0 csvfile=House" & Tmonth & "_" & Tday & "_" & occupants & "_" & LoadshapeNumber & "_1.txt"
             DSSText.Command = "new load.House" & house & " bus1=Consumer" & CustomersArrayHP(i, y, z) & ".1 Phases=1 kV=0.23 kW=10 PF=0.97 Daily=Houseload" & house
-            
+                            
+
         Next
     Next
 Next
@@ -366,7 +369,8 @@ For i = 1 To NoFeeders
             
                 m = m + 1
                 house = house + 1
-                HouseStopPoint(i, y) = HouseStopPoint(i, y) + 1
+                HouseStopPoint(i, y) = z
+                HPStopPoint(i, y) = z
                 
                 repetition = Int((20 - 1 + 1) * Rnd + 1)
                 Thouse = HouseTypeArray(Int((100 - 1 + 1) * Rnd + 1))
@@ -386,9 +390,11 @@ For i = 1 To NoFeeders
                 HPLocation(3, m) = Int(Mid(CustomersArrayHP(i, y, z), 3)) Mod 3 'Store the phase of each device
                 If HPLocation(3, m) = 0 Then HPLocation(3, m) = 3
                 HPLocation(2, m) = y 'Store the lateral of each device
+                
+                                                         
 
         Next
-        HPStopPoint(i, y) = z
+
     Next
 Next
 
@@ -564,14 +570,14 @@ For i = 1 To NoFeeders
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100
-            If PenetrationPercentage < 1 Then
+            If PenetrationPercentage < 0 Then
                 If u <= Abs(PenetrationPercentage) Then
                     PenetrationMatrix(u) = PenetrationNumberInteger - 1
                 ElseIf u > Abs(PenetrationPercentage) Then
                     PenetrationMatrix(u) = PenetrationNumberInteger
                 End If
             End If
-            If PenetrationPercentage > 1 Then
+            If PenetrationPercentage > 0 Then
                 If u <= Abs(PenetrationPercentage) Then
                     PenetrationMatrix(u) = PenetrationNumberInteger + 1
                 ElseIf u > Abs(PenetrationPercentage) Then
@@ -587,7 +593,8 @@ For i = 1 To NoFeeders
                 If z <= LateralSizes(i, y) Then
                     m = m + 1
                     house = house + 1
-                    HouseStopPoint(i, y) = HouseStopPoint(i, y) + 1
+                    HouseStopPoint(i, y) = z
+                    CHPStopPoint(i, y) = z
                     
                     repetition = Int((20 - 1 + 1) * Rnd + 1)
                     Thouse = HouseTypeArray(Int((100 - 1 + 1) * Rnd + 1))
@@ -602,9 +609,11 @@ For i = 1 To NoFeeders
                     LoadshapeNumber = Int((500 - 1 + 1) * Rnd + 1)
                     DSSText.Command = "new loadshape.Houseload" & house & " npts=1440 minterval=1.0 csvfile=House" & Tmonth & "_" & Tday & "_" & occupants & "_" & LoadshapeNumber & ".txt"
                     DSSText.Command = "new load.House" & house & " bus1=Consumer" & CustomersArrayHP(i, y, z) & ".1 Phases=1 kV=0.23 kW=10 PF=0.97 Daily=Houseload" & house
+                    
+
                 End If
         Next
-        CHPStopPoint(i, y) = z
+
     Next
 Next
 
@@ -776,14 +785,14 @@ For i = 1 To NoFeeders
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100
-            If PenetrationPercentage < 1 Then
+            If PenetrationPercentage < 0 Then
                 If u <= Abs(PenetrationPercentage) Then
                     PenetrationMatrix(u) = PenetrationNumberInteger - 1
                 ElseIf u > Abs(PenetrationPercentage) Then
                     PenetrationMatrix(u) = PenetrationNumberInteger
                 End If
             End If
-            If PenetrationPercentage > 1 Then
+            If PenetrationPercentage > 0 Then
                 If u <= Abs(PenetrationPercentage) Then
                     PenetrationMatrix(u) = PenetrationNumberInteger + 1
                 ElseIf u > Abs(PenetrationPercentage) Then
@@ -806,6 +815,7 @@ For i = 1 To NoFeeders
             EVLocation(3, m) = Int(Mid(CustomersArray(i, y, z), 3)) Mod 3 'Store the phase of each device
             If EVLocation(3, m) = 0 Then EVLocation(3, m) = 3
             EVLocation(2, m) = y 'Store the lateral of each device
+            
         Next
     Next
 Next
@@ -869,3 +879,4 @@ Function ShuffleArray(InArray() As Variant) As Variant()
     Next N
     ShuffleArray = arr
 End Function
+
