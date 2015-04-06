@@ -44,6 +44,8 @@ Dim PenetrationNumber As Integer
 Dim PenetrationPercentage As Integer
 Dim PenetrationMatrix(1 To 100) As Integer
 Dim DevicesNumber As Integer
+Dim PVPenetrationArrayLocal() As Double
+
 
 
 'If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
@@ -51,14 +53,17 @@ Dim DevicesNumber As Integer
 'End If
 DevicesNumber = 0
 max = 0
+ReDim PVPenetrationArrayLocal(1 To NoFeeders, 1 To NoLaterals)
+
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
         
-        If PVPenetrationArray(i, y) = Empty Then PVPenetrationArray(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
+        If PVPenetrationArray(i, y) = Empty Then PVPenetrationArrayLocal(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
+        If PVPenetrationArray(i, y) <> Empty Then PVPenetrationArrayLocal(i, y) = PVPenetrationArray(i, y)
         If max < LateralSizes(i, y) Then
             max = LateralSizes(i, y)
         End If
-        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * PVPenetrationArray(i, y) + 1)
+        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * PVPenetrationArrayLocal(i, y) + 1)
     Next
 Next
 
@@ -89,8 +94,8 @@ m = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
         
-        PenetrationNumberDouble = LateralSizes(i, y) * PVPenetrationArray(i, y)
-        PenetrationNumberInteger = LateralSizes(i, y) * PVPenetrationArray(i, y)
+        PenetrationNumberDouble = LateralSizes(i, y) * PVPenetrationArrayLocal(i, y)
+        PenetrationNumberInteger = LateralSizes(i, y) * PVPenetrationArrayLocal(i, y)
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100
@@ -240,6 +245,10 @@ Dim PenetrationPercentage As Integer
 Dim PenetrationMatrix(1 To 100) As Integer
 Dim DevicesNumber As Integer
 
+Dim HPPenetrationArrayLocal() As Double
+ReDim HPPenetrationArrayLocal(1 To NoFeeders, 1 To NoLaterals)
+
+
 
 '---------------------------------- Create probability arrays ----------------------------
 For i = 1 To 100
@@ -306,11 +315,12 @@ End If
 max = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
-       If HPPenetrationArray(i, y) = Empty Then HPPenetrationArray(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
+       If HPPenetrationArray(i, y) = Empty Then HPPenetrationArrayLocal(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
+       If HPPenetrationArray(i, y) <> Empty Then HPPenetrationArrayLocal(i, y) = HPPenetrationArray(i, y)
         If max < LateralSizes(i, y) Then
             max = LateralSizes(i, y)
         End If
-        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * HPPenetrationArray(i, y) + 1)
+        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * HPPenetrationArrayLocal(i, y) + 1)
     Next
 Next
 
@@ -342,8 +352,8 @@ m = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
         
-        PenetrationNumberDouble = LateralSizes(i, y) * HPPenetrationArray(i, y)
-        PenetrationNumberInteger = LateralSizes(i, y) * HPPenetrationArray(i, y)
+        PenetrationNumberDouble = LateralSizes(i, y) * HPPenetrationArrayLocal(i, y)
+        PenetrationNumberInteger = LateralSizes(i, y) * HPPenetrationArrayLocal(i, y)
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100
@@ -460,6 +470,9 @@ Dim PenetrationPercentage As Integer
 Dim PenetrationMatrix(1 To 100) As Integer
 Dim DevicesNumber As Integer
 
+Dim CHPPenetrationArrayLocal() As Double
+ReDim CHPPenetrationArrayLocal(1 To NoFeeders, 1 To NoLaterals)
+
 
 '---------------------------------- Create probability arrays ----------------------------
 For i = 1 To 100
@@ -526,11 +539,12 @@ End If
 max = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
-       If CHPPenetrationArray(i, y) = Empty Then CHPPenetrationArray(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
+        If CHPPenetrationArray(i, y) = Empty Then CHPPenetrationArrayLocal(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
+        If CHPPenetrationArray(i, y) <> Empty Then CHPPenetrationArrayLocal(i, y) = CHPPenetrationArray(i, y)
         If max < LateralSizes(i, y) Then
             max = LateralSizes(i, y)
         End If
-        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * CHPPenetrationArray(i, y) + 1)
+        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * CHPPenetrationArrayLocal(i, y) + 1)
     Next
 Next
 
@@ -565,8 +579,8 @@ m = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
         
-        PenetrationNumberDouble = LateralSizes(i, y) * CHPPenetrationArray(i, y)
-        PenetrationNumberInteger = LateralSizes(i, y) * CHPPenetrationArray(i, y)
+        PenetrationNumberDouble = LateralSizes(i, y) * CHPPenetrationArrayLocal(i, y)
+        PenetrationNumberInteger = LateralSizes(i, y) * CHPPenetrationArrayLocal(i, y)
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100
@@ -736,6 +750,9 @@ Dim PenetrationNumberInteger As Integer
 Dim PenetrationNumber As Integer
 Dim PenetrationPercentage As Integer
 Dim PenetrationMatrix(1 To 100) As Integer
+Dim EVPenetrationArrayLocal() As Double
+
+ReDim EVPenetrationArrayLocal(1 To NoFeeders, 1 To NoLaterals)
 
 
 'If PresetNetwork.Network = "Urban" Or PresetNetwork.Network = "SemiUrban" Or PresetNetwork.Network = "Rural" Then
@@ -745,11 +762,12 @@ Dim PenetrationMatrix(1 To 100) As Integer
 max = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
-       If EVPenetrationArray(i, y) = Empty Then EVPenetrationArray(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
+       If EVPenetrationArray(i, y) = Empty Then EVPenetrationArrayLocal(i, y) = penetration ' PUT THIS INTO AN IF STATEMENT LATER
+       If EVPenetrationArray(i, y) <> Empty Then EVPenetrationArrayLocal(i, y) = EVPenetrationArray(i, y)
         If max < LateralSizes(i, y) Then
             max = LateralSizes(i, y)
         End If
-        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * EVPenetrationArray(i, y) + 1)
+        DevicesNumber = DevicesNumber + (LateralSizes(i, y) * EVPenetrationArrayLocal(i, y) + 1)
     Next
 Next
 
@@ -780,8 +798,8 @@ m = 0
 For i = 1 To NoFeeders
     For y = 1 To NoLaterals
         
-        PenetrationNumberDouble = LateralSizes(i, y) * EVPenetrationArray(i, y)
-        PenetrationNumberInteger = LateralSizes(i, y) * EVPenetrationArray(i, y)
+        PenetrationNumberDouble = LateralSizes(i, y) * EVPenetrationArrayLocal(i, y)
+        PenetrationNumberInteger = LateralSizes(i, y) * EVPenetrationArrayLocal(i, y)
         PenetrationPercentage = (PenetrationNumberDouble - PenetrationNumberInteger) * 100
         
         For u = 1 To 100

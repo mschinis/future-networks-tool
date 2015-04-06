@@ -2,10 +2,10 @@
 new monitor.SSTransformer element=transformer.LV_Transformer terminal=1 mode=1 ppolar=no
 
  ! Start of feeders
-new monitor.VIFeeder1 element=Line.Feeder1.1 terminal=1 mode=0
-new monitor.VIFeeder2 element=Line.Feeder2.1 terminal=1 mode=0
-new monitor.VIFeeder3 element=Line.Feeder3.1 terminal=1 mode=0
-new monitor.VIFeeder4 element=Line.Feeder4.1 terminal=1 mode=0
+new monitor.VIFeeder1 element=Line.Feeder1.1 terminal=2 mode=0
+new monitor.VIFeeder2 element=Line.Feeder2.1 terminal=2 mode=0
+new monitor.VIFeeder3 element=Line.Feeder3.1 terminal=2 mode=0
+new monitor.VIFeeder4 element=Line.Feeder4.1 terminal=2 mode=0
 
  ! Start of lateral
 new monitor.VILateral1_1_Start element=Line.Lateral1_start_1 terminal=2 mode=0

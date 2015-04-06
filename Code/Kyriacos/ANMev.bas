@@ -6,10 +6,19 @@ Public achieved As Integer
 Public achievedlaterals() As Integer
 Public achievedfeeders() As Integer
 
+Public MaxLaterals() As Integer
+Public LateralsAssigned() As Integer
+Public MaxFeeders() As Integer
+Public FeedersAssigned() As Integer
+
+
+
+
 
 Public Sub EVManagement(ByVal i As Integer)
-
+    
     Call CheckEV
+    Call CalculateDisconnectionsLaterals(i)
     
     If ChooseNetwork.EVANM = True Then
         
@@ -165,11 +174,14 @@ For m = 1 To Assign_Profiles.NoEV
     min = 1000
     
     For k = 1 To Assign_Profiles.NoEV
-        If feedercurrents(iter, Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(3, k)) / CheckValues.feedercurrentmax < 0.9 Then
-            If EVFlags(k) = 2 Then
-                If min > Charge(k) Then
-                    min = Charge(k)
-                    comp = k
+        'If feedercurrents(iter, Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(3, k)) / CheckValues.feedercurrentmax < 0.9 Then
+        If MaxLaterals(Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(2, k), Assign_Profiles.EVLocation(3, k)) > LateralsAssigned(Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(2, k), Assign_Profiles.EVLocation(3, k)) Then
+            If MaxFeeders(Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(3, k)) > FeedersAssigned(Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(3, k)) Then
+                If EVFlags(k) = 2 Then
+                    If min > Charge(k) Then
+                        min = Charge(k)
+                        comp = k
+                    End If
                 End If
             End If
         End If
@@ -180,7 +192,9 @@ For m = 1 To Assign_Profiles.NoEV
             If EVFlags(comp) = 2 Then
                 EVFlags(comp) = 1
                 achieved = achieved + 1
-            
+                LateralsAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(2, comp), Assign_Profiles.EVLocation(3, comp)) = LateralsAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(2, comp), Assign_Profiles.EVLocation(3, comp)) + 1
+                FeedersAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(3, comp)) = FeedersAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(3, comp)) + 1
+                
                 Call ConnectEV(comp)
             End If
         End If
@@ -224,6 +238,43 @@ Public Sub CheckEV()
             Charge(i) = Charge(i) + 1
         End If
 
+    Next
+
+End Sub
+
+Public Sub CalculateDisconnectionsLaterals(ByVal iter As Integer)
+
+    ReDim MaxLaterals(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals, 1 To 3)
+    ReDim LateralsAssigned(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals, 1 To 3)
+    ReDim MaxFeeders(1 To Assign_Profiles.NoFeeders, 1 To 3)
+    ReDim FeedersAssigned(1 To Assign_Profiles.NoFeeders, 1 To 3)
+      
+    For i = 1 To Assign_Profiles.NoFeeders
+        For y = 1 To Assign_Profiles.NoFeeders
+            For z = 1 To 3
+                
+                LateralsAssigned(i, y, z) = 0
+                FeedersAssigned(i, z) = 0
+                
+                If Start.Laterals(iter, i, y, z) < CheckValues.lateralcurrentmax Then
+                    
+                    MaxLaterals(i, y, z) = (CheckValues.lateralcurrentmax - Start.Laterals(iter, i, y, z)) / (16 * 2)
+                Else
+                
+                    MaxLaterals(i, y, z) = 0
+                End If
+                
+                
+                If Start.Feeders(iter, i, z) < (CheckValues.feedercurrentmax) Then
+                    
+                    MaxFeeders(i, z) = ((CheckValues.feedercurrentmax) - Start.Feeders(iter, i, z)) / (16 * 2.5)
+                Else
+                
+                    MaxFeeders(i, z) = 0
+                End If
+            
+            Next
+        Next
     Next
 
 End Sub

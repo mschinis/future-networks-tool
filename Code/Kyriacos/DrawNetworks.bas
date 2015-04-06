@@ -1,4 +1,112 @@
 Attribute VB_Name = "DrawNetworks"
+Sub DrawBasicNetworkCustom()
+'
+
+Dim customer As Integer
+Dim workingsheet As Worksheet
+Set workingsheet = Sheets("Network")
+Sheets("Network").Activate
+
+Dim Shp As Shape
+For Each Shp In ActiveSheet.Shapes
+    If Shp.Type = 1 Then
+        Shp.Delete
+    End If
+Next Shp
+
+
+Sheets("Network").Activate
+'Cells.Select
+'Selection.Delete Shift:=xlUp
+
+For y = 1 To Assign_Profiles.NoFeeders
+
+'Draw Feeder
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 0, 50 + (y * 500 - 500), (350 * (Assign_Profiles.NoFeeders)), _
+        50 + (y * 500 - 500)).Select
+    With Selection.ShapeRange.Line
+        .Weight = 4
+        .Visible = msoTrue
+    End With
+
+    For z = 1 To Assign_Profiles.NoLaterals
+
+        If z <> Assign_Profiles.NoLaterals Then
+        
+            workingsheet.Shapes.AddConnector(msoConnectorStraight, 350 * z, 50 + (y * 500 - 500), 350 * z, _
+            50 + (y * 500 - 500) + 450).Select
+            With Selection.ShapeRange.Line
+                .Visible = msoTrue
+                .Weight = 3
+            End With
+        Else
+            
+            workingsheet.Shapes.AddConnector(msoConnectorStraight, 350 * z, 50 + (y * 500 - 500), 350 * z, _
+            50 + (y * 500 - 500) + 450).Select
+            With Selection.ShapeRange.Line
+                .Visible = msoTrue
+                .Weight = 3
+            End With
+        End If
+
+    Next
+Next
+
+
+End Sub
+
+Sub DrawCustom()
+
+    Dim customer As Integer
+    Dim var As Integer
+    
+    Dim workingsheet As Worksheet
+    Set workingsheet = Sheets("Network")
+    customer = 0
+    
+    Call DrawBasicNetworkCustom
+    
+    For i = 1 To Assign_Profiles.NoFeeders
+        For y = 1 To Assign_Profiles.NoLaterals
+            For z = 1 To Assign_Profiles.LateralSizes(i, y)
+                customer = customer + 1
+                If z Mod 2 = 1 Then
+                    var = 30
+                Else
+                    var = -30
+                End If
+                
+                workingsheet.Shapes.AddConnector(msoConnectorStraight, 350 * y, (100 + (i * 500 - 500) + (400 * z / Assign_Profiles.LateralSizes(i, y))), (350 * y) + var, _
+                (100 + (i * 500 - 500) + (400 * z / Assign_Profiles.LateralSizes(i, y)))).Select
+                With Selection.ShapeRange.Line
+                    .Visible = msoTrue
+                    .Weight = 3
+                End With
+            
+                If Start.CustomerVoltageLimit(customer) = 1 Then
+            
+                    With Selection.ShapeRange.Line
+                        .Visible = msoTrue
+                        .ForeColor.RGB = RGB(255, 0, 0)
+                        .Transparency = 0
+                    End With
+                Else
+                    With Selection.ShapeRange.Line
+                        .Visible = msoTrue
+                        .ForeColor.RGB = RGB(0, 0, 0)
+                        .Transparency = 0
+                    End With
+                End If
+            
+            Next
+        Next
+    Next
+    
+    ActiveSheet.Shapes.Range(Array("Group 1")).Select
+    Selection.ShapeRange.ZOrder msoBringToFront
+    
+End Sub
+
 Sub DrawBasicNetwork()
 '
 
@@ -22,12 +130,13 @@ Sheets("Network").Activate
 For y = 1 To 4
 
 'Draw Feeder
-    workingsheet.Shapes.AddConnector(msoConnectorStraight, 0, 50 + (y * 500 - 500), 1350, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 0, 50 + (y * 500 - 500), (1350), _
         50 + (y * 500 - 500)).Select
     With Selection.ShapeRange.Line
         .Weight = 4
         .Visible = msoTrue
     End With
+
 
     'Draw Lateral 1
     workingsheet.Shapes.AddConnector(msoConnectorStraight, 250, 50 + (y * 500 - 500), 250, _
@@ -36,7 +145,7 @@ For y = 1 To 4
         .Visible = msoTrue
         .Weight = 3
     End With
-        
+
     'Draw Lateral 2
     workingsheet.Shapes.AddConnector(msoConnectorStraight, 750, 50 + (y * 500 - 500), 150 * 5, _
         50 + (y * 500 - 500) + 450).Select
@@ -65,6 +174,8 @@ Next
 
 
 End Sub
+
+
 Sub DrawSemiUrban()
 '
 ' DrawRural Macro

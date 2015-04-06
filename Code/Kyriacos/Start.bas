@@ -131,7 +131,7 @@ OverrideDefault = False
                 Application.StatusBar = "Simulation running - " & (progresscounter * 10 + 10) & "%"
             End If
             Call CheckValuesPreset(PresetNetwork.customers, i - 420, TransformerArray, Feeders, Laterals, CustomersVoltages, CustomersLimits, CurrentFlags)
-            If ChooseNetwork.EVPeneScroll.Value <> 0 Then
+            If ChooseNetwork.EVEnable.Value = True Then
                 Call EVManagement(i - 420)
             End If
             

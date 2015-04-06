@@ -9,9 +9,16 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub CommandButton1_Click()
 
-    If PresetNetwork.Network = "Urban" Then Call DrawNetworks.DrawUrban
-    If PresetNetwork.Network = "Rural" Then Call DrawNetworks.DrawRural
-    If PresetNetwork.Network = "SemiUrban" Then Call DrawNetworks.DrawSemiUrban
+
+    If PresetNetwork.Network = "Urban" Then
+        Call DrawNetworks.DrawUrban
+    ElseIf PresetNetwork.Network = "Rural" Then
+        Call DrawNetworks.DrawRural
+    ElseIf PresetNetwork.Network = "SemiUrban" Then
+        Call DrawNetworks.DrawSemiUrban
+    Else
+        Call DrawNetworks.DrawCustom
+    End If
     
     Call CurrentOverload
 

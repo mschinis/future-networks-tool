@@ -45,6 +45,7 @@ Public Sub Monitors()
     Dim character As String
     Dim iextrastr As String
     Dim z As Integer
+    Dim countercorrected As Integer
     
     
     character = Chr(68)
@@ -87,6 +88,7 @@ Public Sub Monitors()
     
     For i = 1 To Assign_Profiles.NoFeeders
         DSSText.Command = "Export monitors VIFeeder" & i
+ '       DSSText.Command = "Export monitors VIFeeder" & i & "n"
         
         For j = 1 To Assign_Profiles.NoLaterals
             DSSText.Command = "Export monitors VILateral" & i & "_" & j & "_Start"
@@ -169,7 +171,12 @@ Public Sub Monitors()
         Transformer(i, 3) = Parser.DblValue
         iextra = Parser.DblValue
         If iextra > 90 Or iextra < -90 Then Transformer(i, 3) = -Transformer(i, 3)
-        Values(i, 1) = Transformer(i, 1) + Transformer(i, 2) + Transformer(i, 3)
+        
+        If i <= 1020 Then
+            Values(i + 420, 1) = Transformer(i, 1) + Transformer(i, 2) + Transformer(i, 3)
+        Else
+            Values(i - 1020, 1) = Transformer(i, 1) + Transformer(i, 2) + Transformer(i, 3)
+        End If
 
     Loop
     Close
@@ -199,25 +206,34 @@ Public Sub Monitors()
                 iextra = Parser.DblValue
                 
                 ' Currents
+                
+                
                 IFeederStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
-              
-              
-                If iextra > 40 Or iextra < -140 Then IFeederStart(counter, 1) = -IFeederStart(counter, 1)
+                If iextra < 30 And iextra > -150 Then IFeederStart(counter, 1) = -IFeederStart(counter, 1)
+                
                 IFeederStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > 100 Or iextra > -80 Then IFeederStart(counter, 2) = -IFeederStart(counter, 2)
+                If iextra > 90 Or iextra < -90 Then IFeederStart(counter, 2) = -IFeederStart(counter, 2)
+                
                 IFeederStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra < -5 Or iextra > 175 Then IFeederStart(counter, 3) = -IFeederStart(counter, 3)
+                If iextra > -30 And iextra < 150 Then IFeederStart(counter, 3) = -IFeederStart(counter, 3)
                 
-                VFValues(counter, 1) = VFeederStart(counter, 1) / 230
-                VFValues(counter, 2) = VFeederStart(counter, 2) / 230
-                VFValues(counter, 3) = VFeederStart(counter, 3) / 230
+                If counter <= 1020 Then
+                    countercorrected = counter + 420
+                Else
+                    countercorrected = counter - 1020
+                End If
                 
-                IFValues(counter, 1) = IFeederStart(counter, 1)
-                IFValues(counter, 2) = IFeederStart(counter, 2)
-                IFValues(counter, 3) = IFeederStart(counter, 3)
+                
+                VFValues(countercorrected, 1) = VFeederStart(counter, 1) / 230
+                VFValues(countercorrected, 2) = VFeederStart(counter, 2) / 230
+                VFValues(countercorrected, 3) = VFeederStart(counter, 3) / 230
+                
+                IFValues(countercorrected, 1) = IFeederStart(counter, 1)
+                IFValues(countercorrected, 2) = IFeederStart(counter, 2)
+                IFValues(countercorrected, 3) = IFeederStart(counter, 3)
             
         Loop
         Close
@@ -251,21 +267,29 @@ Public Sub Monitors()
                 ' Currents
                 ILateralStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra < 40 And iextra > -140 Then ILateralStart(counter, 1) = -ILateralStart(counter, 1)
+                If iextra < 30 And iextra > -150 Then ILateralStart(counter, 1) = -ILateralStart(counter, 1)
+                
                 ILateralStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > 100 Or iextra < -80 Then ILateralStart(counter, 2) = -ILateralStart(counter, 2)
+                If iextra > 90 Or iextra < -90 Then ILateralStart(counter, 2) = -ILateralStart(counter, 2)
+                
                 ILateralStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > -20 And iextra < 160 Then ILateralStart(counter, 3) = -ILateralStart(counter, 3)
+                If iextra > -30 And iextra < 150 Then ILateralStart(counter, 3) = -ILateralStart(counter, 3)
                 
-                VLValues(counter, 1) = VLateralStart(counter, 1) / 230
-                VLValues(counter, 2) = VLateralStart(counter, 2) / 230
-                VLValues(counter, 3) = VLateralStart(counter, 3) / 230
+                If counter <= 1020 Then
+                    countercorrected = counter + 420
+                Else
+                    countercorrected = counter - 1020
+                End If
                 
-                ILValues(counter, 1) = ILateralStart(counter, 1)
-                ILValues(counter, 2) = ILateralStart(counter, 2)
-                ILValues(counter, 3) = ILateralStart(counter, 3)
+                VLValues(countercorrected, 1) = VLateralStart(counter, 1) / 230
+                VLValues(countercorrected, 2) = VLateralStart(counter, 2) / 230
+                VLValues(countercorrected, 3) = VLateralStart(counter, 3) / 230
+                
+                ILValues(countercorrected, 1) = ILateralStart(counter, 1)
+                ILValues(countercorrected, 2) = ILateralStart(counter, 2)
+                ILValues(countercorrected, 3) = ILateralStart(counter, 3)
             Loop
             Close
             ' Display Lateral Voltages
@@ -307,13 +331,19 @@ Public Sub Monitors()
                 ILateralStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
                 
-                VLValues(counter, 1) = VLateralStart(counter, 1) / 230
-                VLValues(counter, 2) = VLateralStart(counter, 2) / 230
-                VLValues(counter, 3) = VLateralStart(counter, 3) / 230
+                If counter <= 1020 Then
+                    countercorrected = counter + 420
+                Else
+                    countercorrected = counter - 1020
+                End If
                 
-                ILValues(counter, 1) = ILateralStart(counter, 1)
-                ILValues(counter, 2) = ILateralStart(counter, 2)
-                ILValues(counter, 3) = ILateralStart(counter, 3)
+                VLValues(countercorrected, 1) = VLateralStart(counter, 1) / 230
+                VLValues(countercorrected, 2) = VLateralStart(counter, 2) / 230
+                VLValues(countercorrected, 3) = VLateralStart(counter, 3) / 230
+                
+                ILValues(countercorrected, 1) = ILateralStart(counter, 1)
+                ILValues(countercorrected, 2) = ILateralStart(counter, 2)
+                ILValues(countercorrected, 3) = ILateralStart(counter, 3)
             Loop
             Close
             ' Display Lateral Voltages
