@@ -46,6 +46,9 @@ Public Sub Monitors()
     Dim iextrastr As String
     Dim z As Integer
     Dim countercorrected As Integer
+    Dim AngleVariable As Integer
+    
+    AngleVariable = 30
     
     
     character = Chr(68)
@@ -210,21 +213,22 @@ Public Sub Monitors()
                 
                 IFeederStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra < 30 And iextra > -150 Then IFeederStart(counter, 1) = -IFeederStart(counter, 1)
+                If iextra < 30 + AngleVariable And iextra > -150 + AngleVariable Then IFeederStart(counter, 1) = -IFeederStart(counter, 1)
                 
                 IFeederStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > 90 Or iextra < -90 Then IFeederStart(counter, 2) = -IFeederStart(counter, 2)
+                If iextra > 90 + AngleVariable Or iextra < -90 + AngleVariable Then IFeederStart(counter, 2) = -IFeederStart(counter, 2)
                 
                 IFeederStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > -30 And iextra < 150 Then IFeederStart(counter, 3) = -IFeederStart(counter, 3)
+                If iextra > -30 + AngleVariable And iextra < 150 + AngleVariable Then IFeederStart(counter, 3) = -IFeederStart(counter, 3)
                 
                 If counter <= 1020 Then
                     countercorrected = counter + 420
                 Else
                     countercorrected = counter - 1020
                 End If
+
                 
                 
                 VFValues(countercorrected, 1) = VFeederStart(counter, 1) / 230
@@ -267,22 +271,24 @@ Public Sub Monitors()
                 ' Currents
                 ILateralStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra < 30 And iextra > -150 Then ILateralStart(counter, 1) = -ILateralStart(counter, 1)
+                If iextra < 30 + AngleVariable And iextra > -150 + AngleVariable Then ILateralStart(counter, 1) = -ILateralStart(counter, 1)
                 
                 ILateralStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > 90 Or iextra < -90 Then ILateralStart(counter, 2) = -ILateralStart(counter, 2)
+                If iextra > 90 + AngleVariable Or iextra < -90 + AngleVariable Then ILateralStart(counter, 2) = -ILateralStart(counter, 2)
                 
                 ILateralStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > -30 And iextra < 150 Then ILateralStart(counter, 3) = -ILateralStart(counter, 3)
+                If iextra > -30 + AngleVariable And iextra < 150 + AngleVariable Then ILateralStart(counter, 3) = -ILateralStart(counter, 3)
                 
                 If counter <= 1020 Then
                     countercorrected = counter + 420
                 Else
                     countercorrected = counter - 1020
                 End If
-                
+
+
+
                 VLValues(countercorrected, 1) = VLateralStart(counter, 1) / 230
                 VLValues(countercorrected, 2) = VLateralStart(counter, 2) / 230
                 VLValues(countercorrected, 3) = VLateralStart(counter, 3) / 230
@@ -336,6 +342,8 @@ Public Sub Monitors()
                 Else
                     countercorrected = counter - 1020
                 End If
+
+
                 
                 VLValues(countercorrected, 1) = VLateralStart(counter, 1) / 230
                 VLValues(countercorrected, 2) = VLateralStart(counter, 2) / 230

@@ -118,11 +118,13 @@ OverrideDefault = False
     ReDim CustomerVoltageLimit(1 To PresetNetwork.customers)
     ReDim CurrentFlags(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals + 1)
     ReDim NotCompliant(1 To PresetNetwork.customers)
+    ReDim ANMhp.HPReduction(1 To RunHours)
+
     
     progresscounter = 0
     Application.StatusBar = "Simulation running - 10%"
     
-    For i = 1 To 1860
+    For i = 1 To RunHours + 420
            
         DSSobj.ActiveCircuit.Solution.Solve
         If i > 420 Then
@@ -137,6 +139,10 @@ OverrideDefault = False
             
             If ChooseNetwork.PVANM.Value = True Then
                 Call PVManagement(i - 420)
+            End If
+            
+            If ChooseNetwork.HPANM.Value = True Then
+                Call HPManagement(i - 420)
             End If
             
         End If

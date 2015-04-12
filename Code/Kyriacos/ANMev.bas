@@ -94,7 +94,7 @@ For i = 1 To Assign_Profiles.NoFeeders
             If CurrentUse(iter, i, z) / CheckValues.feedercurrentmax > 0.95 Then
                 For h = 1 To Assign_Profiles.NoEV
                     max = 0
-                    feederrequired = (CurrentUse(iter, i, z) - CheckValues.feedercurrentmax) * 0.5 / 16
+                    feederrequired = (CurrentUse(iter, i, z) - CheckValues.feedercurrentmax * 0.95) * 0.5 / 16
                     For A = 1 To Assign_Profiles.NoEV
                         If Assign_Profiles.EVLocation(1, A) = i And Assign_Profiles.EVLocation(3, A) = z Then
                             If EVFlags(A) = 1 Then
@@ -133,11 +133,13 @@ Public Sub TransformerManagementEV(ByVal iter As Integer, ByRef feedercurrents()
 Dim required As Integer
 Dim max, min, comp, j, y, i, m, k As Integer
 Dim upperlimit, lowerlimit As Double
+Dim achievedcon As Integer
 
 upperlimit = 0.96
 lowerlimit = 0.93
+achievedcon = 0
 
-required = (((TransformerUse * CheckValues.TransformerMax) - CheckValues.TransformerMax) * 0.5) / 3.3
+required = (((TransformerUse * CheckValues.TransformerMax) - CheckValues.TransformerMax * upperlimit) * 0.5) / 3.3
 required = Abs(required)
 'achieved = 0
 
@@ -187,11 +189,11 @@ For m = 1 To Assign_Profiles.NoEV
         End If
     Next
 
-    If achieved < required Then
+    If achievedcon < required Then
         If comp > 0 Then
             If EVFlags(comp) = 2 Then
                 EVFlags(comp) = 1
-                achieved = achieved + 1
+                achievedcon = achievedcon + 1
                 LateralsAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(2, comp), Assign_Profiles.EVLocation(3, comp)) = LateralsAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(2, comp), Assign_Profiles.EVLocation(3, comp)) + 1
                 FeedersAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(3, comp)) = FeedersAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(3, comp)) + 1
                 
@@ -200,7 +202,7 @@ For m = 1 To Assign_Profiles.NoEV
         End If
     End If
 
-    If achieved = required Then
+    If achievedcon = required Then
         Exit For
     End If
 Next

@@ -409,7 +409,11 @@ For i = 1 To NoFeeders
 Next
 
 NoHP = m
-
+    
+ReDim HPFlags(1 To NoHP)
+For i = 1 To NoHP
+    HPFlags(i) = 1
+Next
 
 'For i = 1 To 4
 '    For y = 1 To NoCustomers / 4
@@ -623,7 +627,7 @@ For i = 1 To NoFeeders
                     LoadshapeNumber = Int((500 - 1 + 1) * Rnd + 1)
                     DSSText.Command = "new loadshape.Houseload" & house & " npts=1440 minterval=1.0 csvfile=House" & Tmonth & "_" & Tday & "_" & occupants & "_" & LoadshapeNumber & ".txt"
                     DSSText.Command = "new load.House" & house & " bus1=Consumer" & CustomersArrayHP(i, y, z) & ".1 Phases=1 kV=0.23 kW=10 PF=0.97 Daily=Houseload" & house
-                    
+
 
                 End If
         Next
