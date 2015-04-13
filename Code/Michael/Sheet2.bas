@@ -9,9 +9,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub CommandButton1_Click()
 
-    If PresetNetwork.Network = "Urban" Then Call DrawUrban
-    If PresetNetwork.Network = "Rural" Then Call DrawRural
-    If PresetNetwork.Network = "SemiUrban" Then Call DrawSemiUrban
+    If PresetNetwork.network = "Urban" Then Call DrawUrban
+    If PresetNetwork.network = "Rural" Then Call DrawRural
+    If PresetNetwork.network = "SemiUrban" Then Call DrawSemiUrban
 
 End Sub
 

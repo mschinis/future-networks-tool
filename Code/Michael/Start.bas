@@ -7,10 +7,74 @@ Public CurrentFlags() As Byte
 Public NotCompliant() As Double
 
 Public TransformerArray() As Double
-Public Feeders() As Double
-Public Laterals() As Double
+Public feeders() As Double
+Public laterals() As Double
 
 Public finished As Boolean
+
+
+Public Parser As ParserXControl.ParserX
+
+Public Sub getSettings()
+    '-------------------------- Load Settings File in Singleton ---------------------------------------------------
+    Dim FileNum As Long
+    Dim parserExtraStr As String
+    Dim s As String
+    SharedClass.resetSettings
+    Dim localObjSettings As SimulationSettings
+    Set localObjSettings = SharedClass.Settings
+    
+    Set Parser = Nothing ' destroy old object should it already exist
+    Set Parser = New ParserXControl.ParserX
+    Parser.AutoIncrement = True
+    FileNum = FreeFile
+    
+    localObjSettings.network = ChooseNetwork.SelectNetwork.Value
+    
+    ' Load all settings from the settings.csv file of the network
+    Open ActiveWorkbook.Path & "\Networks\" & localObjSettings.network & "\settings.csv" For Input As #FileNum
+        ' Customers
+        Line Input #FileNum, s
+        Parser.CmdString = s
+        parserExtraStr = Parser.StrValue
+        localObjSettings.customers = Parser.IntValue
+        ' Feeders
+        Line Input #FileNum, s
+        Parser.CmdString = s
+        parserExtraStr = Parser.StrValue
+        localObjSettings.feeders = Parser.IntValue
+        ' Laterals
+        Line Input #FileNum, s
+        Parser.CmdString = s
+        parserExtraStr = Parser.StrValue
+        localObjSettings.laterals = Parser.IntValue
+        ' Transformer Size
+        Line Input #FileNum, s
+        Parser.CmdString = s
+        parserExtraStr = Parser.StrValue
+        localObjSettings.transformerSize = Parser.IntValue
+        ' Feeder Winter Current Limit
+        Line Input #FileNum, s
+        Parser.CmdString = s
+        parserExtraStr = Parser.StrValue
+        localObjSettings.feederWinterCurrentLimit = Parser.IntValue
+        ' Feeder Summer Current Limit
+        Line Input #FileNum, s
+        Parser.CmdString = s
+        parserExtraStr = Parser.StrValue
+        localObjSettings.feederSummerCurrentLimit = Parser.IntValue
+        ' Lateral Winter Current Limit
+        Line Input #FileNum, s
+        Parser.CmdString = s
+        parserExtraStr = Parser.StrValue
+        localObjSettings.lateralWinterCurrentLimit = Parser.IntValue
+        ' Lateral Summer Current Limit
+        Line Input #FileNum, s
+        Parser.CmdString = s
+        parserExtraStr = Parser.StrValue
+        localObjSettings.lateralSummerCurrentLimit = Parser.IntValue
+    Close
+End Sub
 
 Public Sub Start()
 
@@ -24,9 +88,10 @@ CheckValues.MaxVoltage = 0
 CheckValues.MinVoltage = 2
 CheckValues.MaxCurrentUseFeeder = 0
 CheckValues.MinCurrentUseFeeder = 10
+Assign_Profiles.HPEnabled = False
+Assign_Profiles.CHPEnabled = False
 
 OverrideDefault = False
-
 
 '''''''''''''''''''''''''''''''''''''
 '    Dim StatusOld As Boolean, CalcOld As XlCalculation
@@ -105,18 +170,18 @@ OverrideDefault = False
     Dim i As Integer
     Dim CustomersVoltages() As Double
     ReDim TransformerArray(1 To RunHours, 1 To 4) ' (iteration, 1 = transformerpwoer, 2-4 voltages)
-    ReDim Feeders(1 To RunHours, 1 To 4, 1 To 3) ' (iteration, feeder, currentstarts)
-    ReDim Laterals(1 To RunHours, 1 To 4, 1 To 4, 1 To 9) ' (iteration, feeder, lateral, 1-9 currents / voltagesstart / voltagesend)
-    ReDim CustomersVoltages(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
-    ReDim CustomersLimits(1 To 4, 1 To (PresetNetwork.customers / 4), 1 To RunHours)
+    ReDim feeders(1 To RunHours, 1 To Assign_Profiles.NoFeeders, 1 To 3) ' (iteration, feeder, currentstarts)
+    ReDim laterals(1 To RunHours, 1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals, 1 To 9) ' (iteration, feeder, lateral, 1-9 currents / voltagesstart / voltagesend)
+    ReDim CustomersVoltages(1 To Assign_Profiles.NoFeeders, 1 To (PresetNetwork.customers / Assign_Profiles.NoFeeders), 1 To RunHours)
+    ReDim CustomersLimits(1 To Assign_Profiles.NoFeeders, 1 To (PresetNetwork.customers / Assign_Profiles.NoFeeders), 1 To RunHours)
     ReDim CustomerVoltageLimit(1 To PresetNetwork.customers)
-    ReDim CurrentFlags(1 To 4, 1 To 5)
+    ReDim CurrentFlags(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals + 1)
     ReDim NotCompliant(1 To PresetNetwork.customers)
     
     progresscounter = 0
     Application.StatusBar = "Simulation running - 10%"
     
-    For i = 1 To 1860
+    For i = 1 To RunHours + 420
            
         DSSobj.ActiveCircuit.Solution.Solve
         If i > 420 Then
@@ -124,13 +189,17 @@ OverrideDefault = False
                 progresscounter = progresscounter + 1
                 Application.StatusBar = "Simulation running - " & (progresscounter * 10 + 10) & "%"
             End If
-            Call CheckValuesPreset(PresetNetwork.customers, i - 420, TransformerArray, Feeders, Laterals, CustomersVoltages, CustomersLimits, CurrentFlags)
-            If ChooseNetwork.EVPeneScroll.Value <> 0 Then
+            Call CheckValuesPreset(PresetNetwork.customers, i - 420, TransformerArray, feeders, laterals, CustomersVoltages, CustomersLimits, CurrentFlags)
+            If ChooseNetwork.EVEnable.Value = True Then
                 Call EVManagement(i - 420)
             End If
             
             If ChooseNetwork.PVANM.Value = True Then
                 Call PVManagement(i - 420)
+            End If
+            
+            If ChooseNetwork.HPANM.Value = True Then
+                Call HPManagement(i - 420)
             End If
             
         End If
@@ -148,8 +217,8 @@ OverrideDefault = False
    
    Call Monitors
    
-   Application.StatusBar = "Simulation running - 100%"
-    
+    Application.StatusBar = "Simulation running - 100%"
+    'CostCalculations.CalculateCosts
     MsgBox ("Total time " + Trim(Str(Timer - stime)))
     
 ENDLINE:

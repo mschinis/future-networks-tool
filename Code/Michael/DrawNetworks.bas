@@ -3,16 +3,16 @@ Sub DrawBasicNetwork()
 '
 
 Dim customer As Integer
-Dim WorkingSheet As Worksheet
-Set WorkingSheet = Sheets("Network")
+Dim workingsheet As Worksheet
+Set workingsheet = Sheets("Network")
 Sheets("Network").Activate
 
-Dim Shp As Shape
-For Each Shp In ActiveSheet.Shapes
-    If Shp.Type = 1 Then
-        Shp.Delete
+Dim shp As Shape
+For Each shp In ActiveSheet.Shapes
+    If shp.Type = 1 Then
+        shp.Delete
     End If
-Next Shp
+Next shp
 
 
 Sheets("Network").Activate
@@ -22,7 +22,7 @@ Sheets("Network").Activate
 For y = 1 To 4
 
 'Draw Feeder
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 0, 50 + (y * 500 - 500), 1350, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 0, 50 + (y * 500 - 500), 1350, _
         50 + (y * 500 - 500)).Select
     With Selection.ShapeRange.Line
         .Weight = 4
@@ -30,7 +30,7 @@ For y = 1 To 4
     End With
 
     'Draw Lateral 1
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, 50 + (y * 500 - 500), 250, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250, 50 + (y * 500 - 500), 250, _
         50 + (y * 500 - 500) + 450).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -38,7 +38,7 @@ For y = 1 To 4
     End With
         
     'Draw Lateral 2
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, 50 + (y * 500 - 500), 150 * 5, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 750, 50 + (y * 500 - 500), 150 * 5, _
         50 + (y * 500 - 500) + 450).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -46,7 +46,7 @@ For y = 1 To 4
     End With
 
     'Draw Lateral 3
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, 50 + (y * 500 - 500), 250 * 5, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 1250, 50 + (y * 500 - 500), 250 * 5, _
         50 + (y * 500 - 500) + 450).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -54,7 +54,7 @@ For y = 1 To 4
     End With
 
     'Draw Lateral 4
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, 50 + (y * 500 - 500), 250 * 5 + 100, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, 50 + (y * 500 - 500), 250 * 5 + 100, _
         50 + (y * 500 - 500) + 450).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -72,8 +72,8 @@ Sub DrawSemiUrban()
 Dim customer As Integer
 Dim var As Integer
 
-Dim WorkingSheet As Worksheet
-Set WorkingSheet = Sheets("Network")
+Dim workingsheet As Worksheet
+Set workingsheet = Sheets("Network")
 customer = 0
 
 Call DrawBasicNetwork
@@ -89,7 +89,7 @@ For i = 1 To 12
         var = -30
     End If
         
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 12)), 250 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 12)), 250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 12))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -119,7 +119,7 @@ For i = 1 To 39
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 39)), 750 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 39)), 750 + var, _
         (100 + (y * 500 - 500) + (400 * i / 39))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -149,7 +149,7 @@ For i = 1 To 33
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 33))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -179,7 +179,7 @@ For i = 1 To 33
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 + 100 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, (100 + (y * 500 - 500) + (400 * i / 33)), 1250 + 100 + var, _
         (100 + (y * 500 - 500) + (400 * i / 33))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -211,8 +211,8 @@ End Sub
 Sub DrawUrban()
 
 Dim customer As Integer
-Dim WorkingSheet As Worksheet
-Set WorkingSheet = Sheets("Network")
+Dim workingsheet As Worksheet
+Set workingsheet = Sheets("Network")
 customer = 0
 
 Call DrawBasicNetwork
@@ -227,7 +227,7 @@ For i = 1 To 17
         var = -30
     End If
         
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 17)), 250 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 17)), 250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 17))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -257,7 +257,7 @@ For i = 1 To 53
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 53)), 750 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 53)), 750 + var, _
         (100 + (y * 500 - 500) + (400 * i / 53))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -287,7 +287,7 @@ For i = 1 To 44
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 44))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -317,7 +317,7 @@ For i = 1 To 44
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 + 100 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, (100 + (y * 500 - 500) + (400 * i / 44)), 1250 + 100 + var, _
         (100 + (y * 500 - 500) + (400 * i / 44))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -351,8 +351,8 @@ Sub DrawRural()
 ' DrawRural Macro
 
 Dim customer As Integer
-Dim WorkingSheet As Worksheet
-Set WorkingSheet = Sheets("Network")
+Dim workingsheet As Worksheet
+Set workingsheet = Sheets("Network")
 customer = 0
 
 Call DrawBasicNetwork
@@ -368,7 +368,7 @@ For i = 1 To 4
         var = -30
     End If
         
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 4)), 250 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 250, (100 + (y * 500 - 500) + (400 * i / 4)), 250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 4))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -398,7 +398,7 @@ For i = 1 To 11
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 11)), 750 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 750, (100 + (y * 500 - 500) + (400 * i / 11)), 750 + var, _
         (100 + (y * 500 - 500) + (400 * i / 11))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -428,7 +428,7 @@ For i = 1 To 9
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 9)), 1250 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 1250, (100 + (y * 500 - 500) + (400 * i / 9)), 1250 + var, _
         (100 + (y * 500 - 500) + (400 * i / 9))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue
@@ -458,7 +458,7 @@ For i = 1 To 9
     Else
         var = -30
     End If
-    WorkingSheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, (100 + (y * 500 - 500) + (400 * i / 9)), 1250 + 100 + var, _
+    workingsheet.Shapes.AddConnector(msoConnectorStraight, 1250 + 100, (100 + (y * 500 - 500) + (400 * i / 9)), 1250 + 100 + var, _
         (100 + (y * 500 - 500) + (400 * i / 9))).Select
     With Selection.ShapeRange.Line
         .Visible = msoTrue

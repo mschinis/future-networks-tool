@@ -6,10 +6,19 @@ Public achieved As Integer
 Public achievedlaterals() As Integer
 Public achievedfeeders() As Integer
 
+Public MaxLaterals() As Integer
+Public LateralsAssigned() As Integer
+Public MaxFeeders() As Integer
+Public FeedersAssigned() As Integer
+
+
+
+
 
 Public Sub EVManagement(ByVal i As Integer)
-
+    
     Call CheckEV
+    Call CalculateDisconnectionsLaterals(i)
     
     If ChooseNetwork.EVANM = True Then
         
@@ -27,12 +36,12 @@ Public Sub LateralManagementEV(ByVal iter As Integer, ByRef CurrentUse() As Doub
 Dim i, y, z, h As Integer
 Dim lateralrequired As Integer
 
-ReDim achievedlaterals(1 To 4, 1 To 4, 1 To 3)
-ReDim achievedfeeders(1 To 4, 1 To 3)
+ReDim achievedlaterals(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals, 1 To 3)
+ReDim achievedfeeders(1 To Assign_Profiles.NoLaterals, 1 To 3)
 achieved = 0
 
-For i = 1 To 4
-    For y = 1 To 4
+For i = 1 To Assign_Profiles.NoFeeders
+    For y = 1 To Assign_Profiles.NoLaterals
         For z = 1 To 3
             If CurrentUse(iter, i, y, z) / CheckValues.lateralcurrentmax > 1 Then
                 For h = 1 To Assign_Profiles.NoEV
@@ -80,12 +89,12 @@ Dim feederrequired As Integer
 'ReDim achievedfeeder(1 To 4, 1 To 3)
 'achieved = 0
 
-For i = 1 To 4
+For i = 1 To Assign_Profiles.NoFeeders
         For z = 1 To 3
             If CurrentUse(iter, i, z) / CheckValues.feedercurrentmax > 0.95 Then
                 For h = 1 To Assign_Profiles.NoEV
                     max = 0
-                    feederrequired = (CurrentUse(iter, i, z) - CheckValues.feedercurrentmax) * 0.5 / 16
+                    feederrequired = (CurrentUse(iter, i, z) - CheckValues.feedercurrentmax * 0.95) * 0.5 / 16
                     For A = 1 To Assign_Profiles.NoEV
                         If Assign_Profiles.EVLocation(1, A) = i And Assign_Profiles.EVLocation(3, A) = z Then
                             If EVFlags(A) = 1 Then
@@ -124,11 +133,13 @@ Public Sub TransformerManagementEV(ByVal iter As Integer, ByRef feedercurrents()
 Dim required As Integer
 Dim max, min, comp, j, y, i, m, k As Integer
 Dim upperlimit, lowerlimit As Double
+Dim achievedcon As Integer
 
 upperlimit = 0.96
 lowerlimit = 0.93
+achievedcon = 0
 
-required = (((TransformerUse * CheckValues.TransformerMax) - CheckValues.TransformerMax) * 0.5) / 3.3
+required = (((TransformerUse * CheckValues.TransformerMax) - CheckValues.TransformerMax * upperlimit) * 0.5) / 3.3
 required = Abs(required)
 'achieved = 0
 
@@ -165,28 +176,33 @@ For m = 1 To Assign_Profiles.NoEV
     min = 1000
     
     For k = 1 To Assign_Profiles.NoEV
-        If feedercurrents(iter, Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(3, k)) / CheckValues.feedercurrentmax < 0.9 Then
-            If EVFlags(k) = 2 Then
-                If min > Charge(k) Then
-                    min = Charge(k)
-                    comp = k
+        'If feedercurrents(iter, Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(3, k)) / CheckValues.feedercurrentmax < 0.9 Then
+        If MaxLaterals(Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(2, k), Assign_Profiles.EVLocation(3, k)) > LateralsAssigned(Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(2, k), Assign_Profiles.EVLocation(3, k)) Then
+            If MaxFeeders(Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(3, k)) > FeedersAssigned(Assign_Profiles.EVLocation(1, k), Assign_Profiles.EVLocation(3, k)) Then
+                If EVFlags(k) = 2 Then
+                    If min > Charge(k) Then
+                        min = Charge(k)
+                        comp = k
+                    End If
                 End If
             End If
         End If
     Next
 
-    If achieved < required Then
+    If achievedcon < required Then
         If comp > 0 Then
             If EVFlags(comp) = 2 Then
                 EVFlags(comp) = 1
-                achieved = achieved + 1
-            
+                achievedcon = achievedcon + 1
+                LateralsAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(2, comp), Assign_Profiles.EVLocation(3, comp)) = LateralsAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(2, comp), Assign_Profiles.EVLocation(3, comp)) + 1
+                FeedersAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(3, comp)) = FeedersAssigned(Assign_Profiles.EVLocation(1, comp), Assign_Profiles.EVLocation(3, comp)) + 1
+                
                 Call ConnectEV(comp)
             End If
         End If
     End If
 
-    If achieved = required Then
+    If achievedcon = required Then
         Exit For
     End If
 Next
@@ -224,6 +240,43 @@ Public Sub CheckEV()
             Charge(i) = Charge(i) + 1
         End If
 
+    Next
+
+End Sub
+
+Public Sub CalculateDisconnectionsLaterals(ByVal iter As Integer)
+
+    ReDim MaxLaterals(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals, 1 To 3)
+    ReDim LateralsAssigned(1 To Assign_Profiles.NoFeeders, 1 To Assign_Profiles.NoLaterals, 1 To 3)
+    ReDim MaxFeeders(1 To Assign_Profiles.NoFeeders, 1 To 3)
+    ReDim FeedersAssigned(1 To Assign_Profiles.NoFeeders, 1 To 3)
+      
+    For i = 1 To Assign_Profiles.NoFeeders
+        For y = 1 To Assign_Profiles.NoFeeders
+            For z = 1 To 3
+                
+                LateralsAssigned(i, y, z) = 0
+                FeedersAssigned(i, z) = 0
+                
+                If Start.Laterals(iter, i, y, z) < CheckValues.lateralcurrentmax Then
+                    
+                    MaxLaterals(i, y, z) = (CheckValues.lateralcurrentmax - Start.Laterals(iter, i, y, z)) / (16 * 2)
+                Else
+                
+                    MaxLaterals(i, y, z) = 0
+                End If
+                
+                
+                If Start.Feeders(iter, i, z) < (CheckValues.feedercurrentmax) Then
+                    
+                    MaxFeeders(i, z) = ((CheckValues.feedercurrentmax) - Start.Feeders(iter, i, z)) / (16 * 2.5)
+                Else
+                
+                    MaxFeeders(i, z) = 0
+                End If
+            
+            Next
+        Next
     Next
 
 End Sub

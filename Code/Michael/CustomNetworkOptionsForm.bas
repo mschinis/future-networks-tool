@@ -61,8 +61,9 @@ Private Sub ContinueButtonPressed_Click()
     noOfCustomersTemp = noOfCustomers
     ' Determine the number of customers per Feeder and Lateral
     noOfCustomersPerFeeder = Int(noOfCustomers / noOfFeeders)
-    noofcustomersperlateral = Int(noOfCustomersPerFeeder / noOfLaterals)
+    noOfCustomersPerLateral = Int(noOfCustomersPerFeeder / noOfLaterals)
     
+    Values = CustomersPerLateralPerFeeder(noOfCustomers, noOfFeeders, noOfLaterals)
     
     ' Validation of input
     singleSpace = " "
@@ -92,8 +93,8 @@ Private Sub ContinueButtonPressed_Click()
         MsgBox "Lateral length must be at least 20m"
         Exit Sub
     End If
-    If noofcustomersperlateral > lateralLength Then
-        MsgBox "Maximum number of customers per lateral (" & noofcustomersperlateral & ") cannot exceed the length of the feeder specified."
+    If noOfCustomersPerLateral > lateralLength Then
+        MsgBox "Maximum number of customers per lateral (" & noOfCustomersPerLateral & ") cannot exceed the length of the feeder specified."
         Exit Sub
     End If
 
@@ -106,8 +107,8 @@ Private Sub ContinueButtonPressed_Click()
     For i = 1 To noOfFeeders
         ReDim customersPerLaterals(1 To noOfLaterals)
         For j = 1 To noOfLaterals
-            customersPerLaterals(j) = noofcustomersperlateral
-            noOfCustomersTemp = noOfCustomersTemp - noofcustomersperlateral
+            customersPerLaterals(j) = noOfCustomersPerLateral
+            noOfCustomersTemp = noOfCustomersTemp - noOfCustomersPerLateral
         Next j
         customersPerFeederPerLateral(i) = customersPerLaterals
     Next i
@@ -125,7 +126,7 @@ Private Sub ContinueButtonPressed_Click()
     CheckDir (strpath)
     
     ' Create the Master file
-    Set oFile = fso.CreateTextFile(strpath & "\" & networkName & ".dss")
+    Set oFile = fso.createTextFile(strpath & "\" & networkName & ".dss")
     
     oFile.writeLine "Clear"
     oFile.writeLine "New Circuit." & networkName & "LVNetwork"
@@ -142,8 +143,8 @@ Private Sub ContinueButtonPressed_Click()
         oFile.writeLine "Redirect " & networkName & "_Consumers" & i & ".txt"
     Next i
     
-'    oFile.writeLine "Monitors.txt"
-'    oFile.writeLine "EnergyMeters.txt"
+    oFile.writeLine "Redirect Monitors.txt"
+    oFile.writeLine "Redirect EnergyMeters.txt"
     oFile.writeLine ""
     oFile.writeLine "Set voltagebases=[11 0.4]"
     oFile.writeLine "CalcVoltageBases"
@@ -151,7 +152,7 @@ Private Sub ContinueButtonPressed_Click()
     oFile.Close
     
     ' Create Linecodes File
-    Set oFile = fso.CreateTextFile(strpath & "\Linecodes.txt")
+    Set oFile = fso.createTextFile(strpath & "\Linecodes.txt")
     
     oFile.writeLine "New Linecode.Type-A R1=0.102 X1=0.068 R0=0.625 X0=0.085 C0=0.0 C1=0.0 units=km nphases=3"
     oFile.writeLine "New Linecode.Type-B R1=0.127 X1=0.073 R0=0.619 X0=0.109 C0=0.0 C1=0.0 units=km nphases=3"
@@ -176,7 +177,7 @@ Private Sub ContinueButtonPressed_Click()
         l = distanceFromFirstLateral
         
         
-        Set oFile = fso.CreateTextFile(strpath & "\" & networkName & "_LinesLaterals" & i & ".txt")
+        Set oFile = fso.createTextFile(strpath & "\" & networkName & "_LinesLaterals" & i & ".txt")
         oFile.writeLine "New Line.Feeder" & i & ".1      Bus1=Main_Busbar Bus2=" & i & "_1       Length=1    units=m Linecode=Line_185"
         ' Allocation of first part of the feeder
         For j = 1 To l
@@ -211,7 +212,7 @@ Private Sub ContinueButtonPressed_Click()
         
         ' For each of the feeder, allocate the customers on the lateral
         lateralPosition = lateralStarts(1)
-        Set oFile = fso.CreateTextFile(strpath & "\" & networkName & "_Consumers" & i & ".txt")
+        Set oFile = fso.createTextFile(strpath & "\" & networkName & "_Consumers" & i & ".txt")
         
         ' Foreach of the laterals, except the last one, allocate their service line
         counter = 1
@@ -233,15 +234,47 @@ Private Sub ContinueButtonPressed_Click()
     Next i
     
     ' Create settings file
-    Set oFile = fso.CreateTextFile(strpath & "\settings.csv")
-        oFile.writeLine "Customers," & noOfCustomers
-        oFile.writeLine "Feeders," & noOfFeeders
-        oFile.writeLine "Laterals," & noOfLaterals
-        oFile.writeLine "TransformerSize," & transformerSize
-        oFile.writeLine "FeederWinterCurrentLimit,"
-        oFile.writeLine "FeederSummerCurrentLimit,"
-        oFile.writeLine "LateralWinterCurrentLimit,"
-        oFile.writeLine "LateralSummerCurrentLimit,"
+    Set oFile = fso.createTextFile(strpath & "\settings.csv")
+    With oFile
+        .writeLine "Customers," & noOfCustomers
+        .writeLine "Feeders," & noOfFeeders
+        .writeLine "Laterals," & noOfLaterals
+        .writeLine "TransformerSize," & transformerSize
+        .writeLine "FeederWinterCurrentLimit,404"
+        .writeLine "FeederSummerCurrentLimit,350"
+        .writeLine "LateralWinterCurrentLimit,263"
+        .writeLine "LateralSummerCurrentLimit,230"
+    End With
+    oFile.Close
+    
+    ' Create Monitors file
+    Set oFile = fso.createTextFile(strpath & "\Monitors.txt")
+        oFile.writeLine "! Transformer"
+        oFile.writeLine "new monitor.SSTransformer element=transformer.LV_Transformer terminal=1 mode=1 ppolar=no"
+        
+        oFile.writeLine "! Start of feeders"
+        For i = 1 To noOfFeeders
+            oFile.writeLine "new monitor.VIFeeder" & i & " element=Line.Feeder" & i & ".1 terminal=2 mode=0"
+        Next i
+        
+        oFile.writeLine "! Start of Laterals"
+        For i = 1 To noOfFeeders
+            For j = 1 To noOfLaterals
+                oFile.writeLine "new monitor.VILateral" & i & "_" & j & "_Start element=Line.Lateral" & i & "_start_" & j & " terminal=2 mode=0"
+            Next j
+        Next i
+        
+        oFile.writeLine "! End of Laterals"
+        For i = 1 To noOfFeeders
+            For j = 1 To noOfLaterals
+                oFile.writeLine "new monitor.VILateral" & i & "_" & j & "_End element=Line.Lateral" & i & "_end_" & j & " terminal=2 mode=0"
+            Next j
+        Next i
+    oFile.Close
+    
+    ' Create EnergyMeters file
+    Set oFile = fso.createTextFile(strpath & "\EnergyMeters.txt")
+        oFile.writeLine "New energymeter.LV_Transformer element=transformer.LV_Transformer terminal=1"
     oFile.Close
     
     ' Finish creation of files
@@ -274,4 +307,8 @@ End Sub
 
 Private Sub TransformerSizeSpinButton_SpinUp()
     CustomNetworkOptionsForm.TransformerSizeTextField.Text = CStr(CInt(CustomNetworkOptionsForm.TransformerSizeTextField) + 10)
+End Sub
+
+Private Sub UserForm_Click()
+
 End Sub

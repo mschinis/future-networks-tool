@@ -21,7 +21,7 @@ Public VoltageAverageMin As Double
 
 
 
-Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer, ByRef TransformerArray() As Double, ByRef Feeders() As Double, ByRef Laterals() As Double, ByRef CustomersVoltages() As Double, ByRef CustomersLimits() As Byte, ByRef CurrentFlags() As Byte)
+Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer, ByRef TransformerArray() As Double, ByRef feeders() As Double, ByRef laterals() As Double, ByRef CustomersVoltages() As Double, ByRef CustomersLimits() As Byte, ByRef CurrentFlags() As Byte)
     
     Dim TempArray As Variant
     Dim dValue As Double
@@ -29,55 +29,20 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
     Dim A, B, C As Double
 
     
-    Network = PresetNetwork.Network
+    network = PresetNetwork.network
     
-'    If Start.OverrideDefault = False Then
         VoltageMax = AdvancedProperties.VoltageMax
         VoltageMin = AdvancedProperties.VoltageMin
         VoltageAverageMin = AdvancedProperties.VoltageAverageMin
     
-        If Network = "Urban" Then
-            TransformerMax = 800 * AdvancedProperties.TransformerMax / 100
-
-            If ChooseNetwork.MonthVal.Value <= 4 Or ChooseNetwork.MonthVal.Value >= 11 Then
-                feedercurrentmax = 309 * AdvancedProperties.FeederMax / 100
-                lateralcurrentmax = 209 * AdvancedProperties.LateralMax / 100
-            Else
-                feedercurrentmax = 297 * AdvancedProperties.FeederMax / 100
-                lateralcurrentmax = 202 * AdvancedProperties.LateralMax / 100
-            End If
-        
-        ElseIf Network = "SemiUrban" Then
-            TransformerMax = 500 * AdvancedProperties.TransformerMax / 100
-            If ChooseNetwork.MonthVal.Value <= 4 Or ChooseNetwork.MonthVal.Value >= 11 Then
-                feedercurrentmax = 309 * AdvancedProperties.FeederMax / 100
-                lateralcurrentmax = 209 * AdvancedProperties.LateralMax / 100
-            Else
-                feedercurrentmax = 297 * AdvancedProperties.FeederMax / 100
-                lateralcurrentmax = 202 * AdvancedProperties.LateralMax / 100
-            End If
-        
-        ElseIf Network = "Rural" Then
-            TransformerMax = 200 * AdvancedProperties.TransformerMax / 100
-            If ChooseNetwork.MonthVal.Value <= 4 Or ChooseNetwork.MonthVal.Value >= 11 Then
-                feedercurrentmax = 404 * AdvancedProperties.FeederMax / 100
-                lateralcurrentmax = 263 * AdvancedProperties.LateralMax / 100
-            Else
-                feedercurrentmax = 350 * AdvancedProperties.FeederMax / 100
-                lateralcurrentmax = 230 * AdvancedProperties.LateralMax / 100
-            End If
+        TransformerMax = SharedClass.Settings.transformerSize * AdvancedProperties.TransformerMax / 100
+        If ChooseNetwork.MonthVal.Value <= 4 Or ChooseNetwork.MonthVal.Value >= 11 Then
+            feedercurrentmax = SharedClass.Settings.feederWinterCurrentLimit * AdvancedProperties.FeederMax / 100
+            lateralcurrentmax = SharedClass.Settings.lateralWinterCurrentLimit * AdvancedProperties.FeederMax / 100
+        Else
+            feedercurrentmax = SharedClass.Settings.feederSummerCurrentLimit * AdvancedProperties.FeederMax / 100
+            lateralcurrentmax = SharedClass.Settings.lateralSummerCurrentLimit * AdvancedProperties.LateralMax / 100
         End If
-    
-'    Else
-'
-'        feedercurrentmax = AdvancedProperties.FeederMax
-'        lateralcurrentmax = AdvancedProperties.LateralMax
-'        TransformerMax = AdvancedProperties.TransformerMax
-'        VoltageMax = AdvancedProperties.VoltageMax
-'        VoltageMin = AdvancedProperties.VoltageMin
-'        VoltageAverageMin = AdvancedProperties.VoltageAverageMin
-'
-'    End If
         
         
         'Check Transformer
@@ -122,7 +87,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
         If C > 1.1 Or C < 0.94 Then
         End If
 
-        For i = 1 To 4 'Feeder Number
+        For i = 1 To Assign_Profiles.NoFeeders 'Feeder Number
             
             'Check Currents at Start of the Feeder
             DSSCircuit.SetActiveElement ("Line.Feeder" & i & ".1")
@@ -131,9 +96,9 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
             B = (TempArray(LBound(TempArray) + 2) ^ 2 + TempArray(LBound(TempArray) + 3) ^ 2) ^ 0.5
             C = (TempArray(LBound(TempArray) + 4) ^ 2 + TempArray(LBound(TempArray) + 5) ^ 2) ^ 0.5
 
-            Feeders(iter, i, 1) = A
-            Feeders(iter, i, 2) = B
-            Feeders(iter, i, 3) = C
+            feeders(iter, i, 1) = A
+            feeders(iter, i, 2) = B
+            feeders(iter, i, 3) = C
                     
             A = A / feedercurrentmax
             B = B / feedercurrentmax
@@ -156,7 +121,7 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 CurrentFlags(i, 1) = 1
             End If
             
-            For y = 1 To 4 'Lateral Number
+            For y = 1 To Assign_Profiles.NoLaterals 'Lateral Number
                 
                 'Check Currents at Start of Lateral
                 DSSCircuit.SetActiveElement ("Line.Lateral" & i & "_start_" & y)
@@ -165,9 +130,9 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 B = (TempArray(LBound(TempArray) + 2) ^ 2 + TempArray(LBound(TempArray) + 3) ^ 2) ^ 0.5
                 C = (TempArray(LBound(TempArray) + 4) ^ 2 + TempArray(LBound(TempArray) + 5) ^ 2) ^ 0.5
     
-                Laterals(iter, i, y, 1) = A
-                Laterals(iter, i, y, 2) = B
-                Laterals(iter, i, y, 3) = C
+                laterals(iter, i, y, 1) = A
+                laterals(iter, i, y, 2) = B
+                laterals(iter, i, y, 3) = C
                     
                 A = A / lateralcurrentmax
                 B = B / lateralcurrentmax
@@ -197,9 +162,9 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 B = (TempArray(LBound(TempArray) + 2) ^ 2 + TempArray(LBound(TempArray) + 3) ^ 2) ^ 0.5 / 230
                 C = (TempArray(LBound(TempArray) + 4) ^ 2 + TempArray(LBound(TempArray) + 5) ^ 2) ^ 0.5 / 230
     
-                Laterals(iter, i, y, 4) = A
-                Laterals(iter, i, y, 5) = B
-                Laterals(iter, i, y, 6) = C
+                laterals(iter, i, y, 4) = A
+                laterals(iter, i, y, 5) = B
+                laterals(iter, i, y, 6) = C
                 
                 If A > MaxVoltage Then MaxVoltage = A
                 If B > MaxVoltage Then MaxVoltage = B
@@ -222,9 +187,9 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 B = (TempArray(LBound(TempArray) + 2) ^ 2 + TempArray(LBound(TempArray) + 3) ^ 2) ^ 0.5 / 230
                 C = (TempArray(LBound(TempArray) + 4) ^ 2 + TempArray(LBound(TempArray) + 5) ^ 2) ^ 0.5 / 230
     
-                Laterals(iter, i, y, 7) = A
-                Laterals(iter, i, y, 8) = B
-                Laterals(iter, i, y, 9) = C
+                laterals(iter, i, y, 7) = A
+                laterals(iter, i, y, 8) = B
+                laterals(iter, i, y, 9) = C
                 
                 If A > MaxVoltage Then MaxVoltage = A
                 If B > MaxVoltage Then MaxVoltage = B
@@ -243,7 +208,12 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
           
             Next
             
-            For z = 1 To (NoCustomers / 4)
+            feedercustomers = 0
+            For m = 1 To Assign_Profiles.NoLaterals
+                feedercustomers = feedercustomers + Assign_Profiles.LateralSizes(i, m)
+            Next
+            
+            For z = 1 To feedercustomers
                 DSSCircuit.SetActiveElement ("Line.Consumer" & i & "_" & z)
                 TempArray = DSSCircuit.ActiveCktElement.Voltages
                 A = (TempArray(LBound(TempArray)) ^ 2 + TempArray(LBound(TempArray) + 1) ^ 2) ^ 0.5 / 230
@@ -253,8 +223,8 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                 dValue = 0
                 If A > VoltageMax Or A < VoltageMin Then
                     CustomersLimits(i, z, iter) = 1
-                    Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) + 1
-                    Start.CustomerVoltageLimit(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
+                    Start.NotCompliant(z + ((i * feedercustomers) - feedercustomers)) = Start.NotCompliant(z + ((i * feedercustomers) - feedercustomers)) + 1
+                    Start.CustomerVoltageLimit(z + ((i * feedercustomers) - feedercustomers)) = 1
                 ElseIf iter > 10 Then
                     For j = 1 To 10
                         dValue = CustomersVoltages(i, z, iter - j) + dValue
@@ -262,8 +232,8 @@ Public Sub CheckValuesPreset(ByVal NoCustomers As Integer, ByVal iter As Integer
                     dValue = dValue / 10
                     If dValue < VoltageAverageMin Then
                         CustomersLimits(i, z, iter) = 1
-                        Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = Start.NotCompliant(z + ((i * NoCustomers / 4) - NoCustomers / 4)) + 1
-                        Start.CustomerVoltageLimit(z + ((i * NoCustomers / 4) - NoCustomers / 4)) = 1
+                        Start.NotCompliant(z + ((i * feedercustomers) - feedercustomers)) = Start.NotCompliant(z + ((i * feedercustomers) - feedercustomers)) + 1
+                        Start.CustomerVoltageLimit(z + ((i * feedercustomers) - feedercustomers)) = 1
                     End If
                 End If
 
@@ -300,9 +270,7 @@ Public Sub Customer_Voltage_Percentage()
     adder = 0
     
     For i = 1 To PresetNetwork.customers
-    
         adder = adder + Start.CustomerVoltageLimit(i)
-    
     Next
     
     PercentageCustomersVoltage = adder / PresetNetwork.customers

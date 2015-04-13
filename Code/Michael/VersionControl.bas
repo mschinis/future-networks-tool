@@ -6,8 +6,8 @@ Dim i%, sName$
 
 With ThisWorkbook.VBProject
     For i% = 1 To .VBComponents.Count
-        If .VBComponents(i%).CodeModule.CountOfLines > 0 Then
-            sName$ = .VBComponents(i%).CodeModule.name
+        If .VBComponents(i%).codemodule.CountOfLines > 0 Then
+            sName$ = .VBComponents(i%).codemodule.name
             .VBComponents(i%).Export "C:\Users\michael\Documents\future-networks-tool\Code\Michael\" & sName$ & ".bas"
         End If
     Next i

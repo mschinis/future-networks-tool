@@ -1,0 +1,41 @@
+! Transformer
+new monitor.SSTransformer element=transformer.LV_Transformer terminal=1 mode=1 ppolar=no
+! Start of feeders
+new monitor.VIFeeder1 element=Line.Feeder1.1 terminal=2 mode=0
+new monitor.VIFeeder2 element=Line.Feeder2.1 terminal=2 mode=0
+new monitor.VIFeeder3 element=Line.Feeder3.1 terminal=2 mode=0
+new monitor.VIFeeder4 element=Line.Feeder4.1 terminal=2 mode=0
+! Start of Laterals
+new monitor.VILateral1_1_Start element=Line.Lateral1_start_1 terminal=2 mode=0
+new monitor.VILateral1_2_Start element=Line.Lateral1_start_2 terminal=2 mode=0
+new monitor.VILateral1_3_Start element=Line.Lateral1_start_3 terminal=2 mode=0
+new monitor.VILateral1_4_Start element=Line.Lateral1_start_4 terminal=2 mode=0
+new monitor.VILateral2_1_Start element=Line.Lateral2_start_1 terminal=2 mode=0
+new monitor.VILateral2_2_Start element=Line.Lateral2_start_2 terminal=2 mode=0
+new monitor.VILateral2_3_Start element=Line.Lateral2_start_3 terminal=2 mode=0
+new monitor.VILateral2_4_Start element=Line.Lateral2_start_4 terminal=2 mode=0
+new monitor.VILateral3_1_Start element=Line.Lateral3_start_1 terminal=2 mode=0
+new monitor.VILateral3_2_Start element=Line.Lateral3_start_2 terminal=2 mode=0
+new monitor.VILateral3_3_Start element=Line.Lateral3_start_3 terminal=2 mode=0
+new monitor.VILateral3_4_Start element=Line.Lateral3_start_4 terminal=2 mode=0
+new monitor.VILateral4_1_Start element=Line.Lateral4_start_1 terminal=2 mode=0
+new monitor.VILateral4_2_Start element=Line.Lateral4_start_2 terminal=2 mode=0
+new monitor.VILateral4_3_Start element=Line.Lateral4_start_3 terminal=2 mode=0
+new monitor.VILateral4_4_Start element=Line.Lateral4_start_4 terminal=2 mode=0
+! End of Laterals
+new monitor.VILateral1_1_End element=Line.Lateral1_end_1 terminal=2 mode=0
+new monitor.VILateral1_2_End element=Line.Lateral1_end_2 terminal=2 mode=0
+new monitor.VILateral1_3_End element=Line.Lateral1_end_3 terminal=2 mode=0
+new monitor.VILateral1_4_End element=Line.Lateral1_end_4 terminal=2 mode=0
+new monitor.VILateral2_1_End element=Line.Lateral2_end_1 terminal=2 mode=0
+new monitor.VILateral2_2_End element=Line.Lateral2_end_2 terminal=2 mode=0
+new monitor.VILateral2_3_End element=Line.Lateral2_end_3 terminal=2 mode=0
+new monitor.VILateral2_4_End element=Line.Lateral2_end_4 terminal=2 mode=0
+new monitor.VILateral3_1_End element=Line.Lateral3_end_1 terminal=2 mode=0
+new monitor.VILateral3_2_End element=Line.Lateral3_end_2 terminal=2 mode=0
+new monitor.VILateral3_3_End element=Line.Lateral3_end_3 terminal=2 mode=0
+new monitor.VILateral3_4_End element=Line.Lateral3_end_4 terminal=2 mode=0
+new monitor.VILateral4_1_End element=Line.Lateral4_end_1 terminal=2 mode=0
+new monitor.VILateral4_2_End element=Line.Lateral4_end_2 terminal=2 mode=0
+new monitor.VILateral4_3_End element=Line.Lateral4_end_3 terminal=2 mode=0
+new monitor.VILateral4_4_End element=Line.Lateral4_end_4 terminal=2 mode=0

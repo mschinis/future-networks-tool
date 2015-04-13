@@ -8,6 +8,14 @@ Public DSSSolution As OpenDSSengine.Solution
 Public DSSControlQueue As OpenDSSengine.CtrlQueue
 Public Parser As ParserXControl.ParserX
 
+Public Function WorksheetExists(ByVal WorksheetName As String) As Boolean
+
+    On Error Resume Next
+    WorksheetExists = (Sheets(WorksheetName).name <> "")
+    On Error GoTo 0
+
+End Function
+
 Public Function File_Exists(ByVal File As String) As Boolean
 
     Dim FilePath As String
@@ -35,7 +43,7 @@ End If
 End Sub
 Public Sub Monitors()
 
-    Dim WorkingSheet As Worksheet
+    Dim workingsheet As Worksheet
     Dim i, j, counter, iextra As Long
     Dim s As String
     Dim FileNum As Long
@@ -45,6 +53,10 @@ Public Sub Monitors()
     Dim character As String
     Dim iextrastr As String
     Dim z As Integer
+    Dim countercorrected As Integer
+    Dim AngleVariable As Integer
+    
+    AngleVariable = 30
     
     
     character = Chr(68)
@@ -80,15 +92,16 @@ Public Sub Monitors()
     
 
     
-    Direc = PresetNetwork.Network & "LVNetwork_" '
+    Direc = PresetNetwork.network & "LVNetwork_" '
     
     ' Export dem monitors
     DSSText.Command = "Export monitors SSTransformer"
     
-    For i = 1 To 4
+    For i = 1 To SharedClass.Settings.feeders
         DSSText.Command = "Export monitors VIFeeder" & i
+ '       DSSText.Command = "Export monitors VIFeeder" & i & "n"
         
-        For j = 1 To 4
+        For j = 1 To SharedClass.Settings.laterals
             DSSText.Command = "Export monitors VILateral" & i & "_" & j & "_Start"
             DSSText.Command = "Export monitors VILateral" & i & "_" & j & "_End"
         Next
@@ -131,7 +144,7 @@ Public Sub Monitors()
     Dim zoneLosseskVarh As Integer
     zoneLosseskVarh = Parser.IntValue
     
-    Set WorkingSheet = Worksheets("Results Summary")
+    Set workingsheet = Worksheets("Results Summary")
 '    WorkingSheet.Range("C3").Value = CheckValues.MinVoltage
 '    WorkingSheet.Range("C4").Value = CheckValues.MaxVoltage
 '    WorkingSheet.Range("C6").Value = CheckValues.MinCurrentUseFeeder
@@ -140,13 +153,13 @@ Public Sub Monitors()
 '    WorkingSheet.Range("C10").Value = CheckValues.MaxCurrentUseLateral
 '    WorkingSheet.Range("C12").Value = CheckValues.MinTransformerUse
 '    WorkingSheet.Range("C13").Value = CheckValues.MaxTransformerUse
-    WorkingSheet.Range("C15").Value = ((zoneLosseskWh ^ 2 + zoneLosseskVarh ^ 2) ^ 0.5 / (kWh ^ 2 + kVarh ^ 2) ^ 0.5) 'Calculate losses %
-    WorkingSheet.Range("C17").Value = CheckValues.VoltageCompliance
-    WorkingSheet.Range("C18").Value = CheckValues.PercentageCustomersVoltage
+    workingsheet.Range("C15").Value = ((zoneLosseskWh ^ 2 + zoneLosseskVarh ^ 2) ^ 0.5 / (kWh ^ 2 + kVarh ^ 2) ^ 0.5) 'Calculate losses %
+    workingsheet.Range("C17").Value = CheckValues.VoltageCompliance
+    workingsheet.Range("C18").Value = CheckValues.PercentageCustomersVoltage
     
     Close
     
-    Set WorkingSheet = Worksheets("Transformer")
+    Set workingsheet = Worksheets("Transformer")
     Direc = Direc & "Mon_"
     ' Monitors for transformer
     i = 0
@@ -169,16 +182,21 @@ Public Sub Monitors()
         Transformer(i, 3) = Parser.DblValue
         iextra = Parser.DblValue
         If iextra > 90 Or iextra < -90 Then Transformer(i, 3) = -Transformer(i, 3)
-        Values(i, 1) = Transformer(i, 1) + Transformer(i, 2) + Transformer(i, 3)
+        
+        If i <= 1020 Then
+            Values(i + 420, 1) = Transformer(i, 1) + Transformer(i, 2) + Transformer(i, 3)
+        Else
+            Values(i - 1020, 1) = Transformer(i, 1) + Transformer(i, 2) + Transformer(i, 3)
+        End If
 
     Loop
     Close
-    WorkingSheet.Range("B3:B" & (RunHours + 2)).Value = Values
+    workingsheet.Range("B3:B" & (RunHours + 2)).Value = Values
     
     ' Feeders
-    For i = 1 To 4
-    counter = 0
-    Set WorkingSheet = Worksheets("Feeder" & i & "Start")
+    For i = 1 To SharedClass.Settings.feeders
+        counter = 0
+        Set workingsheet = Worksheets("Feeder" & i & "Start")
         Open Direc & "vifeeder" & i & ".csv" For Input As #FileNum
         For z = 1 To 421
             Line Input #FileNum, s  ' skip first 7 hours
@@ -199,25 +217,34 @@ Public Sub Monitors()
                 iextra = Parser.DblValue
                 
                 ' Currents
+                
+                
                 IFeederStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
-              
-              
-                If iextra > 40 Or iextra < -140 Then IFeederStart(counter, 1) = -IFeederStart(counter, 1)
+                If iextra < 30 + AngleVariable And iextra > -150 + AngleVariable Then IFeederStart(counter, 1) = -IFeederStart(counter, 1)
+                
                 IFeederStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > 100 Or iextra > -80 Then IFeederStart(counter, 2) = -IFeederStart(counter, 2)
+                If iextra > 90 + AngleVariable Or iextra < -90 + AngleVariable Then IFeederStart(counter, 2) = -IFeederStart(counter, 2)
+                
                 IFeederStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra < -5 Or iextra > 175 Then IFeederStart(counter, 3) = -IFeederStart(counter, 3)
+                If iextra > -30 + AngleVariable And iextra < 150 + AngleVariable Then IFeederStart(counter, 3) = -IFeederStart(counter, 3)
                 
-                VFValues(counter, 1) = VFeederStart(counter, 1) / 230
-                VFValues(counter, 2) = VFeederStart(counter, 2) / 230
-                VFValues(counter, 3) = VFeederStart(counter, 3) / 230
+                If counter <= 1020 Then
+                    countercorrected = counter + 420
+                Else
+                    countercorrected = counter - 1020
+                End If
                 
-                IFValues(counter, 1) = IFeederStart(counter, 1)
-                IFValues(counter, 2) = IFeederStart(counter, 2)
-                IFValues(counter, 3) = IFeederStart(counter, 3)
+                
+                VFValues(countercorrected, 1) = VFeederStart(counter, 1) / 230
+                VFValues(countercorrected, 2) = VFeederStart(counter, 2) / 230
+                VFValues(countercorrected, 3) = VFeederStart(counter, 3) / 230
+                
+                IFValues(countercorrected, 1) = IFeederStart(counter, 1)
+                IFValues(countercorrected, 2) = IFeederStart(counter, 2)
+                IFValues(countercorrected, 3) = IFeederStart(counter, 3)
             
         Loop
         Close
@@ -225,13 +252,13 @@ Public Sub Monitors()
         counter = 0
         character = Chr(65) ' Letter A
         ' Laterals
-        For j = 1 To 4
+        For j = 1 To SharedClass.Settings.laterals
             character = Chr(Asc(character) + 1)
             Open Direc & "vilateral" & i & "_" & j & "_start.csv" For Input As #FileNum
             counter = 0
             For z = 1 To 421
                 Line Input #FileNum, s  ' skip first 7 hours
-            Next
+            Next z
             Do While Not EOF(FileNum)
                 Line Input #FileNum, s
                 Parser.CmdString = s
@@ -251,34 +278,42 @@ Public Sub Monitors()
                 ' Currents
                 ILateralStart(counter, 1) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra < 40 And iextra > -140 Then ILateralStart(counter, 1) = -ILateralStart(counter, 1)
+                If iextra < 30 + AngleVariable And iextra > -150 + AngleVariable Then ILateralStart(counter, 1) = -ILateralStart(counter, 1)
+                
                 ILateralStart(counter, 2) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > 100 Or iextra < -80 Then ILateralStart(counter, 2) = -ILateralStart(counter, 2)
+                If iextra > 90 + AngleVariable Or iextra < -90 + AngleVariable Then ILateralStart(counter, 2) = -ILateralStart(counter, 2)
+                
                 ILateralStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
-                If iextra > -20 And iextra < 160 Then ILateralStart(counter, 3) = -ILateralStart(counter, 3)
+                If iextra > -30 + AngleVariable And iextra < 150 + AngleVariable Then ILateralStart(counter, 3) = -ILateralStart(counter, 3)
                 
-                VLValues(counter, 1) = VLateralStart(counter, 1) / 230
-                VLValues(counter, 2) = VLateralStart(counter, 2) / 230
-                VLValues(counter, 3) = VLateralStart(counter, 3) / 230
+                If counter <= 1020 Then
+                    countercorrected = counter + 420
+                Else
+                    countercorrected = counter - 1020
+                End If
                 
-                ILValues(counter, 1) = ILateralStart(counter, 1)
-                ILValues(counter, 2) = ILateralStart(counter, 2)
-                ILValues(counter, 3) = ILateralStart(counter, 3)
+                VLValues(countercorrected, 1) = VLateralStart(counter, 1) / 230
+                VLValues(countercorrected, 2) = VLateralStart(counter, 2) / 230
+                VLValues(countercorrected, 3) = VLateralStart(counter, 3) / 230
+                
+                ILValues(countercorrected, 1) = ILateralStart(counter, 1)
+                ILValues(countercorrected, 2) = ILateralStart(counter, 2)
+                ILValues(countercorrected, 3) = ILateralStart(counter, 3)
             Loop
             Close
             ' Display Lateral Voltages
-            WorkingSheet.Range(WorkingSheet.Cells(4, j * 3 - 1), WorkingSheet.Cells(RunHours + 3, j * 3 + 1)).Value = VLValues
+            workingsheet.Range(workingsheet.Cells(4, j * 3 - 1), workingsheet.Cells(RunHours + 3, j * 3 + 1)).Value = VLValues
             ' Display Lateral Currents
-            WorkingSheet.Range(WorkingSheet.Cells(4, 12 + j * 3 - 1), WorkingSheet.Cells(RunHours + 3, 12 + j * 3 + 1)).Value = ILValues
+            workingsheet.Range(workingsheet.Cells(4, 12 + j * 3 - 1), workingsheet.Cells(RunHours + 3, 12 + j * 3 + 1)).Value = ILValues
             
             ' Display Feeder Currents
-            WorkingSheet.Range(WorkingSheet.Cells(4, 26), WorkingSheet.Cells(RunHours + 3, 28)).Value = IFValues
-       Next
-       For j = 1 To 4
+            workingsheet.Range(workingsheet.Cells(4, 26), workingsheet.Cells(RunHours + 3, 28)).Value = IFValues
+        Next j
+        For j = 1 To SharedClass.Settings.laterals
             Open Direc & "vilateral" & i & "_" & j & "_end.csv" For Input As #FileNum
-            Set WorkingSheet = Worksheets("Feeder" & i & "End")
+            Set workingsheet = Worksheets("Feeder" & i & "End")
             counter = 0
             For z = 1 To 421
                 Line Input #FileNum, s  ' skip first 7 hours
@@ -307,34 +342,40 @@ Public Sub Monitors()
                 ILateralStart(counter, 3) = Parser.DblValue
                 iextra = Parser.DblValue
                 
-                VLValues(counter, 1) = VLateralStart(counter, 1) / 230
-                VLValues(counter, 2) = VLateralStart(counter, 2) / 230
-                VLValues(counter, 3) = VLateralStart(counter, 3) / 230
+                If counter <= 1020 Then
+                    countercorrected = counter + 420
+                Else
+                    countercorrected = counter - 1020
+                End If
                 
-                ILValues(counter, 1) = ILateralStart(counter, 1)
-                ILValues(counter, 2) = ILateralStart(counter, 2)
-                ILValues(counter, 3) = ILateralStart(counter, 3)
+                VLValues(countercorrected, 1) = VLateralStart(counter, 1) / 230
+                VLValues(countercorrected, 2) = VLateralStart(counter, 2) / 230
+                VLValues(countercorrected, 3) = VLateralStart(counter, 3) / 230
+                
+                ILValues(countercorrected, 1) = ILateralStart(counter, 1)
+                ILValues(countercorrected, 2) = ILateralStart(counter, 2)
+                ILValues(countercorrected, 3) = ILateralStart(counter, 3)
             Loop
             Close
             ' Display Lateral Voltages
-            WorkingSheet.Range(WorkingSheet.Cells(4, j * 3 - 1), WorkingSheet.Cells(RunHours + 3, j * 3 + 1)).Value = VLValues
+            workingsheet.Range(workingsheet.Cells(4, j * 3 - 1), workingsheet.Cells(RunHours + 3, j * 3 + 1)).Value = VLValues
             ' Display Lateral Currents
-            WorkingSheet.Range(WorkingSheet.Cells(4, 12 + j * 3 - 1), WorkingSheet.Cells(RunHours + 3, 12 + j * 3 + 1)).Value = ILValues
+            workingsheet.Range(workingsheet.Cells(4, 12 + j * 3 - 1), workingsheet.Cells(RunHours + 3, 12 + j * 3 + 1)).Value = ILValues
         Next
         ' Display Feeders
     Next
     ' Display Feeder Voltages
-    Set WorkingSheet = Worksheets("Transformer")
-    WorkingSheet.Range(WorkingSheet.Cells(3, 3), WorkingSheet.Cells(RunHours + 2, 5)).Value = VFValues
+    Set workingsheet = Worksheets("Transformer")
+    workingsheet.Range(workingsheet.Cells(3, 3), workingsheet.Cells(RunHours + 2, 5)).Value = VFValues
     
     
-    Set WorkingSheet = Worksheets("Limits")
-    WorkingSheet.Range("D4:D1443").Value = CheckValues.lateralcurrentmax
+    Set workingsheet = Worksheets("Limits")
+    workingsheet.Range("D4:D1443").Value = CheckValues.lateralcurrentmax
     'workingsheet.Range("E4:E1443").Value = -CheckValues.lateralcurrentmax
-    WorkingSheet.Range("E4:F1443").Value = CheckValues.feedercurrentmax
-    WorkingSheet.Range("F4:F1443").Value = -CheckValues.feedercurrentmax
-    WorkingSheet.Range("G4:G1443").Value = CheckValues.TransformerMax
-    WorkingSheet.Range("H4:H1443").Value = -CheckValues.TransformerMax
+    workingsheet.Range("E4:F1443").Value = CheckValues.feedercurrentmax
+    workingsheet.Range("F4:F1443").Value = -CheckValues.feedercurrentmax
+    workingsheet.Range("G4:G1443").Value = CheckValues.TransformerMax
+    workingsheet.Range("H4:H1443").Value = -CheckValues.TransformerMax
     
 End Sub
 
@@ -343,10 +384,15 @@ Public Sub Customers_Voltage()
     Worksheets("test").Range("A1:CCC632").Clear
     Dim i, y, iter, place As Integer
     
-    For i = 1 To 4
-        For y = 1 To PresetNetwork.customers / 4
+    For i = 1 To SharedClass.Settings.feeders
+        feedercustomers = 0
+        For m = 1 To SharedClass.Settings.laterals
+            feedercustomers = feedercustomers + Assign_Profiles.LateralSizes(i, m)
+        Next
+        
+        For y = 1 To feedercustomers
             For iter = 1 To Start.RunHours
-                place = (i * (PresetNetwork.customers / 4) - (PresetNetwork.customers / 4)) + y
+                place = (i * (feedercustomers) - (feedercustomers)) + y
                 Worksheets("Test").Cells(place, iter).Value = Start.CustomersLimits(i, y, iter)
             Next
         Next

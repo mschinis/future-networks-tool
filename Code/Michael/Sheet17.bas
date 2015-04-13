@@ -9,16 +9,24 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub CommandButton1_Click()
 
-    If PresetNetwork.Network = "Urban" Then Call DrawNetworks.DrawUrban
-    If PresetNetwork.Network = "Rural" Then Call DrawNetworks.DrawRural
-    If PresetNetwork.Network = "SemiUrban" Then Call DrawNetworks.DrawSemiUrban
+
+    If PresetNetwork.network = "Urban" Then
+        Call DrawNetworks.DrawUrban
+    ElseIf PresetNetwork.network = "Rural" Then
+        Call DrawNetworks.DrawRural
+    ElseIf PresetNetwork.network = "SemiUrban" Then
+        Call DrawNetworks.DrawSemiUrban
+    Else
+        Call DrawNetworks.DrawCustom
+    End If
     
     Call CurrentOverload
 
 End Sub
 
 Private Sub CommandButton2_Click()
-    SelectGraphsForm.Show
+    SelectGraphs.setupSelectGraphsForm
+    
 End Sub
 
 Private Sub ShowExtra_Click()
@@ -28,6 +36,7 @@ Private Sub ShowExtra_Click()
         ShowExtra.Caption = "Show output tabs"
     End If
     
+    Sheets("Costs").Visible = Not Sheets("Costs").Visible
     Sheet16.Visible = Not Sheet16.Visible
     Sheet10.Visible = Not Sheet11.Visible
     Sheet11.Visible = Not Sheet11.Visible

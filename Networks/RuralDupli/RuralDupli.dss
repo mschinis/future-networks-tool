@@ -1,0 +1,19 @@
+Clear
+New Circuit.RuralDupliLVNetwork
+Edit Vsource.Source BasekV=11 pu=1.00 angle=0 ISC3=3000 ISC1=2500
+New transformer.LV_Transformer Buses=(Sourcebus, Main_Busbar)  Conns=(Delta, Wye) kvs=(11, 0.433) kvas=(200, 200) xhl=4.5
+
+Redirect Linecodes.txt
+Redirect RuralDupli_LinesLaterals1.txt
+Redirect RuralDupli_LinesLaterals2.txt
+Redirect RuralDupli_LinesLaterals3.txt
+Redirect RuralDupli_LinesLaterals4.txt
+Redirect RuralDupli_Consumers1.txt
+Redirect RuralDupli_Consumers2.txt
+Redirect RuralDupli_Consumers3.txt
+Redirect RuralDupli_Consumers4.txt
+Redirect Monitors.txt
+Redirect EnergyMeters.txt
+
+Set voltagebases=[11 0.4]
+CalcVoltageBases
